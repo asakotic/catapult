@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.catalist"
+    namespace = "com.example.catapult"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.catalist"
+        applicationId = "com.example.catapult"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

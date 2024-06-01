@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Catalist"
+rootProject.name = "Catapult"
 include(":app")
  
