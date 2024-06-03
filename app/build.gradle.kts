@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs.kotlin")
     kotlin("plugin.serialization") version "1.9.22"
+
+    //Hilt
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -90,4 +94,16 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    //Hilt
+    val hilt_version = "2.51.1"
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    // Hilt Compose Navigation support (hiltViewModel factory)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+}
+
+kapt {
+    correctErrorTypes = true
 }
