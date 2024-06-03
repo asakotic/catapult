@@ -3,10 +3,12 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs.kotlin")
     kotlin("plugin.serialization") version "1.9.22"
-
     //Hilt
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    //Room
+    id("androidx.room")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -25,6 +27,11 @@ android {
             useSupportLibrary = true
         }
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
 
     buildTypes {
         release {
@@ -75,10 +82,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Jetpack Navigation
-    val nav_version = "2.7.7"
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    val navVersion = "2.7.7"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-compose:$navVersion")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -96,11 +103,19 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     //Hilt
-    val hilt_version = "2.51.1"
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    val hiltVersion = "2.51.1"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
     // Hilt Compose Navigation support (hiltViewModel factory)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //Room
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+
 
 }
 
