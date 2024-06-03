@@ -3,12 +3,12 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs.kotlin")
     kotlin("plugin.serialization") version "1.9.22"
-    //Hilt
-    kotlin("kapt")
     id("com.google.dagger.hilt.android")
     //Room
     id("androidx.room")
     id("com.google.devtools.ksp")
+    //Hilt
+    kotlin("kapt")
 }
 
 android {
