@@ -1,6 +1,7 @@
 package com.example.catapult.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -10,7 +11,7 @@ import com.example.catapult.cats.list.catsListScreen
 
 @Composable
 fun AppNavigation() {
-    val navController = rememberNavController();
+    val navController = rememberNavController()
 
     NavHost(
         navController = navController,
@@ -30,5 +31,9 @@ fun AppNavigation() {
             })
         )
     }
+
 }
+
+inline val SavedStateHandle.catId: String
+    get() = checkNotNull(get("id")) {"catId is mandatory"}
 

@@ -2,9 +2,11 @@ package com.example.catapult.cats.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.catapult.cats.di.DispatcherProvider
 import com.example.catapult.cats.list.ICatsContract.CatsListState
 import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.cats.repository.CatsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +15,12 @@ import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 
-class CatsViewModel(
-    private val catsRepository: CatsRepository = CatsRepository
+@HiltViewModel
+class CatsViewModel @Inject constructor(
+    private val dispatcherProvider: DispatcherProvider,
+    private val catsRepository: CatsRepository
 ) : ViewModel() {
 
     private val _catsState = MutableStateFlow(CatsListState())
@@ -61,7 +66,7 @@ class CatsViewModel(
 
             setCatsState { copy(isLoading = true) }
             try {
-                withContext(Dispatchers.IO) {
+                withContext(dispatcherProvider.io()) {
                     //delay(1.seconds)
                     catsRepository.fetchAllCats()
                 }

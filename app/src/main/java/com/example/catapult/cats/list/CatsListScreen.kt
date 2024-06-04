@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -47,7 +48,7 @@ fun NavGraphBuilder.catsListScreen(
     route : String,
     navController: NavController
 ) = composable(route = route) {
-    val catsViewModel = viewModel<CatsViewModel>()
+    val catsViewModel:CatsViewModel = hiltViewModel()
     val catsState by catsViewModel.catsState.collectAsState()
 
     Scaffold (

@@ -10,8 +10,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object CatsRepository {
+@Singleton //TODO this singleton should be remove when database is added
+class CatsRepository @Inject constructor(){
 
     private val cats = MutableStateFlow(listOf<CatInfo>())
     //ICatListAPI:: class.java -  reflection of ICatListAPI class and instance (reference type of java)

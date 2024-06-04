@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
@@ -58,9 +59,8 @@ fun NavGraphBuilder.catDetailsScreen (
     navController: NavController,
     arguments: List<NamedNavArgument>
 ) = composable(route = route, arguments = arguments) { navBackStackEntry ->
-    val catId = navBackStackEntry.arguments?.getString("id") ?: throw IllegalArgumentException("id is required.")
 
-    val catDetailsViewModel: CatDetailsViewModel = viewModel(factory = CatDetailsViewModelFactory(catId = catId))
+    val catDetailsViewModel: CatDetailsViewModel = hiltViewModel(navBackStackEntry)
     val catState by catDetailsViewModel.catDetailsState.collectAsState()
     
     Scaffold (
@@ -105,7 +105,9 @@ fun CatDetailsScreen(
             }
             else if (catState.error != null) {
                 Box(
-                    modifier = Modifier.padding(16.dp).fillMaxSize(),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     val errorMessage = when (catState.error) {
@@ -132,7 +134,9 @@ fun CatDetailsScreen(
 
                     val scrollState = rememberScrollState()
                     Column(
-                        modifier = Modifier.padding(it).verticalScroll(scrollState)
+                        modifier = Modifier
+                            .padding(it)
+                            .verticalScroll(scrollState)
                     ) {
                         Card(
                             shape = RectangleShape,

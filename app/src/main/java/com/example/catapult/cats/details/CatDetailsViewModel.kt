@@ -1,10 +1,13 @@
 package com.example.catapult.cats.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.details.ICatDetailsContract.CatDetailsState
 import com.example.catapult.cats.repository.CatsRepository
+import com.example.catapult.navigation.catId
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,12 +15,15 @@ import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 
-class CatDetailsViewModel(
-    private val catId: String,
-    private val catsRepository: CatsRepository = CatsRepository
+@HiltViewModel
+class CatDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val catsRepository: CatsRepository
 ) : ViewModel() {
 
+    private val catId: String = savedStateHandle.catId
     private val _catDetailsState = MutableStateFlow(CatDetailsState(catId = catId))
     val catDetailsState = _catDetailsState.asStateFlow()
 
@@ -55,13 +61,4 @@ class CatDetailsViewModel(
         }
     }
 
-}
-
-class CatDetailsViewModelFactory(
-    private val catId: String
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return CatDetailsViewModel(catId = catId) as T
-    }
 }
