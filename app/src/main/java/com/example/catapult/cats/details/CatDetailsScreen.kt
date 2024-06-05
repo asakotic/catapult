@@ -26,7 +26,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -61,16 +63,20 @@ fun NavGraphBuilder.catDetailsScreen (
 
     val catDetailsViewModel: CatDetailsViewModel = hiltViewModel(navBackStackEntry)
     val catState by catDetailsViewModel.catDetailsState.collectAsState()
-    
-    Scaffold (
-        content = { paddingValues ->
-            CatDetailsScreen(
-                catState = catState,
-                paddingValues = paddingValues,
-                onClose = {navController.navigateUp()}
-            )
-        }    
-    )
+
+    Surface(
+        tonalElevation = 1.dp
+    ) {
+        Scaffold (
+            content = { paddingValues ->
+                CatDetailsScreen(
+                    catState = catState,
+                    paddingValues = paddingValues,
+                    onClose = {navController.navigateUp()}
+                )
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,10 +94,7 @@ fun CatDetailsScreen(
                 },
                 navigationIcon = {
                     AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = onClose)
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xffff8141)
-                )
+                }
             )
         },
         content = {
@@ -139,9 +142,6 @@ fun CatDetailsScreen(
                     ) {
                         Card(
                             shape = RectangleShape,
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.Gray
-                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
@@ -241,12 +241,9 @@ private fun CatInformation(
                     Intent.ACTION_VIEW,
                     Uri.parse(data.wikipediaUrl ?: "")
                 ))
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xffff8141)
-            )
+            }
         ) {
-            Text(text = "Wiki", color = Color.Black)
+            Text(text = "Wiki")
         }
 
     }

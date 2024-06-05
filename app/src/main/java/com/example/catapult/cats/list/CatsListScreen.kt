@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -50,16 +51,20 @@ fun NavGraphBuilder.catsListScreen(
     val catsViewModel:CatsViewModel = hiltViewModel()
     val catsState by catsViewModel.catsState.collectAsState()
 
-    Scaffold (
-        content = {
-            CatsList(
-                catsState = catsState,
-                paddingValues = it,
-                eventPublisher = {uiEvent ->  catsViewModel.setCatsEvent(uiEvent)},
-                onClick = {catInfoDetail ->  navController.navigate("cats/${catInfoDetail.id}")}
-            )
-        }
-    )
+    Surface(
+        tonalElevation = 1.dp
+    ) {
+        Scaffold (
+            content = {
+                CatsList(
+                    catsState = catsState,
+                    paddingValues = it,
+                    eventPublisher = {uiEvent ->  catsViewModel.setCatsEvent(uiEvent)},
+                    onClick = {catInfoDetail ->  navController.navigate("cats/${catInfoDetail.id}")}
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -146,10 +151,7 @@ fun CatDetails(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xffff8141)
-        )
+            .clickable { onClick() }
     ) {
 
         Column(
