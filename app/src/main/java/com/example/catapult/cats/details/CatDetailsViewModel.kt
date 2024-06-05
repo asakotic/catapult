@@ -2,25 +2,23 @@ package com.example.catapult.cats.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.details.ICatDetailsContract.CatDetailsState
-import com.example.catapult.cats.repository.CatsRepository
+import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.navigation.catId
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class CatDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val catsRepository: CatsRepository
+    private val dispatcherProvider: DispatcherProvider,
+    private val catsService: CatsService
 ) : ViewModel() {
 
     private val catId: String = savedStateHandle.catId
@@ -32,31 +30,13 @@ class CatDetailsViewModel @Inject constructor(
 
     init {
         observeCatDetails()
-        fetchCatDetailsRepo()
     }
 
     private fun observeCatDetails() {
         viewModelScope.launch {
-            catsRepository.observeCat(id = catId).collect { catInfoDetail ->
-                setCatDetailsState { copy(data = catInfoDetail) }
-            }
-        }
-    }
-
-    private fun fetchCatDetailsRepo() {
-        viewModelScope.launch {
             setCatDetailsState { copy(isLoading = true) }
-            try {
-                //delay(1.seconds)
-                withContext(Dispatchers.IO) {
-                    catsRepository.getCatById(_catDetailsState.value.catId)
-                }
-            }
-            catch (error: IOException) {
-                setCatDetailsState { copy(error = CatDetailsState.DetailsError.DataUpdateFailed(cause = error)) }
-            }
-            finally {
-                setCatDetailsState { copy(isLoading = false) }
+            catsService.getCatByIdFlow(id = catId).collect { catInfoDetail ->
+                setCatDetailsState { copy(data = catInfoDetail, isLoading = false) }
             }
         }
     }

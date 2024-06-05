@@ -43,13 +43,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
-import com.example.catapult.cats.domen.CatInfo
+import com.example.catapult.cats.db.Cat
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
@@ -148,7 +147,7 @@ fun CatDetailsScreen(
                         ) {
                             SubcomposeAsyncImage(
                                 modifier =  Modifier.fillMaxWidth(),
-                                model = catState.data.catImageUrl,
+                                model = catState.data.image?.url ?: "",
                                 contentDescription = null
                             )
                         }
@@ -170,7 +169,7 @@ fun CatDetailsScreen(
 
 @Composable
 private fun CatInformation(
-    data: CatInfo
+    data: Cat
 ) {
     Column(
         modifier = Modifier
@@ -179,7 +178,7 @@ private fun CatInformation(
 
         SimpleInfo(
             title = "Race Of Cat",
-            description = data.raceOfCat
+            description = data.name
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -191,24 +190,24 @@ private fun CatInformation(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ListInfo(title = "Countries Of Origin", items = data.countriesOfOrigin)
+        ListInfo(title = "Countries Of Origin", items = data.origin.replace(" ", "").split(","))
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ListInfo(title = "Temperament Traits", items = data.temperamentTraits)
+        ListInfo(title = "Temperament Traits", items = data.temperament.replace(" ", "").split(","))
 
         Spacer(modifier = Modifier.height(16.dp))
 
         SimpleInfo(
             title = "Average Weight",
-            description = data.averageWeight
+            description = data.weight.metric
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         SimpleInfo(
             title = "Rare",
-            description = data.isRare.toString()
+            description = if (data.rare == 1) "Yes" else "No"
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -221,12 +220,16 @@ private fun CatInformation(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column {
-            data.mapWidgets.forEach {
-
-                StarRatingBar(text = it.key, rating = it.value.toFloat()) {}
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            StarRatingBar(text = "affectionLevel", rating = data.affectionLevel.toFloat()) {}
+            Spacer(modifier = Modifier.height(16.dp))
+            StarRatingBar(text = "childFriendly", rating = data.childFriendly.toFloat()) {}
+            Spacer(modifier = Modifier.height(16.dp))
+            StarRatingBar(text = "dogFriendly", rating = data.dogFriendly.toFloat()) {}
+            Spacer(modifier = Modifier.height(16.dp))
+            StarRatingBar(text = "energyLevel", rating = data.energyLevel.toFloat()) {}
+            Spacer(modifier = Modifier.height(16.dp))
+            StarRatingBar(text = "healthIssues", rating = data.healthIssues.toFloat()) {}
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         val context = LocalContext.current
@@ -236,7 +239,7 @@ private fun CatInformation(
             {
                 context.startActivity(Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(data.wikiUrl)
+                    Uri.parse(data.wikipediaUrl ?: "")
                 ))
             },
             colors = ButtonDefaults.buttonColors(

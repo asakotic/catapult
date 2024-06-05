@@ -33,11 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.catapult.cats.domen.CatInfo
+import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.list.ICatsContract.CatsListState
 import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.core.AppIconButton
@@ -68,7 +67,7 @@ fun CatsList(
     catsState : CatsListState,
     paddingValues: PaddingValues,
     eventPublisher: (uiEvent: CatsListUIEvent) -> Unit,
-    onClick: (CatInfo) -> Unit
+    onClick: (Cat) -> Unit
 ) {
 
 
@@ -126,10 +125,10 @@ fun CatsList(
                 items(
                     items = catsState.catsFiltered,
                     key = {catInfo -> catInfo.id}
-                ) {catInfoDetail ->
+                ) {catDetail ->
                     CatDetails(
-                        catInfo = catInfoDetail,
-                        onClick = {onClick(catInfoDetail)}
+                        cat = catDetail,
+                        onClick = {onClick(catDetail)}
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -140,7 +139,7 @@ fun CatsList(
 
 @Composable
 fun CatDetails(
-    catInfo: CatInfo,
+    cat: Cat,
     onClick: () -> Unit
 ) {
     Card(
@@ -157,19 +156,19 @@ fun CatDetails(
             modifier = Modifier.padding(16.dp)
         ) {
 
-            SimpleInfo(title = "Race Of Cat", description = catInfo.raceOfCat)
+            SimpleInfo(title = "Race Of Cat", description = cat.name)
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (catInfo.altNames.isNotEmpty()) {
-                ListInfo(title = "Alternative Names", items = catInfo.altNames)
+            if (!cat.altNames.isNullOrEmpty()) {
+                ListInfo(title = "Alternative Names", items = cat.altNames.replace(" ","").split(","))
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            SimpleInfo(title = "Description", description = catInfo.description)
+            SimpleInfo(title = "Description", description = cat.description)
             Spacer(modifier = Modifier.height(16.dp))
 
             Row {
-                catInfo.temperamentTraits.take(3).forEach {
+                cat.temperament.replace(" ", "").split(",").take(3).forEach {
                     AssistChip(
                         onClick = {  },
                         label = { Text(text = it) }

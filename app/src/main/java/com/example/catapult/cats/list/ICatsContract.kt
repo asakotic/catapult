@@ -1,12 +1,12 @@
 package com.example.catapult.cats.list
 
-import com.example.catapult.cats.domen.CatInfo
+import com.example.catapult.cats.db.Cat
 
 interface ICatsContract {
     data class CatsListState(
         val isLoading: Boolean = false,
-        val cats: List<CatInfo> = emptyList(),
-        val catsFiltered: List<CatInfo> = emptyList(),
+        val cats: List<Cat> = emptyList(),
+        val catsFiltered: List<Cat> = emptyList(),
         val isSearching: Boolean = false,
         val searchText: String = "",
         val error: DetailsError? = null

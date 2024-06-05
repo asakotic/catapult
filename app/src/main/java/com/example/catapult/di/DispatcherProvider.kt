@@ -1,4 +1,4 @@
-package com.example.catapult.cats.di
+package com.example.catapult.di
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

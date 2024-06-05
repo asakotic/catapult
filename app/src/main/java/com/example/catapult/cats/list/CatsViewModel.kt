@@ -2,12 +2,11 @@ package com.example.catapult.cats.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.catapult.cats.di.DispatcherProvider
+import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.list.ICatsContract.CatsListState
 import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
-import com.example.catapult.cats.repository.CatsRepository
+import com.example.catapult.di.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CatsViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
-    private val catsRepository: CatsRepository
+    private val catsService: CatsService
 ) : ViewModel() {
 
     private val _catsState = MutableStateFlow(CatsListState())
@@ -38,7 +37,7 @@ class CatsViewModel @Inject constructor(
 
     init {
         observeRepoCats()
-        fetchCats()
+        fetchAllCats()
         observeEvents()
     }
 
@@ -61,14 +60,14 @@ class CatsViewModel @Inject constructor(
     /**
      * Gets new list of cats from repository, triggers recomposition
      */
-    private fun fetchCats() {
+    private fun fetchAllCats() {
         viewModelScope.launch {
 
             setCatsState { copy(isLoading = true) }
             try {
                 withContext(dispatcherProvider.io()) {
                     //delay(1.seconds)
-                    catsRepository.fetchAllCats()
+                    catsService.fetchAllCatsFromApi()
                 }
             } catch (error: IOException) {
                 setCatsState { copy(error = CatsListState.DetailsError.DataUpdateFailed(cause = error)) }
@@ -84,8 +83,9 @@ class CatsViewModel @Inject constructor(
      */
     private fun observeRepoCats() {
         viewModelScope.launch {
-            catsRepository.observeCats().collect { newCatsList ->
-                setCatsState { copy(cats = newCatsList) }
+            setCatsState { copy(isLoading = true) }
+            catsService.getAllCatsFlow().collect { newCatsList ->
+                setCatsState { copy(cats = newCatsList, isLoading = false) }
                 searchQueryFilter(_catsState.value.searchText)
             }
         }
