@@ -72,7 +72,8 @@ fun NavGraphBuilder.catDetailsScreen (
                 CatDetailsScreen(
                     catState = catState,
                     paddingValues = paddingValues,
-                    onClose = {navController.navigateUp()}
+                    onClose = {navController.navigateUp()},
+                    openGallery = {id ->  navController.navigate("images/${id}")}
                 )
             }
         )
@@ -84,7 +85,8 @@ fun NavGraphBuilder.catDetailsScreen (
 fun CatDetailsScreen(
     catState: ICatDetailsContract.CatDetailsState,
     paddingValues: PaddingValues,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    openGallery: (String)-> Unit,
 ) {
     Scaffold (
         topBar = {
@@ -150,6 +152,11 @@ fun CatDetailsScreen(
                                 model = catState.data.image?.url ?: "",
                                 contentDescription = null
                             )
+                            Button(onClick = {
+                                openGallery(catState.catId)
+                            }) {
+
+                            }
                         }
 
                         Card(

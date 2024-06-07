@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.catapult.cats.details.catDetailsScreen
+import com.example.catapult.cats.gallery.catGalleryScreen
 import com.example.catapult.cats.list.catsListScreen
 
 @Composable
@@ -25,6 +26,14 @@ fun AppNavigation() {
 
         catDetailsScreen(
             route = "cats/{id}",
+            navController = navController,
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+            })
+        )
+
+        catGalleryScreen(
+            route = "images/{id}",
             navController = navController,
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType

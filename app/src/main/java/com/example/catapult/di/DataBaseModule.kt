@@ -1,6 +1,7 @@
 package com.example.catapult.di
 
 import com.example.catapult.cats.db.CatDao
+import com.example.catapult.cats.db.CatGalleryDao
 import com.example.catapult.database.AppDataBase
 import com.example.catapult.database.AppDataBaseBuilder
 import dagger.Module
@@ -15,6 +16,8 @@ object DataBaseModule {
 
     @Provides
     fun provideCatDao(dataBase: AppDataBase): CatDao = dataBase.catDao()
+    @Provides
+    fun provideCatGalleryDao(dataBase: AppDataBase): CatGalleryDao = dataBase.catGalleryDao()
 
     @Provides
     @Singleton

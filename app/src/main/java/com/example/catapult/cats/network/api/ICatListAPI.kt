@@ -1,8 +1,11 @@
 package com.example.catapult.cats.network.api
 
+import androidx.room.Insert
 import com.example.catapult.cats.db.Cat
+import com.example.catapult.cats.db.CatGallery
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ICatListAPI {
     @GET("breeds")
@@ -10,4 +13,8 @@ interface ICatListAPI {
 
     @GET("breeds/{id}")
     suspend fun getCat(@Path("id") id: String): Cat
+
+    @GET("images/search?limit=20")
+    suspend fun getAllCatsPhotos(@Query("breed_ids") id: String): List<CatGallery>
+
 }
