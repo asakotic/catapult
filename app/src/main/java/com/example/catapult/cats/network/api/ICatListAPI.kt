@@ -1,8 +1,7 @@
 package com.example.catapult.cats.network.api
 
-import androidx.room.Insert
 import com.example.catapult.cats.db.Cat
-import com.example.catapult.cats.db.CatGallery
+import com.example.catapult.cats.db.images.CatGallery
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

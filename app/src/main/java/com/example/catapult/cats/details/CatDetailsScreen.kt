@@ -55,6 +55,7 @@ import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.catDetailsScreen (
     route: String,
     navController: NavController,
@@ -68,11 +69,20 @@ fun NavGraphBuilder.catDetailsScreen (
         tonalElevation = 1.dp
     ) {
         Scaffold (
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Catapult", fontWeight = FontWeight.Bold)
+                    },
+                    navigationIcon = {
+                        AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = {navController.navigateUp()})
+                    }
+                )
+            },
             content = { paddingValues ->
                 CatDetailsScreen(
                     catState = catState,
                     paddingValues = paddingValues,
-                    onClose = {navController.navigateUp()},
                     openGallery = {id ->  navController.navigate("images/${id}")}
                 )
             }
@@ -85,93 +95,80 @@ fun NavGraphBuilder.catDetailsScreen (
 fun CatDetailsScreen(
     catState: ICatDetailsContract.CatDetailsState,
     paddingValues: PaddingValues,
-    onClose: () -> Unit,
     openGallery: (String)-> Unit,
 ) {
-    Scaffold (
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Catapult", fontWeight = FontWeight.Bold)
-                },
-                navigationIcon = {
-                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = onClose)
-                }
+    if (catState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-        },
-        content = {
-            if (catState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+        }
+    }
+    else if (catState.error != null) {
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            val errorMessage = when (catState.error) {
+                is ICatDetailsContract.CatDetailsState.DetailsError.DataUpdateFailed ->
+                    "Failed to load. Error message: ${catState.error.cause?.message}."
             }
-            else if (catState.error != null) {
-                Box(
+
+            Text(text = errorMessage, fontSize = 20.sp)
+        }
+    }
+    else if (catState.data == null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = "There is no data for id ${catState.catId}",
+                fontSize = 20.sp
+            )
+        }
+    }
+    else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .verticalScroll(scrollState)
+            ) {
+                Card(
+                    shape = RectangleShape,
                     modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
                 ) {
-                    val errorMessage = when (catState.error) {
-                        is ICatDetailsContract.CatDetailsState.DetailsError.DataUpdateFailed ->
-                            "Failed to load. Error message: ${catState.error.cause?.message}."
-                    }
-
-                    Text(text = errorMessage, fontSize = 20.sp)
-                }
-            }
-            else if (catState.data == null) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "There is no data for id ${catState.catId}",
-                        fontSize = 20.sp
+                    SubcomposeAsyncImage(
+                        modifier =  Modifier.fillMaxWidth(),
+                        model = catState.data.image?.url ?: "",
+                        contentDescription = null
                     )
-                }
-            }
-            else {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-
-                    val scrollState = rememberScrollState()
-                    Column(
-                        modifier = Modifier
-                            .padding(it)
-                            .verticalScroll(scrollState)
+                    Button(
+                        onClick = {
+                            openGallery(catState.catId)
+                        }
                     ) {
-                        Card(
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            SubcomposeAsyncImage(
-                                modifier =  Modifier.fillMaxWidth(),
-                                model = catState.data.image?.url ?: "",
-                                contentDescription = null
-                            )
-                            Button(onClick = {
-                                openGallery(catState.catId)
-                            }) {
-                                Text(text = "Gallery")
-                            }
-                        }
-
-                        Card(
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            CatInformation(catState.data)
-                        }
-
+                        Text(text = "Gallery")
                     }
                 }
+
+                Card(
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    CatInformation(catState.data)
+                }
+
             }
         }
-    )
+    }
 }
 
 @Composable

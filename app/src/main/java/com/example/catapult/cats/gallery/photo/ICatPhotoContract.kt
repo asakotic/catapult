@@ -11,9 +11,4 @@ interface ICatPhotoContract {
             data class DataUpdateFailed(val cause: Throwable? = null): DetailsError()
         }
     }
-
-    sealed class CatListUIEvent {
-        data class SearchQueryChanged(val query: String) : CatListUIEvent()
-    }
-
 }
