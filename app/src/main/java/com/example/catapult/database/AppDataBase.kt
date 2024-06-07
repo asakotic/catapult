@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatDao
-import com.example.catapult.cats.db.CatGallery
-import com.example.catapult.cats.db.CatGalleryDao
+import com.example.catapult.cats.db.images.CatGallery
+import com.example.catapult.cats.db.images.CatGalleryDao
 
 @Database(
     entities = [

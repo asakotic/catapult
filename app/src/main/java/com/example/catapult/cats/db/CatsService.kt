@@ -1,5 +1,6 @@
 package com.example.catapult.cats.db
 
+import com.example.catapult.cats.db.images.CatGalleryDao
 import com.example.catapult.cats.network.api.ICatListAPI
 import com.example.catapult.cats.network.retrofit
 import kotlinx.coroutines.flow.Flow

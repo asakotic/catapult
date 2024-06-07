@@ -1,4 +1,4 @@
-package com.example.catapult.cats.db
+package com.example.catapult.cats.db.images
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
