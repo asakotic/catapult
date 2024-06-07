@@ -155,7 +155,7 @@ fun CatDetailsScreen(
                             Button(onClick = {
                                 openGallery(catState.catId)
                             }) {
-
+                                Text(text = "Gallery")
                             }
                         }
 

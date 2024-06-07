@@ -12,9 +12,9 @@ interface CatGalleryDao {
     @Query("select url from images where id= :id")
     fun getAllImagesForId(id: String): Flow<List<String>>
 
-   /* @Query("select url from images where url = :url")
-    fun getImageByUrl(url: String): Flow<>
-    */
+    @Query("select url from images where url = :url")
+    fun getImageByUrl(url: String): Flow<String>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllGalleryCats(cats: List<CatGallery>)

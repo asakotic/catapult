@@ -1,15 +1,14 @@
-package com.example.catapult.cats.gallery
+package com.example.catapult.cats.gallery.photo
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,17 +33,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
-import com.example.catapult.cats.gallery.ICatGalleryContract.CatGalleryState
 
-fun NavGraphBuilder.catGalleryScreen (
+fun NavGraphBuilder.catPhotoScreen (
     route: String,
     navController: NavController,
-    arguments: List<NamedNavArgument>,
-    onPhotoClicked: (catId: String, photoIndex: Int) -> Unit
+    arguments: List<NamedNavArgument>
 ) = composable(route = route, arguments = arguments) { navBackStackEntry ->
 
-    val catGalleryViewModel: CatGalleryViewModel = hiltViewModel(navBackStackEntry)
-    val catState by catGalleryViewModel.catGalleryState.collectAsState()
+    val catPhotoViewModel: CatPhotoViewModel = hiltViewModel(navBackStackEntry)
+    val catState by catPhotoViewModel.catPhotoState.collectAsState()
 
 
     Surface(
@@ -52,29 +49,27 @@ fun NavGraphBuilder.catGalleryScreen (
     ) {
         Scaffold (
             content = { paddingValues ->
-                CatGalleryScreen(
+                CatPhotoScreen(
                     catState = catState,
                     paddingValues = paddingValues,
-                    onClose = {navController.navigateUp()},
-                    onPhotoClicked = onPhotoClicked
+                    onClose = {navController.navigateUp()}
                 )
             }
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CatGalleryScreen(
-    catState: CatGalleryState,
+fun CatPhotoScreen(
+    catState: ICatPhotoContract.CatPhotoState,
     paddingValues: PaddingValues,
-    onClose: () -> Unit,
-    onPhotoClicked: (catId: String,photoNumber: Int) -> Unit
+    onClose: () -> Unit
 ){
     Scaffold (
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Photo gallery", fontWeight = FontWeight.Bold)
+                    Text(text = "Photo", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = onClose)
@@ -82,6 +77,14 @@ fun CatGalleryScreen(
             )
         },
         content = {
+            val pagerState = rememberPagerState(
+                pageCount = {
+                    catState.photos.size
+                },
+                initialPage = catState.photoIndex
+            ) 
+
+            
             if (catState.isLoading) {
                 Box(modifier = Modifier
                     .fillMaxSize()
@@ -98,7 +101,7 @@ fun CatGalleryScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     val errorMessage = when (catState.error) {
-                        is CatGalleryState.DetailsError.DataUpdateFailed ->
+                        is ICatPhotoContract.CatPhotoState.DetailsError.DataUpdateFailed ->
                             "Failed to load. Error message: ${catState.error.cause?.message}."
                     }
 
@@ -112,25 +115,18 @@ fun CatGalleryScreen(
                     )
                 }
             } else {
-                LazyVerticalGrid(
-                    modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Fixed(2),
+                HorizontalPager(
+                    state = pagerState,
                     contentPadding = it
-                ) {
+                ) {pageIndex ->
+                    val photo = catState.photos[pageIndex]
 
-                    itemsIndexed(items = catState.photos,
-                        key = { index: Int, item: String ->
-                            item
-                        }){index: Int, item: String ->
-                        SubcomposeAsyncImage(
-                            modifier =  Modifier.fillMaxWidth().aspectRatio(1f).clickable {
-                                onPhotoClicked(catState.catId,index)
-                            },
-                            model = item,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
+                    SubcomposeAsyncImage(
+                        modifier =  Modifier.fillMaxSize(),
+                        model = photo,
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                    )
                 }
             }
         }

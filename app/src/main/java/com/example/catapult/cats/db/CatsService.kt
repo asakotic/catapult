@@ -27,5 +27,6 @@ class CatsService @Inject constructor(
     }
 
     fun getAllCatImagesFlow(id: String): Flow<List<String>> = catGalleryDao.getAllImagesForId(id)
+    fun getCatImageByUrlFlow(url: String): Flow<String> = catGalleryDao.getImageByUrl(url)
 
 }
