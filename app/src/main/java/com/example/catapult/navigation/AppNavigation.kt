@@ -10,6 +10,7 @@ import com.example.catapult.cats.details.catDetailsScreen
 import com.example.catapult.cats.gallery.catGalleryScreen
 import com.example.catapult.cats.gallery.photo.catPhotoScreen
 import com.example.catapult.cats.list.catsListScreen
+import com.example.catapult.cats.quiz.chooseQuizScreen
 import java.net.URLEncoder
 
 @Composable
@@ -23,7 +24,10 @@ fun AppNavigation() {
 
         catsListScreen(
             route = "cats",
-            navController = navController
+            navController = navController,
+            goToQuiz = {
+                navController.navigate("quiz")
+            }
         )
 
         catDetailsScreen(
@@ -52,6 +56,10 @@ fun AppNavigation() {
             }, navArgument("photoIndex") {
                 type = NavType.IntType
             }),
+        )
+        chooseQuizScreen(
+            route = "quiz",
+            navController = navController
         )
     }
 

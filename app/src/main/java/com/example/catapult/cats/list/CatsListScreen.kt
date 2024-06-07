@@ -50,7 +50,8 @@ import com.example.catapult.core.SimpleInfo
 
 fun NavGraphBuilder.catsListScreen(
     route : String,
-    navController: NavController
+    navController: NavController,
+    goToQuiz: () -> Unit,
 ) = composable(route = route) {
     val catsViewModel:CatsViewModel = hiltViewModel()
     val catsState by catsViewModel.catsState.collectAsState()
@@ -61,10 +62,11 @@ fun NavGraphBuilder.catsListScreen(
         Scaffold (
             floatingActionButton = {
                 LargeFloatingActionButton(
-                    onClick = {  },
+                    onClick = {
+                          goToQuiz()
+                    },
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     contentColor = MaterialTheme.colorScheme.tertiary,
-
                     ) {
                     Icon(painterResource(id = R.drawable.quiz_outline_foreground), "Floating action button.")
                 }
