@@ -36,6 +36,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.cats.gallery.ICatGalleryContract.CatGalleryState
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.catGalleryScreen (
     route: String,
     navController: NavController,
@@ -51,11 +52,20 @@ fun NavGraphBuilder.catGalleryScreen (
         tonalElevation = 1.dp
     ) {
         Scaffold (
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Photo gallery", fontWeight = FontWeight.Bold)
+                    },
+                    navigationIcon = {
+                        AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = {navController.navigateUp()})
+                    }
+                )
+            },
             content = { paddingValues ->
                 CatGalleryScreen(
                     catState = catState,
                     paddingValues = paddingValues,
-                    onClose = {navController.navigateUp()},
                     onPhotoClicked = onPhotoClicked
                 )
             }
@@ -67,72 +77,57 @@ fun NavGraphBuilder.catGalleryScreen (
 fun CatGalleryScreen(
     catState: CatGalleryState,
     paddingValues: PaddingValues,
-    onClose: () -> Unit,
     onPhotoClicked: (catId: String,photoNumber: Int) -> Unit
 ){
-    Scaffold (
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Photo gallery", fontWeight = FontWeight.Bold)
-                },
-                navigationIcon = {
-                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = onClose)
-                }
+    if (catState.isLoading) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-        },
-        content = {
-            if (catState.isLoading) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            } else if (catState.error != null) {
-                Box(
-                    modifier = Modifier
-                        .padding(it)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val errorMessage = when (catState.error) {
-                        is CatGalleryState.DetailsError.DataUpdateFailed ->
-                            "Failed to load. Error message: ${catState.error.cause?.message}."
-                    }
+        }
+    } else if (catState.error != null) {
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            val errorMessage = when (catState.error) {
+                is CatGalleryState.DetailsError.DataUpdateFailed ->
+                    "Failed to load. Error message: ${catState.error.cause?.message}."
+            }
 
-                    Text(text = errorMessage, fontSize = 20.sp)
-                }
-            } else if (catState.photos.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "There is no data for that cat",
-                        fontSize = 20.sp
-                    )
-                }
-            } else {
-                LazyVerticalGrid(
-                    modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Fixed(2),
-                    contentPadding = it
-                ) {
+            Text(text = errorMessage, fontSize = 20.sp)
+        }
+    } else if (catState.photos.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = "There is no data for that cat",
+                fontSize = 20.sp
+            )
+        }
+    } else {
+        LazyVerticalGrid(
+            modifier = Modifier.fillMaxSize(),
+            columns = GridCells.Fixed(2),
+            contentPadding = paddingValues
+        ) {
 
-                    itemsIndexed(items = catState.photos,
-                        key = { index: Int, item: String ->
-                            item
-                        }){index: Int, item: String ->
-                        SubcomposeAsyncImage(
-                            modifier =  Modifier.fillMaxWidth().aspectRatio(1f).clickable {
-                                onPhotoClicked(catState.catId,index)
-                            },
-                            model = item,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
-                }
+            itemsIndexed(items = catState.photos,
+                key = { index: Int, item: String ->
+                    item
+                }){index: Int, item: String ->
+                SubcomposeAsyncImage(
+                    modifier =  Modifier.fillMaxWidth().aspectRatio(1f).clickable {
+                        onPhotoClicked(catState.catId,index)
+                    },
+                    model = item,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
             }
         }
-    )
+    }
 }
