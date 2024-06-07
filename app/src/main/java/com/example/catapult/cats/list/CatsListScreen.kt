@@ -68,7 +68,7 @@ fun NavGraphBuilder.catsListScreen(
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     contentColor = MaterialTheme.colorScheme.tertiary,
                     ) {
-                    Icon(painterResource(id = R.drawable.quiz_outline_foreground), "Floating action button.")
+                    Icon(painterResource(id = R.drawable.quiz_icon), "Floating action button.")
                 }
             },
             content = {

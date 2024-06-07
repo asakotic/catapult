@@ -39,9 +39,13 @@ fun NavGraphBuilder.chooseQuizScreen(
     navController: NavController
 ) = composable(route = route) {
 
-    ChooseQuizScreen(
-        onClose = { navController.navigateUp() }
-    )
+    Surface(
+        tonalElevation = 1.dp
+    ) {
+        ChooseQuizScreen(
+            onClose = { navController.navigateUp() }
+        )
+    }
 
 }
 
