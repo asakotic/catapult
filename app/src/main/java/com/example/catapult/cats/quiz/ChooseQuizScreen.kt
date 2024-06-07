@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -13,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -33,12 +35,12 @@ import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.theme.CatapultTheme
 
 fun NavGraphBuilder.chooseQuizScreen(
-    route : String,
+    route: String,
     navController: NavController
 ) = composable(route = route) {
 
     ChooseQuizScreen(
-        onClose = {navController.navigateUp()}
+        onClose = { navController.navigateUp() }
     )
 
 }
@@ -47,8 +49,8 @@ fun NavGraphBuilder.chooseQuizScreen(
 @Composable
 fun ChooseQuizScreen(
     onClose: () -> Unit
-){
-    Scaffold (
+) {
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
@@ -69,36 +71,38 @@ fun ChooseQuizScreen(
                     modifier = Modifier
                         .verticalScroll(scrollState)
                         .align(Alignment.Center),
-                    verticalArrangement = Arrangement.spacedBy(35.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.quiz_pick),
                         contentDescription = "quiz picker photo",
-                        modifier = Modifier.padding(vertical = 20.dp).padding(bottom = 40.dp)
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
+                            .padding(bottom = 40.dp)
                     )
 
-                    Button(onClick = {
-
-                    },
-                        modifier = Modifier.size(250.dp, 50.dp)) {
-                        Text(text = "Guess the Cat Quiz")
-                    }
-                    Button(
-                        onClick = {
-
-                    },
-                        modifier = Modifier.size(250.dp, 50.dp)
+                    Column(
+                        modifier = Modifier.padding(40.dp),
+                        verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
-                        Text(text = "Guess the Fact Quiz")
-                    }
-                    Button(
-                        onClick = {
-
-                    },
-                        modifier = Modifier.size(250.dp, 50.dp)
-                    ) {
-                        Text(text = "Left or Right Cat Quiz")
+                        Button(
+                            onClick = { },
+                            modifier =  Modifier.fillMaxWidth()
+                            ) {
+                            Text(text = "Guess the Cat Quiz")
+                        }
+                        Button(
+                            onClick = { },
+                            modifier =  Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Guess the Fact Quiz")
+                        }
+                        Button(
+                            onClick = { },
+                            modifier =  Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Left or Right Cat Quiz")
+                        }
                     }
 
                 }
