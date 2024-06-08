@@ -43,7 +43,8 @@ fun NavGraphBuilder.chooseQuizScreen(
         tonalElevation = 1.dp
     ) {
         ChooseQuizScreen(
-            onClose = { navController.navigateUp() }
+            onClose = { navController.navigateUp() },
+            factsQuiz = {navController.navigate("quiz/guessFact")}
         )
     }
 
@@ -52,7 +53,8 @@ fun NavGraphBuilder.chooseQuizScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseQuizScreen(
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    factsQuiz: () ->Unit
 ) {
     Scaffold(
         topBar = {
@@ -96,7 +98,9 @@ fun ChooseQuizScreen(
                             Text(text = "Guess the Cat Quiz")
                         }
                         Button(
-                            onClick = { },
+                            onClick = {
+                                      factsQuiz()
+                            },
                             modifier =  Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Guess the Fact Quiz")
@@ -114,7 +118,7 @@ fun ChooseQuizScreen(
         }
     )
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -124,3 +128,5 @@ fun GreetingPreview() {
         }
     }
 }
+
+ */
