@@ -72,7 +72,7 @@ fun NavGraphBuilder.catDetailsScreen (
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Catapult", fontWeight = FontWeight.Bold)
+                        Text(text = "Catapult", style = MaterialTheme.typography.labelLarge)
                     },
                     navigationIcon = {
                         AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = {navController.navigateUp()})

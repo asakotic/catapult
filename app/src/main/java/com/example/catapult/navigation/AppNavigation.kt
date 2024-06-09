@@ -13,6 +13,7 @@ import com.example.catapult.cats.list.catsListScreen
 import com.example.catapult.cats.quiz.chooseQuizScreen
 import com.example.catapult.cats.quiz.guess_cat.guessCatScreen
 import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
+import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import java.net.URLEncoder
 
 @Composable
@@ -65,6 +66,10 @@ fun AppNavigation() {
         )
         guessFactScreen(
             route = "quiz/guessFact",
+        )
+        quizLeftRightCat(
+            route = "quiz/left-right-cat",
+            navController = navController
         )
     }
 

@@ -44,7 +44,8 @@ fun NavGraphBuilder.chooseQuizScreen(
     ) {
         ChooseQuizScreen(
             onClose = { navController.navigateUp() },
-            factsQuiz = {navController.navigate("quiz/guessFact")}
+            factsQuiz = {navController.navigate("quiz/guessFact")},
+            leftRightCatQuiz = {navController.navigate("quiz/left-right-cat")}
         )
     }
 
@@ -54,7 +55,8 @@ fun NavGraphBuilder.chooseQuizScreen(
 @Composable
 fun ChooseQuizScreen(
     onClose: () -> Unit,
-    factsQuiz: () ->Unit
+    factsQuiz: () ->Unit,
+    leftRightCatQuiz: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -106,7 +108,7 @@ fun ChooseQuizScreen(
                             Text(text = "Guess the Fact Quiz")
                         }
                         Button(
-                            onClick = { },
+                            onClick = { leftRightCatQuiz() },
                             modifier =  Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Left or Right Cat Quiz")
