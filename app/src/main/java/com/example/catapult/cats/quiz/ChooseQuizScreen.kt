@@ -44,7 +44,7 @@ fun NavGraphBuilder.chooseQuizScreen(
     ) {
         ChooseQuizScreen(
             onClose = { navController.navigateUp() },
-            factsQuiz = {navController.navigate("quiz/guessFact")},
+            factsQuiz = {navController.navigate("quiz/guess-fact")},
             leftRightCatQuiz = {navController.navigate("quiz/left-right-cat")}
         )
     }

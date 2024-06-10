@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.room.util.appendPlaceholders
@@ -41,6 +42,7 @@ import com.example.catapult.core.theme.onPrimaryContainerLight
 
 fun NavGraphBuilder.guessFactScreen(
     route: String,
+    navController: NavController
 ) = composable(route = route) {
     val guessFactViewModel: GuessFactViewModel = hiltViewModel()
     val state by guessFactViewModel.guessFactState.collectAsState()
@@ -48,6 +50,7 @@ fun NavGraphBuilder.guessFactScreen(
     GuessFactScreen(
         state = state,
         eventPublisher = { uiEvent -> guessFactViewModel.setEvent(uiEvent) },
+        navController = navController
     )
 }
 
@@ -57,6 +60,7 @@ fun NavGraphBuilder.guessFactScreen(
 fun GuessFactScreen(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
+    navController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -65,7 +69,7 @@ fun GuessFactScreen(
                     Text(text = "Quiz", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = { })
+                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = { navController.navigateUp()})
                 }
             )
         },
