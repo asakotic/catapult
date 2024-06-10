@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
+import com.example.catapult.cats.quiz.Timer
 import com.example.catapult.core.AppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +115,7 @@ fun UpDownScreen(
                     .padding(10.dp),
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
-                Text(text = "4:21", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "${quizState.timer/60}:${quizState.timer%60}", style = MaterialTheme.typography.bodyLarge)
                 Text(text = "${quizState.questionIndex + 1}/20", style = MaterialTheme.typography.bodyLarge)
             }
         }

@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatState
 import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatQuestion
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -28,7 +30,9 @@ class LeftRightCatViewModel @Inject constructor(
 
     private val _questionEvent = MutableSharedFlow<IUpDownCatContract.UpDownCatUIEvent>()
 
-    private fun setUpDownCatState(update: UpDownCatState.() -> UpDownCatState) =
+    private var timerJob: Job? = null
+
+    private fun setQuestionState(update: UpDownCatState.() -> UpDownCatState) =
         _questionState.getAndUpdate(update)
 
     fun setQuestionEvent(even: IUpDownCatContract.UpDownCatUIEvent) = viewModelScope.launch { _questionEvent.emit(even) }
@@ -36,15 +40,31 @@ class LeftRightCatViewModel @Inject constructor(
     init {
         getAllCats()
         observeUpDownCatEvent()
+        startTimer()
+    }
+
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob =  viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                setQuestionState { copy(timer = timer + -1) }
+            }
+
+        }
+    }
+
+    fun pauseTimer() {
+        timerJob?.cancel()
     }
 
     private fun getAllCats() {
         viewModelScope.launch {
-            setUpDownCatState { copy(isLoading = true) }
+            setQuestionState { copy(isLoading = true) }
             val cats = catsService.getAllCatsFlow().first().shuffled()
-            setUpDownCatState { copy(cats = cats) }
+            setQuestionState { copy(cats = cats) }
             createQuestions()
-            setUpDownCatState { copy(isLoading = false) }
+            setQuestionState { copy(isLoading = false) }
         }
     }
 
@@ -68,7 +88,10 @@ class LeftRightCatViewModel @Inject constructor(
 
         if (questionIndex < 19)
             questionIndex++
-        setUpDownCatState {
+        else { //End Screen
+            pauseTimer()
+        }
+        setQuestionState {
             copy(
                 questionIndex = questionIndex,
                 points = points,
@@ -110,7 +133,7 @@ class LeftRightCatViewModel @Inject constructor(
                 )
             )
         }
-        setUpDownCatState { copy(questions = questions.shuffled())}
+        setQuestionState { copy(questions = questions.shuffled())}
     }
 
     private fun giveQuestion(num: Int): String {

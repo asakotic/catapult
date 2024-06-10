@@ -1,6 +1,7 @@
 package com.example.catapult.cats.quiz.left_right_cat
 
 import com.example.catapult.cats.db.Cat
+import com.example.catapult.cats.quiz.Timer
 
 interface IUpDownCatContract {
 
@@ -9,7 +10,8 @@ interface IUpDownCatContract {
         val cats: List<Cat> = emptyList(),
         val questions: List<UpDownCatQuestion> = emptyList(),
         val points: Float = 0f,
-        val questionIndex: Int = 0
+        val questionIndex: Int = 0,
+        val timer: Int = 60*Timer.MINUTES //5min
     ) {
         sealed class DetailsError {
             data class DataUpdateFailed(val cause: Throwable? = null): DetailsError()
