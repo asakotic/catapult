@@ -115,7 +115,7 @@ fun UpDownScreen(
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
                 Text(text = "4:21", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "2/20", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "${quizState.questionIndex + 1}/20", style = MaterialTheme.typography.bodyLarge)
             }
         }
 
@@ -129,7 +129,7 @@ fun UpDownScreen(
                     .clickable {
                         onClickImage(
                             IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered(
-                                answer = 0
+                                catAnswer = question.cat1
                             )
                         )
                     },
@@ -151,7 +151,7 @@ fun UpDownScreen(
                     .clickable {
                         onClickImage(
                             IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered(
-                                answer = 0
+                                catAnswer = question.cat2
                             )
                         )
                     },

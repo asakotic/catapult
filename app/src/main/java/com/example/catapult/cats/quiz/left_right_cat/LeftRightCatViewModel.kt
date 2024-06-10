@@ -10,13 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatState
 import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatQuestion
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 @HiltViewModel
@@ -54,20 +52,21 @@ class LeftRightCatViewModel @Inject constructor(
         viewModelScope.launch {
             _questionEvent.collect {
                 when (it) {
-                    is IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered -> checkAnswer(it.answer)
+                    is IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered -> checkAnswer(it.catAnswer)
                 }
             }
         }
     }
 
-    private fun checkAnswer(answer: Int) {
+    private fun checkAnswer(catAnswer: Cat) {
         var questionIndex= questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
         var points = questionState.value.points
+        val answer = getTraitOfNum(question.randNumForQuestion, catAnswer)
         if (answer == question.correctAnswer)
             points++
 
-        if (questionIndex < 20)
+        if (questionIndex < 19)
             questionIndex++
         setUpDownCatState {
             copy(
@@ -77,29 +76,41 @@ class LeftRightCatViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Creates 20 random questions and saves them in a list
+     */
     private fun createQuestions() {
         //todo random images of cat
-        setUpDownCatState { copy(isLoading = true) }
         val cats = questionState.value.cats
         val questions: MutableList<UpDownCatQuestion> = ArrayList()
-        for (i in 0..<7) {
+        val len = cats.size
+        var skip = 0
+        var i = -1
+
+        while (++i < 20 + skip) {
             val cat1 = cats[i]
+            val cat2 = cats[len - i - 1]
+
+            //If cat doesn't have images, it shouldn't be in the game
+            if (cat1.image == null || cat2.image == null) {
+                skip++
+                continue
+            }
+
             val randomQuestion = Random.nextInt(1, 5)
             val photos: List<String>
-            for (j in i + 1..i + 3) {
-                val cat2 = cats[j]
-                questions.add(
-                    UpDownCatQuestion(
-                        cat1 = cat1,
+            questions.add(
+                UpDownCatQuestion(
+                    cat1 = cat1,
 //                            cat1Image = photos[j - i - 1],
-                        cat2 = cat2,
-                        questionText = giveQuestion(randomQuestion),
-                        correctAnswer = giveAnswer(randomQuestion, cat1, cat2)
-                    )
+                    cat2 = cat2,
+                    questionText = giveQuestion(randomQuestion),
+                    correctAnswer = giveAnswer(randomQuestion, cat1, cat2),
+                    randNumForQuestion = randomQuestion
                 )
-            }
+            )
         }
-        setUpDownCatState { copy(questions = questions.shuffled(), isLoading = false) }
+        setUpDownCatState { copy(questions = questions.shuffled())}
     }
 
     private fun giveQuestion(num: Int): String {
@@ -117,6 +128,11 @@ class LeftRightCatViewModel @Inject constructor(
             1 -> cat1
             else -> cat2
         }
+
+        return getTraitOfNum(num, cat)
+    }
+
+    private fun getTraitOfNum(num:Int, cat:Cat) : Int {
         return when (num) {
             1 -> cat.energyLevel
             2 -> cat.healthIssues

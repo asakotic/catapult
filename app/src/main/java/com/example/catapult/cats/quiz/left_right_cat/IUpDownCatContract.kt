@@ -21,10 +21,11 @@ interface IUpDownCatContract {
         val cat1Image: String? = null,
         val cat2: Cat,
         val questionText: String,
-        val correctAnswer: Int
+        val correctAnswer: Int,
+        val randNumForQuestion: Int
     )
 
     sealed class UpDownCatUIEvent {
-        data class QuestionAnswered(val answer: Int) : UpDownCatUIEvent()
+        data class QuestionAnswered(val catAnswer: Cat) : UpDownCatUIEvent()
     }
 }
