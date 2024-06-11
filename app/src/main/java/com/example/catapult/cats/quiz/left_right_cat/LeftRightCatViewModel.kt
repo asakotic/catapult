@@ -105,7 +105,7 @@ class LeftRightCatViewModel @Inject constructor(
      * Creates 20 random questions and saves them in a list
      */
     private fun createQuestions() {
-        //todo random images of cat
+        //todo random images of cat and if both are correct get new cats
         val cats = questionState.value.cats
         val questions: MutableList<UpDownCatQuestion> = ArrayList()
         val len = cats.size
@@ -130,8 +130,7 @@ class LeftRightCatViewModel @Inject constructor(
 //                            cat1Image = photos[j - i - 1],
                     cat2 = cat2,
                     questionText = giveQuestion(randomQuestion),
-                    correctAnswer = giveAnswer(randomQuestion, cat1, cat2),
-                    randNumForQuestion = randomQuestion
+                    correctAnswer = giveAnswer(randomQuestion, cat1, cat2)
                 )
             )
         }

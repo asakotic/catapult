@@ -60,6 +60,10 @@ data class Cat (
         val lines = lifeSpan.replace(" ", "").split("-")
         return lines[0].toDouble() / lines[1].toDouble()
     }
+
+    fun getListOfTemperaments(): List<String> {
+        return temperament.replace(" ", "").split(",")
+    }
 }
 
 @Serializable

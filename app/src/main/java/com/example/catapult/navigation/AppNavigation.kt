@@ -69,6 +69,10 @@ fun AppNavigation() {
             route = "quiz/guess-fact",
             navController = navController
         )
+        guessCatScreen(
+            route = "quiz/guess-cat",
+            navController = navController
+        )
         quizLeftRightCat(
             route = "quiz/left-right-cat",
             navController = navController

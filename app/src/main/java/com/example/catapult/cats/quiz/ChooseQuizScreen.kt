@@ -45,6 +45,7 @@ fun NavGraphBuilder.chooseQuizScreen(
         ChooseQuizScreen(
             onClose = { navController.navigateUp() },
             factsQuiz = {navController.navigate("quiz/guess-fact")},
+            guessCatQuiz = {navController.navigate("quiz/guess-cat")},
             leftRightCatQuiz = {navController.navigate("quiz/left-right-cat")}
         )
     }
@@ -55,6 +56,7 @@ fun NavGraphBuilder.chooseQuizScreen(
 @Composable
 fun ChooseQuizScreen(
     onClose: () -> Unit,
+    guessCatQuiz: () -> Unit,
     factsQuiz: () ->Unit,
     leftRightCatQuiz: () -> Unit
 ) {
@@ -94,7 +96,7 @@ fun ChooseQuizScreen(
                         verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
                         Button(
-                            onClick = { },
+                            onClick = { guessCatQuiz() },
                             modifier =  Modifier.fillMaxWidth()
                             ) {
                             Text(text = "Guess the Cat Quiz")
