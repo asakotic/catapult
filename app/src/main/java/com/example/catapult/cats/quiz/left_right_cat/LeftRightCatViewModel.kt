@@ -48,13 +48,16 @@ class LeftRightCatViewModel @Inject constructor(
         timerJob =  viewModelScope.launch {
             while (true) {
                 delay(1000)
-                setQuestionState { copy(timer = timer + -1) }
+                setQuestionState { copy(timer = timer - 1) }
+
+                if (questionState.value.timer <= 0)
+                    pauseTimer()
             }
 
         }
     }
 
-    fun pauseTimer() {
+    private fun pauseTimer() {
         timerJob?.cancel()
     }
 
