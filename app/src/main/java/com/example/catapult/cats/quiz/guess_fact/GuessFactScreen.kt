@@ -50,7 +50,13 @@ fun NavGraphBuilder.guessFactScreen(
     GuessFactScreen(
         state = state,
         eventPublisher = { uiEvent -> guessFactViewModel.setEvent(uiEvent) },
-        navController = navController
+        navController = navController,
+        seeResults = {time, points ->
+            //UBP = BTO * 2.5 * (1 + (PVT + 120) / MVT)
+            val ubp: Float = points * 2.5F * (1 + (time + 120F) / 300)
+            Log.d("poeni", ubp.toString())
+            navController.navigate("quiz/result/1/randomNick/${ubp}")
+        }
     )
 }
 
@@ -60,7 +66,8 @@ fun NavGraphBuilder.guessFactScreen(
 fun GuessFactScreen(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
-    navController: NavController
+    navController: NavController,
+    seeResults: (Int, Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -112,6 +119,7 @@ fun GuessFactScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(it)
                 ){
+                    Text(text = "Time left: " + state.timer)
                     MakeQuestion(
                         state.answers,
                         state.image,
@@ -121,12 +129,15 @@ fun GuessFactScreen(
                     )
                     Button(
                         onClick = {
+                            Log.d("kviz", state.answerUser+ " "+ state.rightAnswer)
                             eventPublisher(
                                 IGuessFactContract.GuessFactUIEvent.CalculatePoints(
                                     state.answerUser,
                                     state.rightAnswer
                                 )
                             )
+                            if(state.timer <= 0  || state.questionIndex > 19)
+                                seeResults(state.timer, state.points)
                         },
                         modifier = Modifier
                             .align(Alignment.End)

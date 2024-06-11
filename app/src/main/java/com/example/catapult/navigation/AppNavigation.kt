@@ -14,6 +14,7 @@ import com.example.catapult.cats.quiz.chooseQuizScreen
 import com.example.catapult.cats.quiz.guess_cat.guessCatScreen
 import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
+import com.example.catapult.cats.quiz.result.resultScreen
 import java.net.URLEncoder
 
 @Composable
@@ -72,6 +73,18 @@ fun AppNavigation() {
             route = "quiz/left-right-cat",
             navController = navController
         )
+        resultScreen(
+            route = "quiz/result/{category}/{nickname}/{result}",
+            navController = navController,
+            arguments = listOf(
+                navArgument("category") {
+                type = NavType.IntType
+            }, navArgument("nickname") {
+                type = NavType.StringType
+            }, navArgument("result") {
+            type = NavType.FloatType
+            }  )
+        )
     }
 
 }
@@ -81,4 +94,10 @@ inline val SavedStateHandle.catId: String
 
 inline val SavedStateHandle.photoIndex: Int
     get() = checkNotNull(get("photoIndex")) {"photoIndex is mandatory"}
+inline val SavedStateHandle.category: Int
+    get() = checkNotNull(get("category")) {"category is mandatory"}
+inline val SavedStateHandle.nickname: String
+    get() = checkNotNull(get("nickname")) {"nickname is mandatory"}
+inline val SavedStateHandle.result: Float
+    get() = checkNotNull(get("result")) {"result is mandatory"}
 

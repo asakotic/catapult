@@ -8,6 +8,8 @@ import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract.GuessFactState
 import com.example.catapult.di.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,9 +36,12 @@ class GuessFactViewModel @Inject constructor(
     private fun setGuessFactState (update: GuessFactState.() -> GuessFactState) =
         _guessFactState.getAndUpdate(update)
 
+    private var timerJob: Job? = null
+
     init {
         observeGuessFact()
         observeEvents()
+        startTimer()
     }
 
     private fun observeGuessFact() {
@@ -57,6 +62,23 @@ class GuessFactViewModel @Inject constructor(
             }
         }
     }
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob =  viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                setGuessFactState { copy(timer = timer - 1) }
+                if(guessFactState.value.timer <= 0){
+                    pauseTimer()
+                }
+            }
+
+        }
+    }
+
+    private fun pauseTimer() {
+        timerJob?.cancel()
+    }
 
     private fun setAnswer(answer: String) {
         viewModelScope.launch {
@@ -70,7 +92,10 @@ class GuessFactViewModel @Inject constructor(
         if (rightAnswer == answerUser) {
             setGuessFactState { copy(points = points + 1) }
         }
-        createQuestion()
+        if(guessFactState.value.questionIndex<20 && guessFactState.value.timer > 0)
+            createQuestion()
+        else
+            pauseTimer()
     }
     private fun createQuestion(){
         viewModelScope.launch {
@@ -88,9 +113,13 @@ class GuessFactViewModel @Inject constructor(
             val image = newPhotos.shuffled()[0]
 
             val randomQuestion = Random.nextInt(1,4)
-            val temperaments = list[0].temperament.replace(" ","").split(",").shuffled()
+            val temperaments = list[0].temperament.replace(" ","").lowercase().split(",").shuffled()
+            if(temperaments.size < 3){
+                createQuestion()
+                return@launch
+            }
             val others = list
-                .flatMap { it.temperament.replace(" ","").split(",")}
+                .flatMap { it.temperament.replace(" ","").lowercase().split(",")}
                 .distinct()
                 .filter { !temperaments.contains(it) }
                 .shuffled()
