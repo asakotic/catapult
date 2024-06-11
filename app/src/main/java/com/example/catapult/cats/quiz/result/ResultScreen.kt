@@ -1,5 +1,6 @@
 package com.example.catapult.cats.quiz.result
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.example.catapult.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.resultScreen (
@@ -76,6 +79,13 @@ fun ResultScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.result_cat),
+            contentDescription = "result cat photo",
+            modifier = Modifier
+                .padding(vertical = 20.dp)
+                .padding(bottom = 40.dp)
+        )
         Text(text = "${state.username}, your result is ${state.points}!\n" +
                 "Do you want to share it with other players?")
         Row(
