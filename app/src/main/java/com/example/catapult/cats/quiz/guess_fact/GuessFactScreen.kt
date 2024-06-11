@@ -119,7 +119,8 @@ fun GuessFactScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(it)
                 ){
-                    Text(text = "Time left: " + state.timer)
+                    val sec = state.timer%60
+                    Text(text = "Time left: " + state.timer/60 + ":" + if(sec == 0)"00" else sec)
                     MakeQuestion(
                         state.answers,
                         state.image,

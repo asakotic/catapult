@@ -101,10 +101,13 @@ class GuessFactViewModel @Inject constructor(
         viewModelScope.launch {
             setGuessFactState { copy(isLoading = true) }
             val list = guessFactState.value.cats.shuffled()
-            withContext(dispatcherProvider.io()) {
-                catsService.getAllCatsPhotosApi(id = list[0].id)
+            var newPhotos = catsService.getAllCatImagesFlow(id = list[0].id).first()
+            if(newPhotos.isEmpty()) {
+                withContext(dispatcherProvider.io()) {
+                    catsService.getAllCatsPhotosApi(id = list[0].id)
+                }
+                newPhotos = catsService.getAllCatImagesFlow(id = list[0].id).first()
             }
-            val newPhotos =  catsService.getAllCatImagesFlow(id = list[0].id).first()
 
             if(newPhotos.isEmpty()){
                 createQuestion()
@@ -140,7 +143,8 @@ class GuessFactViewModel @Inject constructor(
                     answers = tmp,
                     isLoading = false,
                     image = image,
-                    question = randomQuestion
+                    question = randomQuestion,
+                    answerUser = ""
                 )
             }
         }
