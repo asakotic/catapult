@@ -16,6 +16,12 @@ interface IUpDownCatContract {
         sealed class DetailsError {
             data class DataUpdateFailed(val cause: Throwable? = null): DetailsError()
         }
+
+        fun getTimeAsFormat(): String {
+            val min = timer/60
+            val sec = if (timer%60 < 10) "0${timer%60}" else timer%60
+            return "${min}:${sec}"
+        }
     }
 
     data class UpDownCatQuestion(
