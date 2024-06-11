@@ -50,6 +50,16 @@ data class Cat (
     fun doesMatchSearchQuery(query: String): Boolean {
         return name.contains(query, true)
     }
+
+    fun averageWeight():Double {
+        val lines = weight.metric.replace(" ", "").split("-")
+        return lines[0].toDouble() / lines[1].toDouble()
+    }
+
+    fun averageLifeSpan(): Double {
+        val lines = lifeSpan.replace(" ", "").split("-")
+        return lines[0].toDouble() / lines[1].toDouble()
+    }
 }
 
 @Serializable

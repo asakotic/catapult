@@ -23,7 +23,7 @@ interface IUpDownCatContract {
         val cat1Image: String? = null,
         val cat2: Cat,
         val questionText: String,
-        val correctAnswer: Int,
+        val correctAnswer: String,
         val randNumForQuestion: Int
     )
 

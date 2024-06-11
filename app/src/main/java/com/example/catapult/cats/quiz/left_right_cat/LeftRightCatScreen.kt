@@ -116,6 +116,7 @@ fun UpDownScreen(
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
                 Text(text = "${quizState.timer/60}:${quizState.timer%60}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "${quizState.points}", style = MaterialTheme.typography.bodyLarge)
                 Text(text = "${quizState.questionIndex + 1}/20", style = MaterialTheme.typography.bodyLarge)
             }
         }

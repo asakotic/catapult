@@ -82,8 +82,7 @@ class LeftRightCatViewModel @Inject constructor(
         var questionIndex= questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
         var points = questionState.value.points
-        val answer = getTraitOfNum(question.randNumForQuestion, catAnswer)
-        if (answer == question.correctAnswer)
+        if (catAnswer.id == question.correctAnswer)
             points++
 
         if (questionIndex < 19)
@@ -120,7 +119,7 @@ class LeftRightCatViewModel @Inject constructor(
                 continue
             }
 
-            val randomQuestion = Random.nextInt(1, 5)
+            val randomQuestion = Random.nextInt(1, 3)
             val photos: List<String>
             questions.add(
                 UpDownCatQuestion(
@@ -138,29 +137,15 @@ class LeftRightCatViewModel @Inject constructor(
 
     private fun giveQuestion(num: Int): String {
         return when (num) {
-            1 -> "Which cat is more energetic?"
-            2 -> "Which cat has more health issues?"
-            3 -> "Which cat is more dog friendly?"
-            else -> "Which cat is more child friendly?"
+            1 -> "Which cat weights more on average?"
+            else -> "Which cat has longer life span on average?"
         }
     }
 
-    private fun giveAnswer(num: Int, cat1: Cat, cat2: Cat): Int {
-        val randNum = Random.nextInt(1, 3)
-        val cat = when (randNum) {
-            1 -> cat1
-            else -> cat2
-        }
-
-        return getTraitOfNum(num, cat)
-    }
-
-    private fun getTraitOfNum(num:Int, cat:Cat) : Int {
+    private fun giveAnswer(num: Int, cat1: Cat, cat2: Cat): String {
         return when (num) {
-            1 -> cat.energyLevel
-            2 -> cat.healthIssues
-            3 -> cat.dogFriendly
-            else -> cat.childFriendly
+            1 -> if (cat1.averageWeight() > cat2.averageWeight()) cat1.id else cat2.id
+            else -> if (cat1.averageLifeSpan() > cat2.averageLifeSpan()) cat1.id else cat2.id
         }
     }
 }
