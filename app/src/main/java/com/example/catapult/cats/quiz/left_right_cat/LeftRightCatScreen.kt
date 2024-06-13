@@ -34,7 +34,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
-import com.example.catapult.cats.quiz.Timer
 import com.example.catapult.core.AppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +69,7 @@ fun NavGraphBuilder.quizLeftRightCat(
                         )
                     }
                 } else {
-                    UpDownScreen(
+                    LeftRightScreen(
                         paddingValues = it,
                         quizState = quizState,
                         onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) }
@@ -82,10 +81,10 @@ fun NavGraphBuilder.quizLeftRightCat(
 }
 
 @Composable
-fun UpDownScreen(
+fun LeftRightScreen(
     paddingValues: PaddingValues,
-    quizState: IUpDownCatContract.UpDownCatState,
-    onClickImage: (uiEvent: IUpDownCatContract.UpDownCatUIEvent) -> Unit
+    quizState: ILeftRightCatContract.LeftRightCatState,
+    onClickImage: (uiEvent: ILeftRightCatContract.LeftRightCatUIEvent) -> Unit
 ) {
 
     val question = quizState.questions[quizState.questionIndex]
@@ -129,7 +128,7 @@ fun UpDownScreen(
                     .weight(1f)
                     .clickable {
                         onClickImage(
-                            IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered(
+                            ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
                                 catAnswer = question.cat1
                             )
                         )
@@ -151,7 +150,7 @@ fun UpDownScreen(
                     .weight(1f)
                     .clickable {
                         onClickImage(
-                            IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered(
+                            ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
                                 catAnswer = question.cat2
                             )
                         )
@@ -159,6 +158,7 @@ fun UpDownScreen(
                 model = question.cat2.image?.url ?: "",
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+//                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiaryContainer, blendMode = BlendMode.Color),
                 loading = {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator(

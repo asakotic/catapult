@@ -3,12 +3,12 @@ package com.example.catapult.cats.quiz.left_right_cat
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.quiz.Timer
 
-interface IUpDownCatContract {
+interface ILeftRightCatContract {
 
-    data class UpDownCatState(
+    data class LeftRightCatState(
         val isLoading: Boolean = false,
         val cats: List<Cat> = emptyList(),
-        val questions: List<UpDownCatQuestion> = emptyList(),
+        val questions: List<LeftRightCatQuestion> = emptyList(),
         val points: Float = 0f,
         val questionIndex: Int = 0,
         val timer: Int = 60*Timer.MINUTES //5min
@@ -24,7 +24,7 @@ interface IUpDownCatContract {
         }
     }
 
-    data class UpDownCatQuestion(
+    data class LeftRightCatQuestion(
         val cat1: Cat,
         val cat1Image: String? = null,
         val cat2: Cat,
@@ -32,7 +32,7 @@ interface IUpDownCatContract {
         val correctAnswer: String,
     )
 
-    sealed class UpDownCatUIEvent {
-        data class QuestionAnswered(val catAnswer: Cat) : UpDownCatUIEvent()
+    sealed class LeftRightCatUIEvent {
+        data class QuestionAnswered(val catAnswer: Cat) : LeftRightCatUIEvent()
     }
 }

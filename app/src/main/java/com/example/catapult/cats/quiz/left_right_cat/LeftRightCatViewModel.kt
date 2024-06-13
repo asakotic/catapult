@@ -8,8 +8,8 @@ import com.example.catapult.di.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatState
-import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract.UpDownCatQuestion
+import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatState
+import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatQuestion
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,21 +25,21 @@ class LeftRightCatViewModel @Inject constructor(
     private val catsService: CatsService
 ) : ViewModel() {
 
-    private val _questionState = MutableStateFlow(UpDownCatState())
+    private val _questionState = MutableStateFlow(LeftRightCatState())
     val questionState = _questionState.asStateFlow()
 
-    private val _questionEvent = MutableSharedFlow<IUpDownCatContract.UpDownCatUIEvent>()
+    private val _questionEvent = MutableSharedFlow<ILeftRightCatContract.LeftRightCatUIEvent>()
 
     private var timerJob: Job? = null
 
-    private fun setQuestionState(update: UpDownCatState.() -> UpDownCatState) =
+    private fun setQuestionState(update: LeftRightCatState.() -> LeftRightCatState) =
         _questionState.getAndUpdate(update)
 
-    fun setQuestionEvent(even: IUpDownCatContract.UpDownCatUIEvent) = viewModelScope.launch { _questionEvent.emit(even) }
+    fun setQuestionEvent(even: ILeftRightCatContract.LeftRightCatUIEvent) = viewModelScope.launch { _questionEvent.emit(even) }
 
     init {
         getAllCats()
-        observeUpDownCatEvent()
+        observeLeftRightCatEvent()
         startTimer()
     }
 
@@ -71,11 +71,11 @@ class LeftRightCatViewModel @Inject constructor(
         }
     }
 
-    private fun observeUpDownCatEvent() {
+    private fun observeLeftRightCatEvent() {
         viewModelScope.launch {
             _questionEvent.collect {
                 when (it) {
-                    is IUpDownCatContract.UpDownCatUIEvent.QuestionAnswered -> checkAnswer(it.catAnswer)
+                    is ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered -> checkAnswer(it.catAnswer)
                 }
             }
         }
@@ -107,7 +107,7 @@ class LeftRightCatViewModel @Inject constructor(
     private fun createQuestions() {
         //todo random images of cat and if both are correct get new cats
         val cats = questionState.value.cats
-        val questions: MutableList<UpDownCatQuestion> = ArrayList()
+        val questions: MutableList<LeftRightCatQuestion> = ArrayList()
         val len = cats.size
         var skip = 0
         var i = -1
@@ -125,7 +125,7 @@ class LeftRightCatViewModel @Inject constructor(
             val randomQuestion = Random.nextInt(1, 3)
             val photos: List<String>
             questions.add(
-                UpDownCatQuestion(
+                LeftRightCatQuestion(
                     cat1 = cat1,
 //                            cat1Image = photos[j - i - 1],
                     cat2 = cat2,

@@ -35,8 +35,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
-import com.example.catapult.cats.quiz.left_right_cat.IUpDownCatContract
-import com.example.catapult.cats.quiz.left_right_cat.LeftRightCatViewModel
 import com.example.catapult.core.AppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +70,7 @@ fun NavGraphBuilder.guessCatScreen(
                     }
                 }
                 else {
-                    UpDownScreen(
+                    GuessCatScreen(
                         paddingValues = it,
                         quizState = quizState,
                         onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) }
@@ -84,7 +82,7 @@ fun NavGraphBuilder.guessCatScreen(
 }
 
 @Composable
-fun UpDownScreen(
+fun GuessCatScreen(
     paddingValues: PaddingValues,
     quizState: IGuessCatContract.GuessCatState,
     onClickImage: (uiEvent: IGuessCatContract.GuessCatUIEvent) -> Unit

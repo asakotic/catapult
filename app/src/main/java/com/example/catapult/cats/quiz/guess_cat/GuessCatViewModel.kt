@@ -38,7 +38,7 @@ class GuessCatViewModel @Inject constructor(
 
     init {
         getAllCats()
-        observeUpDownCatEvent()
+        observeCatsEvent()
         startTimer()
     }
 
@@ -70,7 +70,7 @@ class GuessCatViewModel @Inject constructor(
         }
     }
 
-    private fun observeUpDownCatEvent() {
+    private fun observeCatsEvent() {
         viewModelScope.launch {
             _questionEvent.collect {
                 when (it) {
