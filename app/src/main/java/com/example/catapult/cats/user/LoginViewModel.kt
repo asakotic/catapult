@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,8 +46,30 @@ class LoginViewModel @Inject constructor(
                     is ILoginContract.LoginUIEvent.EmailInputChanged -> emailChange(it.email)
                     is ILoginContract.LoginUIEvent.NameInputChanged -> nameChange(it.name)
                     is ILoginContract.LoginUIEvent.NicknameInputChanged -> nicknameChange(it.nickname)
+                    is ILoginContract.LoginUIEvent.AddUser -> addUser()
                 }
             }
+        }
+    }
+
+    fun isInfoValid(): Boolean {
+        if (loginState.value.name.isEmpty())
+            return false
+        if (loginState.value.nickname.isEmpty())
+            return false
+        if (loginState.value.email.isEmpty())
+            return false
+        return true
+    }
+
+    private fun addUser() {
+        val user = User(name = loginState.value.name, nickname = loginState.value.nickname, email = loginState.value.email)
+        val users = usersData.data.value.users.toMutableList()
+        users.add(user)
+
+        //Using instead of viewmodel scope because im not sure if viewmodel will be removed before operation is finished
+        CoroutineScope(dispatcherProvider.io()).launch {
+            usersData.updateList(users = users, pick = users.size - 1)
         }
     }
 

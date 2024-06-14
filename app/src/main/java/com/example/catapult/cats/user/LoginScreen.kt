@@ -48,7 +48,12 @@ fun NavGraphBuilder.loginScreen(
     ) {
         LoginScreen(
             loginState = loginState,
-            onClick = { navController.navigate("cats") },
+            onClick = { uiEvent ->
+                if (loginViewModel.isInfoValid()) {
+                    loginViewModel.setLoginEvent(uiEvent)
+                    navController.navigate("cats")
+                }
+            },
             onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }
         )
     }
@@ -60,7 +65,7 @@ fun NavGraphBuilder.loginScreen(
 @Composable
 fun LoginScreen(
     loginState: ILoginContract.LoginState,
-    onClick: () -> Unit,
+    onClick: (uiEvent: ILoginContract.LoginUIEvent) -> Unit,
     onValueChange: (uiEvent: ILoginContract.LoginUIEvent) -> Unit
 ) {
     Scaffold(
@@ -86,6 +91,7 @@ fun LoginScreen(
                         .padding(vertical = 20.dp)
                         .padding(bottom = 40.dp)
                 )
+
                 OutlinedTextField(
                     value = loginState.name,
                     onValueChange = {
@@ -122,7 +128,7 @@ fun LoginScreen(
                     label = { Text("Email address") },
                     singleLine = true
                 )
-                Button(onClick =  onClick, modifier = Modifier.padding(vertical = 20.dp)) {
+                Button(onClick = { onClick(ILoginContract.LoginUIEvent.AddUser)}, modifier = Modifier.padding(vertical = 20.dp)) {
                     Text(text = "Log In")
                 }
             }

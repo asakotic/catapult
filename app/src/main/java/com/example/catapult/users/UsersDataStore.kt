@@ -23,7 +23,7 @@ class UsersDataStore @Inject constructor(
     )
 
 
-    suspend fun updateList(users: List<User>) {
+    suspend fun updateList(users: List<User>, pick: Int) {
         dataStore.updateData {
             it.copy(users = users)
         }

@@ -16,5 +16,6 @@ interface ILoginContract {
         data class NicknameInputChanged(val nickname: String) : LoginUIEvent()
         data class EmailInputChanged(val email: String) : LoginUIEvent()
         data class NameInputChanged(val name: String) : LoginUIEvent()
+        data object AddUser : LoginUIEvent()
     }
 }
