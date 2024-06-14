@@ -6,7 +6,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 class UsersDataStore @Inject constructor(
@@ -33,6 +35,20 @@ class UsersDataStore @Inject constructor(
         dataStore.updateData {
             it.copy(pick = newPick)
         }
+    }
+
+    suspend fun addUser(user: User) {
+        val users = data.value.users.toMutableList()
+        users.add(user)
+
+        updateList(users = users.toImmutableList(), pick = users.size - 1)
+    }
+
+    suspend fun removeUser(user: User) {
+        val users = data.value.users.toMutableList()
+        users.remove(user)
+
+        updateList(users = users.toImmutableList(), pick = users.size - 1)
     }
 
 }

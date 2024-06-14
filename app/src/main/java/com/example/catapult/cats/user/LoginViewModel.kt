@@ -64,12 +64,10 @@ class LoginViewModel @Inject constructor(
 
     private fun addUser() {
         val user = User(name = loginState.value.name, nickname = loginState.value.nickname, email = loginState.value.email)
-        val users = usersData.data.value.users.toMutableList()
-        users.add(user)
 
         //Using instead of viewmodel scope because im not sure if viewmodel will be removed before operation is finished
         CoroutineScope(dispatcherProvider.io()).launch {
-            usersData.updateList(users = users, pick = users.size - 1)
+            usersData.addUser(user)
         }
     }
 
@@ -93,8 +91,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun hasAccount(): Boolean {
-        println(usersData.data.value.users)
-        println(usersData.data.value.pick)
         return usersData.data.value.pick != -1
     }
 }
