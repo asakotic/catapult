@@ -46,16 +46,21 @@ fun NavGraphBuilder.loginScreen(
     Surface(
         tonalElevation = 1.dp
     ) {
-        LoginScreen(
-            loginState = loginState,
-            onClick = { uiEvent ->
-                if (loginViewModel.isInfoValid()) {
-                    loginViewModel.setLoginEvent(uiEvent)
-                    navController.navigate("cats")
-                }
-            },
-            onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }
-        )
+        if (loginViewModel.hasAccount()) {
+            navController.navigate("cats")
+        }
+        else {
+            LoginScreen(
+                loginState = loginState,
+                onClick = { uiEvent ->
+                    if (loginViewModel.isInfoValid()) {
+                        loginViewModel.setLoginEvent(uiEvent)
+                        navController.navigate("cats")
+                    }
+                },
+                onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }
+            )
+        }
     }
 
 }

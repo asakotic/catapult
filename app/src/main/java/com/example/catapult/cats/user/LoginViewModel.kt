@@ -91,4 +91,10 @@ class LoginViewModel @Inject constructor(
             setLoginState { copy(nickname = nickname) }
         }
     }
+
+    fun hasAccount(): Boolean {
+        println(usersData.data.value.users)
+        println(usersData.data.value.pick)
+        return usersData.data.value.pick != -1
+    }
 }
