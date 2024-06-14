@@ -22,7 +22,6 @@ interface IGuessFactContract {
         }
     }
     sealed class GuessFactUIEvent {
-        data class CalculatePoints(val answerUser: String, val rightAnswer: String) : GuessFactUIEvent()
-        data class SetAnswer(val answer: String) : GuessFactUIEvent()
+        data class CalculatePoints(val answerUser: String) : GuessFactUIEvent()
     }
 }

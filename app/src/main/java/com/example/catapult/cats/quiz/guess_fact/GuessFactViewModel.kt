@@ -56,8 +56,7 @@ class GuessFactViewModel @Inject constructor(
         viewModelScope.launch {
             _factsEvents.collect { guessFactUIEvent ->
                 when (guessFactUIEvent) {
-                    is IGuessFactContract.GuessFactUIEvent.CalculatePoints -> calculatePoints(guessFactUIEvent.rightAnswer,guessFactUIEvent.answerUser)
-                    is IGuessFactContract.GuessFactUIEvent.SetAnswer -> setAnswer(guessFactUIEvent.answer)
+                    is IGuessFactContract.GuessFactUIEvent.CalculatePoints -> calculatePoints(guessFactUIEvent.answerUser)
                 }
             }
         }
@@ -80,16 +79,10 @@ class GuessFactViewModel @Inject constructor(
         timerJob?.cancel()
     }
 
-    private fun setAnswer(answer: String) {
-        viewModelScope.launch {
-            setGuessFactState {
-                copy(answerUser = answer)
-            }
-        }
-    }
 
-    private fun calculatePoints(rightAnswer: String, answerUser: String) {
-        if (rightAnswer == answerUser) {
+
+    private fun calculatePoints(answerUser: String) {
+        if (guessFactState.value.rightAnswer == answerUser) {
             setGuessFactState { copy(points = points + 1) }
         }
         if(guessFactState.value.questionIndex<20 && guessFactState.value.timer > 0)

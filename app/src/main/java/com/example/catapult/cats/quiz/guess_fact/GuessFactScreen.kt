@@ -114,38 +114,18 @@ fun GuessFactScreen(
                     )
                 }
             } else {
-
                 Column (
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(it)
                 ){
                     val sec = state.timer%60
                     Text(text = "Time left: " + state.timer/60 + ":" + if(sec < 10) "0${sec}" else sec)
+                    Text(text = "Points: " + state.points + "/20")
                     MakeQuestion(
-                        state.answers,
-                        state.image,
-                        state.question,
+                        state,
                         eventPublisher,
-                        state.questionIndex
+                        seeResults
                     )
-                    Button(
-                        onClick = {
-                            Log.d("kviz", state.answerUser+ " "+ state.rightAnswer)
-                            eventPublisher(
-                                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
-                                    state.answerUser,
-                                    state.rightAnswer
-                                )
-                            )
-                            if(state.timer <= 0  || state.questionIndex > 19)
-                                seeResults(state.timer, state.points)
-                        },
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(horizontal = 20.dp)
-                    ) {
-                        Text(text = "Next")
-                    }
                 }
 
             }
@@ -156,13 +136,11 @@ fun GuessFactScreen(
 
 @Composable
 fun MakeQuestion(
-    answers: List<String>,
-    image: String,
-    question: Int,
+    state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
-    questionNumber: Int
+    seeResults: (Int, Int) -> Unit
 ) {
-    Log.d("print", answers.toString())
+    Log.d("print", state.answers.toString())
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -170,60 +148,86 @@ fun MakeQuestion(
     ) {
         var text = ""
 
-        text = when (question) {
+        text = when (state.question) {
             1 -> "What's the race of this cat on the photo?"
             2 -> "Odd one out!"
             else -> "Throw out one temperament!"
         }
 
-        Text(text = "$questionNumber. $text")
-        if(image.isNotEmpty())
+        Text(text = "${state.questionIndex}. $text")
+        if(state.image.isNotEmpty())
             SubcomposeAsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .padding(vertical = 15.dp, horizontal = 20.dp),
-                model = image,
+                model = state.image,
                 contentDescription = null,
                 contentScale = ContentScale.Inside,
             )
         Button(onClick = {
-            eventPublisher(IGuessFactContract.GuessFactUIEvent.SetAnswer(answer = answers[0]))
+            eventPublisher(
+                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                    state.answers[0]
+                )
+            )
+            if(state.rightAnswer != state.answers[0])
+
+            if(state.timer <= 0  || state.questionIndex > 19)
+                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally),
 
         ) {
-            Text(text = answers[0])
+            Text(text = state.answers[0])
         }
         Button(onClick = {
-            eventPublisher(IGuessFactContract.GuessFactUIEvent.SetAnswer(answer = answers[1]))
+            eventPublisher(
+                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                    state.answers[1]
+                )
+            )
+            if(state.timer <= 0  || state.questionIndex > 19)
+                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            Text(text = answers[1])
+            Text(text = state.answers[1])
         }
 
         Button(onClick = {
-            eventPublisher(IGuessFactContract.GuessFactUIEvent.SetAnswer(answer = answers[2]))
+            eventPublisher(
+                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                    state.answers[2]
+                )
+            )
+            if(state.timer <= 0  || state.questionIndex > 19)
+                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            Text(text = answers[2])
+            Text(text = state.answers[2])
         }
         Button(onClick = {
-            eventPublisher(IGuessFactContract.GuessFactUIEvent.SetAnswer(answer = answers[3]))
+            eventPublisher(
+                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                    state.answers[3]
+                )
+            )
+            if(state.timer <= 0  || state.questionIndex > 19)
+                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            Text(text = answers[3])
+            Text(text = state.answers[3])
         }
     }
 }
