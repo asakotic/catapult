@@ -21,8 +21,14 @@ val client = OkHttpClient.Builder()
     )
     .build()
 
-val retrofit: Retrofit = Retrofit.Builder()
+val catapi: Retrofit = Retrofit.Builder()
     .baseUrl("https://api.thecatapi.com/v1/")
     .client(client)
     .addConverterFactory(JsonAndClass.asConverterFactory("application/json".toMediaType()))
     .build()
+
+val resultsapi: Retrofit = Retrofit.Builder()
+    .baseUrl(" https://rma.finlab.rs/")
+    .addConverterFactory(JsonAndClass.asConverterFactory("application/json".toMediaType()))
+    .build()
+

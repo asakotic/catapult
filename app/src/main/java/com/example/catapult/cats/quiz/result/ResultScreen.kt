@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.catapult.R
+import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.resultScreen (
@@ -57,8 +58,12 @@ fun NavGraphBuilder.resultScreen (
                 ResultScreen(
                     state = state,
                     paddingValues = paddingValues,
-                    leaderboard = {category -> navController.navigate("quiz/leaderboard/${category}")},
-                    home = {navController.navigate("cats")}
+                    leaderboard =
+                    {
+                        category,nick -> navController.navigate("quiz/leaderboard/${category}/${nick}")
+                    },
+                    home = {navController.navigate("cats")},
+                    eventPublisher = { uiEvent -> resultViewModel.setEvent(uiEvent) },
                 )
             }
         )
@@ -69,8 +74,9 @@ fun NavGraphBuilder.resultScreen (
 fun ResultScreen(
     state: IResultContract.ResultState,
     paddingValues: PaddingValues,
-    leaderboard: (Int) -> Unit,
-    home:() -> Unit
+    leaderboard: (Int, String) -> Unit,
+    home:() -> Unit,
+    eventPublisher: (uiEvent: IResultContract.ResultUIEvent) -> Unit,
 ){
     Column(
         modifier = Modifier
@@ -93,8 +99,7 @@ fun ResultScreen(
             modifier = Modifier.padding(20.dp)
         ) {
             Button(onClick = {
-                //TODO: post it
-                //leaderboard(state.category)
+                eventPublisher(IResultContract.ResultUIEvent.PostResult)
             },modifier = Modifier.padding(horizontal = 5.dp)
                 ) {
                 Text(text = "Share it")
@@ -106,7 +111,15 @@ fun ResultScreen(
                 Text(text = "Go back to home screen")
             }
         }
-
+        Button(
+            onClick = {
+            leaderboard(state.category,state.username)
+        },
+            modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).align(Alignment.End),
+            enabled = if(state.isLoading)false else true
+        ) {
+            Text(text = "Go to leaderboard")
+        }
     }
 
 }

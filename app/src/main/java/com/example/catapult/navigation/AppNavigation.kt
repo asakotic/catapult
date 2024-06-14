@@ -13,6 +13,7 @@ import com.example.catapult.cats.list.catsListScreen
 import com.example.catapult.cats.quiz.chooseQuizScreen
 import com.example.catapult.cats.quiz.guess_cat.guessCatScreen
 import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
+import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
 import java.net.URLEncoder
@@ -88,6 +89,17 @@ fun AppNavigation() {
             }, navArgument("result") {
             type = NavType.FloatType
             }  )
+        )
+        leaderboardScreen(
+            route = "quiz/leaderboard/{category}/{nickname}",
+            navController = navController,
+            arguments = listOf(
+                navArgument("category") {
+                    type = NavType.IntType
+                }, navArgument("nickname") {
+                    type = NavType.StringType
+                }
+            )
         )
     }
 

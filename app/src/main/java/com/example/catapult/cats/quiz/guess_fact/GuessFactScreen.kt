@@ -55,7 +55,7 @@ fun NavGraphBuilder.guessFactScreen(
             //UBP = BTO * 2.5 * (1 + (PVT + 120) / MVT)
             val ubp: Float = points * 2.5F * (1 + (time + 120F) / 300)
             Log.d("poeni", ubp.toString())
-            navController.navigate("quiz/result/1/randomNick/${ubp}")
+            navController.navigate("quiz/result/1/anasa/${ubp}")
         }
     )
 }
