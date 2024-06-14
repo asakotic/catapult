@@ -37,19 +37,19 @@ import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.theme.CatapultTheme
 
 fun NavGraphBuilder.loginScreen(
-    route : String,
+    route: String,
     navController: NavController,
-    goToQuiz: () -> Unit,
 ) = composable(route = route) {
-    val catsViewModel: CatsViewModel = hiltViewModel()
-    val catsState by catsViewModel.catsState.collectAsState()
+    val loginViewModel: LoginViewModel = hiltViewModel()
+    val loginState by loginViewModel.loginState.collectAsState()
 
     Surface(
         tonalElevation = 1.dp
     ) {
         LoginScreen(
-            //loginState = loginState,
-            //onClick = {catInfoDetail ->  navController.navigate("cats/${catInfoDetail.id}")}
+            loginState = loginState,
+            onClick = { navController.navigate("cats") },
+            onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }
         )
     }
 
@@ -59,8 +59,10 @@ fun NavGraphBuilder.loginScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-
-){
+    loginState: ILoginContract.LoginState,
+    onClick: () -> Unit,
+    onValueChange: (uiEvent: ILoginContract.LoginUIEvent) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,12 +71,11 @@ fun LoginScreen(
                 },
             )
         },
-        content = {pv ->
-            var name by rememberSaveable { mutableStateOf("") }
-            var nick by rememberSaveable { mutableStateOf("") }
-            var email by rememberSaveable { mutableStateOf("") }
+        content = { pv ->
             Column(
-                modifier = Modifier.padding(pv).fillMaxSize(),
+                modifier = Modifier
+                    .padding(pv)
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -86,24 +87,42 @@ fun LoginScreen(
                         .padding(bottom = 40.dp)
                 )
                 OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
+                    value = loginState.name,
+                    onValueChange = {
+                        onValueChange(
+                            ILoginContract.LoginUIEvent.NameInputChanged(
+                                name = it
+                            )
+                        )
+                    },
                     label = { Text("Name and Surname") },
                     singleLine = true
                 )
                 OutlinedTextField(
-                    value = nick,
-                    onValueChange = { nick = it },
+                    value = loginState.nickname,
+                    onValueChange = {
+                        onValueChange(
+                            ILoginContract.LoginUIEvent.NicknameInputChanged(
+                                nickname = it
+                            )
+                        )
+                    },
                     label = { Text("Nickname") },
                     singleLine = true
                 )
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = loginState.email,
+                    onValueChange = {
+                        onValueChange(
+                            ILoginContract.LoginUIEvent.EmailInputChanged(
+                                email = it
+                            )
+                        )
+                    },
                     label = { Text("Email address") },
                     singleLine = true
                 )
-                Button(onClick = { /*TODO*/ },modifier = Modifier.padding(vertical = 20.dp)) {
+                Button(onClick =  onClick, modifier = Modifier.padding(vertical = 20.dp)) {
                     Text(text = "Log In")
                 }
             }
@@ -116,6 +135,5 @@ fun LoginScreen(
 @Composable
 fun GreetingPreview() {
     CatapultTheme {
-        LoginScreen()
     }
 }

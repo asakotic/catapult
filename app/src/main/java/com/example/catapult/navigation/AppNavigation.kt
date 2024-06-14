@@ -16,6 +16,7 @@ import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
 import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
+import com.example.catapult.cats.user.loginScreen
 import java.net.URLEncoder
 
 @Composable
@@ -24,7 +25,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "cats"
+        startDestination = "login"
     ) {
 
         catsListScreen(
@@ -33,6 +34,11 @@ fun AppNavigation() {
             goToQuiz = {
                 navController.navigate("quiz")
             }
+        )
+
+        loginScreen(
+            route = "login",
+            navController = navController,
         )
 
         catDetailsScreen(
