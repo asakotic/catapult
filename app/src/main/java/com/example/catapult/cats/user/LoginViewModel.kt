@@ -1,9 +1,11 @@
 package com.example.catapult.cats.user
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.util.copy
 import com.example.catapult.di.DispatcherProvider
+import com.example.catapult.navigation.addNewUser
 import com.example.catapult.users.User
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,17 +15,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val dispatcherProvider: DispatcherProvider,
     private val usersData: UsersDataStore
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow(ILoginContract.LoginState())
+    private val addNewUser = savedStateHandle.addNewUser
+    private val _loginState = MutableStateFlow(ILoginContract.LoginState(addNewUser = addNewUser))
     val loginState = _loginState.asStateFlow()
 
     private val _loginEvents = MutableSharedFlow<ILoginContract.LoginUIEvent>()
@@ -65,8 +70,8 @@ class LoginViewModel @Inject constructor(
     private fun addUser() {
         val user = User(name = loginState.value.name, nickname = loginState.value.nickname, email = loginState.value.email)
 
-        //Using instead of viewmodel scope because im not sure if viewmodel will be removed before operation is finished
-        CoroutineScope(dispatcherProvider.io()).launch {
+        //waits for user to be added, then goes to new page
+        runBlocking {
             usersData.addUser(user)
         }
     }
@@ -91,6 +96,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun hasAccount(): Boolean {
-        return usersData.data.value.pick != -1
+        return usersData.data.value.pick != -1 && !loginState.value.addNewUser
     }
 }

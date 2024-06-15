@@ -117,6 +117,9 @@ dependencies {
     //DataStore
     implementation("androidx.datastore:datastore:1.1.1")
 
+    //Extend to see all available icons
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+
 //    //Stolen from professor
 //    /*
 //     * Testing

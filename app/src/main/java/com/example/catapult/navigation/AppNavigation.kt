@@ -25,7 +25,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "login/${false}"
     ) {
 
         catsListScreen(
@@ -36,8 +36,13 @@ fun AppNavigation() {
             }
         )
 
-        loginScreen(
-            route = "login",
+        loginScreen( //add-new-user
+//            route = "login?addNewUser={addNewUser}",
+            route = "login/{addNewUser}",
+            arguments = listOf(navArgument("addNewUser"){
+//               defaultValue = false
+               type = NavType.BoolType
+            }),
             navController = navController,
         )
 
@@ -122,4 +127,7 @@ inline val SavedStateHandle.nickname: String
     get() = checkNotNull(get("nickname")) {"nickname is mandatory"}
 inline val SavedStateHandle.result: Float
     get() = checkNotNull(get("result")) {"result is mandatory"}
+
+inline val SavedStateHandle.addNewUser: Boolean
+    get() = get("addNewUser") ?: false
 

@@ -5,7 +5,8 @@ interface ILoginContract {
     data class LoginState (
         val nickname: String = "",
         val name: String = "",
-        val email: String = ""
+        val email: String = "",
+        val addNewUser: Boolean
     ) {
         sealed class DetailsError {
             data class DataUpdateFailed(val cause: Throwable? = null): DetailsError()

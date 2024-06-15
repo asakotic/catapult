@@ -8,6 +8,7 @@ import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,10 +22,10 @@ import javax.inject.Inject
 class CatsViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val catsService: CatsService,
-    private val usersData: UsersDataStore
+    private val usersDataStore: UsersDataStore
 ) : ViewModel() {
 
-    private val _catsState = MutableStateFlow(CatsListState())
+    private val _catsState = MutableStateFlow(CatsListState(usersData =  usersDataStore.data.value))
     val catsState = _catsState.asStateFlow()
 
     private val _catsEvents = MutableSharedFlow<CatsListUIEvent>()
@@ -38,10 +39,16 @@ class CatsViewModel @Inject constructor(
     //so "event" becomes "it" in "events.collect". CHECK RMA6 PROJECT FOR MORE DETAILS
 
     init {
-        println(usersData.data.value.users)
         observeRepoCats()
         fetchAllCats()
         observeEvents()
+    }
+
+    fun changeMainUser(pick: Int) {
+        CoroutineScope(dispatcherProvider.io()).launch {
+            val usersData = usersDataStore.changeMainUser(newPick = pick)
+            setCatsState { copy(usersData = usersData) }
+        }
     }
 
     private fun observeEvents() {

@@ -18,7 +18,12 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -76,6 +81,12 @@ fun NavGraphBuilder.catDetailsScreen (
                     },
                     navigationIcon = {
                         AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = {navController.navigateUp()})
+                    },
+                    actions = {
+                        //Icons.Outlined.LightMode -- dark mode
+                        //Icons.Filled.LightMode -- light mode
+                        AppIconButton(imageVector = Icons.Filled.LightMode, onClick = { /*TODO*/ })
+                        AppIconButton(imageVector = Icons.Default.Menu, onClick = { /*TODO*/ })
                     }
                 )
             },

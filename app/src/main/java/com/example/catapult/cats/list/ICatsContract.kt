@@ -1,10 +1,13 @@
 package com.example.catapult.cats.list
 
 import com.example.catapult.cats.db.Cat
+import com.example.catapult.users.UsersData
+import com.example.catapult.users.UsersDataStore
 
 interface ICatsContract {
     data class CatsListState(
         val isLoading: Boolean = false,
+        var usersData: UsersData,
         val cats: List<Cat> = emptyList(),
         val catsFiltered: List<Cat> = emptyList(),
         val isSearching: Boolean = false,

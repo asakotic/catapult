@@ -25,30 +25,34 @@ class UsersDataStore @Inject constructor(
     )
 
 
-    suspend fun updateList(users: List<User>, pick: Int) {
-        dataStore.updateData {
+    suspend fun updateList(users: List<User>, pick: Int): UsersData {
+        return dataStore.updateData {
             it.copy(users = users, pick = pick)
         }
     }
 
-    suspend fun changeMainUser(newPick: Int) {
-        dataStore.updateData {
+    suspend fun changeMainUser(newPick: Int) : UsersData {
+        return dataStore.updateData {
             it.copy(pick = newPick)
         }
     }
 
-    suspend fun addUser(user: User) {
+    suspend fun addUser(user: User) : UsersData {
         val users = data.value.users.toMutableList()
         users.add(user)
 
-        updateList(users = users.toImmutableList(), pick = users.size - 1)
+        return updateList(users = users.toImmutableList(), pick = users.size - 1)
     }
 
-    suspend fun removeUser(user: User) {
+    suspend fun removeUser(user: User) : UsersData {
         val users = data.value.users.toMutableList()
         users.remove(user)
 
-        updateList(users = users.toImmutableList(), pick = users.size - 1)
+        return updateList(users = users.toImmutableList(), pick = users.size - 1)
+    }
+
+    suspend fun removeAllUsers(): UsersData {
+        return updateList(users = emptyList(), pick = -1)
     }
 
 }
