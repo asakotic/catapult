@@ -104,7 +104,7 @@ fun NavGraphBuilder.catsListScreen(
                 UsersListDrawer(
                     catsState = catsState,
                     catsViewModel = catsViewModel,
-                    addNewUser = { navController.navigate("login/${true}") }
+                    addNewUser = { navController.navigate("login?add-new-user=${true}") }
                 )
             }
         ) {

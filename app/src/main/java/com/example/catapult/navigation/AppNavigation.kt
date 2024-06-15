@@ -25,7 +25,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login/${false}"
+        startDestination = "login"
     ) {
 
         catsListScreen(
@@ -37,10 +37,10 @@ fun AppNavigation() {
         )
 
         loginScreen( //add-new-user
-//            route = "login?addNewUser={addNewUser}",
-            route = "login/{addNewUser}",
+            route = "login?add-new-user={addNewUser}",
+//            route = "login/{addNewUser}",
             arguments = listOf(navArgument("addNewUser"){
-//               defaultValue = false
+               defaultValue = false
                type = NavType.BoolType
             }),
             navController = navController,
