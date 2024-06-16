@@ -57,6 +57,12 @@ class LeftRightCatViewModel @Inject constructor(
         }
     }
 
+    fun isCorrectAnswer(catId: String): Boolean {
+        val questionIndex= questionState.value.questionIndex
+        val question = questionState.value.questions[questionIndex]
+        return catId == question.correctAnswer
+    }
+
     private fun pauseTimer() {
         timerJob?.cancel()
     }
@@ -81,7 +87,7 @@ class LeftRightCatViewModel @Inject constructor(
         }
     }
 
-    private fun checkAnswer(catAnswer: Cat) {
+    private suspend fun checkAnswer(catAnswer: Cat) {
         var questionIndex= questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
         var points = questionState.value.points
@@ -93,6 +99,7 @@ class LeftRightCatViewModel @Inject constructor(
         else { //End Screen
             pauseTimer()
         }
+        //delay(700) //delay for ripple animation to finish
         setQuestionState {
             copy(
                 questionIndex = questionIndex,

@@ -168,35 +168,44 @@ private fun UsersListDrawer(
 
             Column(
                 modifier = Modifier.padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
 
-                Text(text = "Accounts", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
+                Column {
+                    Text(text = "Accounts", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
 
-                LazyColumn {
-                    item {
-                        NavigationDrawerItem(
-                            icon = {
-                                AppIconButton(
-                                    imageVector = Icons.Filled.Add,
-                                    onClick = addNewUser
-                                )
-                            },
-                            label = { Text(text = "Add Account", style = MaterialTheme.typography.labelLarge) },
-                            selected = false,
-                            onClick = addNewUser
-                        )
-                    }
+                    LazyColumn {
+                        item {
+                            NavigationDrawerItem(
+                                icon = {
+                                    AppIconButton(
+                                        imageVector = Icons.Filled.Add,
+                                        onClick = addNewUser
+                                    )
+                                },
+                                label = { Text(text = "Add Account", style = MaterialTheme.typography.labelLarge) },
+                                selected = false,
+                                onClick = addNewUser
+                            )
+                        }
 
-                    itemsIndexed(catsState.usersData.users) { index, user ->
-                        UserItemDrawer(
-                            user = user,
-                            index = index,
-                            catsState = catsState,
-                            onClick = { catsViewModel.changeMainUser(pick = index) }
-                        )
+                        itemsIndexed(catsState.usersData.users) { index, user ->
+                            UserItemDrawer(
+                                user = user,
+                                index = index,
+                                catsState = catsState,
+                                onClick = { catsViewModel.changeMainUser(pick = index) }
+                            )
+                        }
                     }
                 }
+
+                HorizontalDivider()
+
+                Column {
+                    Text(text = "Leaderboards", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp))
+                }
+
             }
         }
     }

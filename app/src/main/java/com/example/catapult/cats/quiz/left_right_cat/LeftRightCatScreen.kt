@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +38,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
+import com.example.catapult.core.CustomRippleTheme
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.quizLeftRightCat(
@@ -71,6 +76,7 @@ fun NavGraphBuilder.quizLeftRightCat(
                 } else {
                     LeftRightScreen(
                         paddingValues = it,
+                        quizViewModel = quizViewModel,
                         quizState = quizState,
                         onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) }
                     )
@@ -83,6 +89,7 @@ fun NavGraphBuilder.quizLeftRightCat(
 @Composable
 fun LeftRightScreen(
     paddingValues: PaddingValues,
+    quizViewModel: LeftRightCatViewModel,
     quizState: ILeftRightCatContract.LeftRightCatState,
     onClickImage: (uiEvent: ILeftRightCatContract.LeftRightCatUIEvent) -> Unit
 ) {
@@ -122,51 +129,71 @@ fun LeftRightScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .clickable {
-                        onClickImage(
-                            ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
-                                catAnswer = question.cat1
+            CompositionLocalProvider(
+                LocalRippleTheme provides CustomRippleTheme(
+                    color =
+                    if (quizViewModel.isCorrectAnswer(question.cat1.id))
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        MaterialTheme.colorScheme.error
+                )
+            ) {
+                SubcomposeAsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .clickable {
+                            onClickImage(
+                                ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
+                                    catAnswer = question.cat1
+                                )
                             )
-                        )
-                    },
-                model = question.cat1.image?.url ?: "",
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
-            )
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .clickable {
-                        onClickImage(
-                            ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
-                                catAnswer = question.cat2
+                        },
+                    model = question.cat1.image?.url ?: "",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
                             )
-                        )
-                    },
-                model = question.cat2.image?.url ?: "",
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-//                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiaryContainer, blendMode = BlendMode.Color),
-                loading = {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
+                        }
                     }
-                }
-            )
+                )
+            }
+            CompositionLocalProvider(
+                LocalRippleTheme provides CustomRippleTheme(
+                    color =
+                    if (quizViewModel.isCorrectAnswer(question.cat2.id))
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        MaterialTheme.colorScheme.error
+                )
+            ) {
+                SubcomposeAsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .clickable {
+                            onClickImage(
+                                ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
+                                    catAnswer = question.cat2
+                                )
+                            )
+                        },
+                    model = question.cat2.image?.url ?: "",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+    //                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiaryContainer, blendMode = BlendMode.Color),
+                    loading = {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
 }

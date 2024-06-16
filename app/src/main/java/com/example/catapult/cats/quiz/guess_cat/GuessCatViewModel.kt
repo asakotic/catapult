@@ -56,6 +56,12 @@ class GuessCatViewModel @Inject constructor(
         }
     }
 
+    fun isCorrectAnswer(catId: String): Boolean {
+        val questionIndex= questionState.value.questionIndex
+        val question = questionState.value.questions[questionIndex]
+        return catId == question.correctAnswer
+    }
+
     private fun pauseTimer() {
         timerJob?.cancel()
     }
