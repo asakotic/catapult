@@ -17,26 +17,15 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +44,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.cats.db.Cat
-import com.example.catapult.core.AppIconButton
+import com.example.catapult.core.TopBar
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
 
@@ -75,20 +63,7 @@ fun NavGraphBuilder.catDetailsScreen (
     ) {
         Scaffold (
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "Catapult", style = MaterialTheme.typography.labelLarge)
-                    },
-                    navigationIcon = {
-                        AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = {navController.navigateUp()})
-                    },
-                    actions = {
-                        //Icons.Outlined.LightMode -- dark mode
-                        //Icons.Filled.LightMode -- light mode
-                        AppIconButton(imageVector = Icons.Filled.LightMode, onClick = { /*TODO*/ })
-                        AppIconButton(imageVector = Icons.Default.Menu, onClick = { /*TODO*/ })
-                    }
-                )
+                TopBar(navController)
             },
             content = { paddingValues ->
                 CatDetailsScreen(
@@ -96,6 +71,7 @@ fun NavGraphBuilder.catDetailsScreen (
                     paddingValues = paddingValues,
                     openGallery = {id ->  navController.navigate("images/${id}")}
                 )
+
             }
         )
     }
@@ -103,7 +79,7 @@ fun NavGraphBuilder.catDetailsScreen (
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatDetailsScreen(
+private fun CatDetailsScreen(
     catState: ICatDetailsContract.CatDetailsState,
     paddingValues: PaddingValues,
     openGallery: (String)-> Unit,
@@ -265,7 +241,7 @@ private fun CatInformation(
 }
 
 @Composable
-fun StarRatingBar(
+private fun StarRatingBar(
     text: String,
     maxStars: Int = 5,
     rating: Float,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -76,13 +77,6 @@ fun LoginScreen(
     onValueChange: (uiEvent: ILoginContract.LoginUIEvent) -> Unit
 ) {
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Hello, please enter your info", fontWeight = FontWeight.Bold)
-                },
-            )
-        },
         content = { pv ->
             Column(
                 modifier = Modifier
@@ -91,6 +85,9 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+
+                Text(text = "Hello, please enter your info", style = MaterialTheme.typography.headlineSmall)
+
                 Image(
                     painter = painterResource(id = R.drawable.login_cat),
                     contentDescription = "login cat photo",

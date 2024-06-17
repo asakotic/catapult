@@ -33,7 +33,7 @@ import com.example.catapult.R
 import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.resultScreen (
+fun NavGraphBuilder.resultScreen(
     route: String,
     navController: NavController,
     arguments: List<NamedNavArgument>,
@@ -46,11 +46,15 @@ fun NavGraphBuilder.resultScreen (
     Surface(
         tonalElevation = 1.dp
     ) {
-        Scaffold (
+        Scaffold(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Here are your results!", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        Text(
+                            text = "Here are your results!",
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 )
             },
@@ -59,10 +63,10 @@ fun NavGraphBuilder.resultScreen (
                     state = state,
                     paddingValues = paddingValues,
                     leaderboard =
-                    {
-                        category,nick -> navController.navigate("quiz/leaderboard/${category}/${nick}")
+                    { category, nick ->
+                        navController.navigate("quiz/leaderboard/${category}/${nick}")
                     },
-                    home = {navController.navigate("cats")},
+                    home = { navController.navigate("cats") },
                     eventPublisher = { uiEvent -> resultViewModel.setEvent(uiEvent) },
                 )
             }
@@ -75,9 +79,9 @@ fun ResultScreen(
     state: IResultContract.ResultState,
     paddingValues: PaddingValues,
     leaderboard: (Int, String) -> Unit,
-    home:() -> Unit,
+    home: () -> Unit,
     eventPublisher: (uiEvent: IResultContract.ResultUIEvent) -> Unit,
-){
+) {
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -92,31 +96,38 @@ fun ResultScreen(
                 .padding(vertical = 20.dp)
                 .padding(bottom = 40.dp)
         )
-        Text(text = "${state.username}, your result is ${state.points}!\n" +
-                "Do you want to share it with other players?")
+        Text(
+            text = "${state.username}, your result is ${state.points}!\n" +
+                    "Do you want to share it with other players?"
+        )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(20.dp)
         ) {
-            Button(onClick = {
-                eventPublisher(IResultContract.ResultUIEvent.PostResult)
-            },modifier = Modifier.padding(horizontal = 5.dp)
-                ) {
+            Button(
+                onClick = {
+                    eventPublisher(IResultContract.ResultUIEvent.PostResult)
+                }, modifier = Modifier.padding(horizontal = 5.dp)
+            ) {
                 Text(text = "Share it")
             }
-            Button(onClick = {
-                home()
-            },
-                modifier = Modifier.padding(horizontal = 5.dp)) {
+            Button(
+                onClick = {
+                    home()
+                },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            ) {
                 Text(text = "Go back to home screen")
             }
         }
         Button(
             onClick = {
-            leaderboard(state.category,state.username)
-        },
-            modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp).align(Alignment.End),
-            enabled = if(state.isLoading)false else true
+                leaderboard(state.category, state.username)
+            },
+            modifier = Modifier
+                .padding(horizontal = 5.dp, vertical = 5.dp)
+                .align(Alignment.End),
+            enabled = if (state.isLoading) false else true
         ) {
             Text(text = "Go to leaderboard")
         }

@@ -1,9 +1,12 @@
 package com.example.catapult.users
 
 import kotlinx.serialization.Serializable
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 @Serializable
 data class User (
+    //TODO image
     val name: String,
     val nickname: String,
     val email: String,
@@ -33,7 +36,28 @@ data class User (
 
 @Serializable
 data class UserQuiz (
-    val resultsHistory: List<Int> = emptyList(),
-    val bestResult: Int = 0,
+    val resultsHistory: List<Int> = emptyList(), //TODO Result
+    val bestResult: Int = 0, //TODO float
     val bestLeaderboardPos: Int = Int.MAX_VALUE,
 )
+
+@Serializable
+data class Result (
+    val result: Float = 0f,
+    val createdAt: Long
+) {
+    fun covertToDate(): String {
+        return getDate(createdAt)
+    }
+
+
+    private fun getDate(milliSeconds: Long): String {
+
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat("dd/MM/yyy hh:mm:ss")
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(milliSeconds)
+        return formatter.format(calendar.time)
+    }}

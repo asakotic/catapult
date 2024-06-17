@@ -1,6 +1,5 @@
 package com.example.catapult.cats.list
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,24 +22,21 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -67,7 +64,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.R
 import com.example.catapult.cats.db.Cat
@@ -104,7 +100,8 @@ fun NavGraphBuilder.catsListScreen(
                 UsersListDrawer(
                     catsState = catsState,
                     catsViewModel = catsViewModel,
-                    addNewUser = { navController.navigate("login?add-new-user=${true}") }
+                    addNewUser = { navController.navigate("login?add-new-user=${true}") },
+                    navigateToHistory = {navController.navigate("history")}
                 )
             }
         ) {
@@ -158,7 +155,8 @@ fun NavGraphBuilder.catsListScreen(
 private fun UsersListDrawer(
     catsState: CatsListState,
     catsViewModel: CatsViewModel,
-    addNewUser: () -> Unit
+    addNewUser: () -> Unit,
+    navigateToHistory: () -> Unit
 ) {
     BoxWithConstraints {
         val box = this
@@ -168,27 +166,36 @@ private fun UsersListDrawer(
 
             Column(
                 modifier = Modifier.padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
 
                 Column {
-                    Text(text = "Accounts", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp, top = 16.dp))
+                    Text(
+                        text = "Accounts",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+                    )
 
-                    LazyColumn {
-                        item {
-                            NavigationDrawerItem(
-                                icon = {
-                                    AppIconButton(
-                                        imageVector = Icons.Filled.Add,
-                                        onClick = addNewUser
-                                    )
-                                },
-                                label = { Text(text = "Add Account", style = MaterialTheme.typography.labelLarge) },
-                                selected = false,
+                    NavigationDrawerItem(
+                        icon = {
+                            AppIconButton(
+                                imageVector = Icons.Filled.Add,
                                 onClick = addNewUser
                             )
-                        }
+                        },
+                        label = {
+                            Text(
+                                text = "Add Account",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        selected = false,
+                        onClick = addNewUser
+                    )
 
+                    LazyColumn(
+                        modifier = Modifier.heightIn(max = 300.dp)
+                    ) {
                         itemsIndexed(catsState.usersData.users) { index, user ->
                             UserItemDrawer(
                                 user = user,
@@ -203,7 +210,55 @@ private fun UsersListDrawer(
                 HorizontalDivider()
 
                 Column {
-                    Text(text = "Leaderboards", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp))
+                    Text(
+                        text = "History",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+
+                    NavigationDrawerItem(
+                        icon = {
+                            AppIconButton(
+                                imageVector = Icons.Filled.Category,
+                                onClick = addNewUser
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "See quiz's history",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        selected = false,
+                        onClick = navigateToHistory
+                    )
+                }
+
+                HorizontalDivider()
+
+                Column {
+                    Text(
+                        text = "Leaderboards",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+
+                    NavigationDrawerItem(
+                        icon = {
+                            AppIconButton(
+                                imageVector = Icons.Filled.Leaderboard,
+                                onClick = addNewUser
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "See leaderboards",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        selected = false,
+                        onClick = addNewUser
+                    )
                 }
 
             }

@@ -17,6 +17,7 @@ import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
 import com.example.catapult.cats.user.loginScreen
+import com.example.catapult.users.history.history
 import java.net.URLEncoder
 
 @Composable
@@ -111,6 +112,10 @@ fun AppNavigation() {
                     type = NavType.StringType
                 }
             )
+        )
+        history(
+            route = "history",
+            navController = navController
         )
     }
 
