@@ -1,5 +1,6 @@
 package com.example.catapult.cats.quiz.left_right_cat
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.CustomRippleTheme
+import com.example.catapult.core.seeResults
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +80,11 @@ fun NavGraphBuilder.quizLeftRightCat(
                         paddingValues = it,
                         quizViewModel = quizViewModel,
                         quizState = quizState,
-                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) }
+                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
+                        seeResults = {time, points ->
+                            val ubp = seeResults(time, points.toInt())
+                            navController.navigate("quiz/result/3/pozy/${ubp}")
+                        }
                     )
                 }
             }
@@ -91,7 +97,8 @@ fun LeftRightScreen(
     paddingValues: PaddingValues,
     quizViewModel: LeftRightCatViewModel,
     quizState: ILeftRightCatContract.LeftRightCatState,
-    onClickImage: (uiEvent: ILeftRightCatContract.LeftRightCatUIEvent) -> Unit
+    onClickImage: (uiEvent: ILeftRightCatContract.LeftRightCatUIEvent) -> Unit,
+    seeResults: (Int, Float)->Unit
 ) {
 
     val question = quizState.questions[quizState.questionIndex]
@@ -148,6 +155,8 @@ fun LeftRightScreen(
                                     catAnswer = question.cat1
                                 )
                             )
+                            if(quizState.questionIndex >18)
+                                seeResults(quizState.timer,quizState.points)
                         },
                     model = question.cat1.image?.url ?: "",
                     contentDescription = null,
@@ -180,6 +189,8 @@ fun LeftRightScreen(
                                     catAnswer = question.cat2
                                 )
                             )
+                            if(quizState.questionIndex >18)
+                                seeResults(quizState.timer,quizState.points)
                         },
                     model = question.cat2.image?.url ?: "",
                     contentDescription = null,

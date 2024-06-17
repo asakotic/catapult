@@ -1,5 +1,6 @@
 package com.example.catapult.cats.quiz.guess_cat
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.CustomRippleTheme
+import com.example.catapult.core.seeResults
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.guessCatScreen(
@@ -76,7 +78,11 @@ fun NavGraphBuilder.guessCatScreen(
                         paddingValues = it,
                         quizViewModel = quizViewModel,
                         quizState = quizState,
-                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) }
+                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
+                        seeResults = {time, points ->
+                            val ubp = seeResults(time, points.toInt())
+                            navController.navigate("quiz/result/2/pozy/${ubp}")
+                        }
                     )
                 }
             }
@@ -89,7 +95,8 @@ fun GuessCatScreen(
     paddingValues: PaddingValues,
     quizViewModel: GuessCatViewModel,
     quizState: IGuessCatContract.GuessCatState,
-    onClickImage: (uiEvent: IGuessCatContract.GuessCatUIEvent) -> Unit
+    onClickImage: (uiEvent: IGuessCatContract.GuessCatUIEvent) -> Unit,
+    seeResults: (Int, Float)->Unit
 ) {
 
     val question = quizState.questions[quizState.questionIndex]
@@ -155,6 +162,8 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[0]
                                     )
                                 )
+                                if(quizState.questionIndex >18)
+                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[0].image?.url ?: "",
                         contentDescription = null,
@@ -187,6 +196,8 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[1]
                                     )
                                 )
+                                if(quizState.questionIndex >18)
+                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[1].image?.url ?: "",
                         contentDescription = null,
@@ -227,6 +238,8 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[2]
                                     )
                                 )
+                                if(quizState.questionIndex >18)
+                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[2].image?.url ?: "",
                         contentDescription = null,
@@ -260,6 +273,8 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[3]
                                     )
                                 )
+                                if(quizState.questionIndex >18)
+                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[3].image?.url ?: "",
                         contentDescription = null,

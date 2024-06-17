@@ -38,6 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.room.util.appendPlaceholders
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
+import com.example.catapult.core.seeResults
 import com.example.catapult.core.theme.onPrimaryContainerLight
 
 fun NavGraphBuilder.guessFactScreen(
@@ -52,9 +53,7 @@ fun NavGraphBuilder.guessFactScreen(
         eventPublisher = { uiEvent -> guessFactViewModel.setEvent(uiEvent) },
         navController = navController,
         seeResults = {time, points ->
-            //UBP = BTO * 2.5 * (1 + (PVT + 120) / MVT)
-            val ubp: Float = points * 2.5F * (1 + (time + 120F) / 300)
-            Log.d("poeni", ubp.toString())
+            val ubp = seeResults(time, points)
             navController.navigate("quiz/result/1/anasa/${ubp}")
         }
     )
