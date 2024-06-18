@@ -1,12 +1,16 @@
 package com.example.catapult.cats.quiz.guess_fact
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract.GuessFactState
+import com.example.catapult.core.seeResults
 import com.example.catapult.di.DispatcherProvider
+import com.example.catapult.users.Result
+import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -24,11 +28,12 @@ import kotlin.random.Random
 class GuessFactViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val dispatcherProvider: DispatcherProvider,
-    private val catsService: CatsService
+    private val catsService: CatsService,
+    private val usersDataStore: UsersDataStore
 ) : ViewModel() {
 
     //private val catId: String = savedStateHandle.catId
-    private val _guessFactState = MutableStateFlow(GuessFactState())
+    private val _guessFactState = MutableStateFlow(GuessFactState(usersData =  usersDataStore.data.value))
     val guessFactState = _guessFactState.asStateFlow()
 
     private val _factsEvents = MutableSharedFlow<IGuessFactContract.GuessFactUIEvent>()
@@ -79,6 +84,13 @@ class GuessFactViewModel @Inject constructor(
         timerJob?.cancel()
     }
 
+    private fun addResult(result: Result) {
+        viewModelScope.launch {
+            setGuessFactState { copy(result = result) }
+            usersDataStore.addGuessFactResult(result)
+        }
+    }
+
 
 
     private fun calculatePoints(answerUser: String) {
@@ -87,8 +99,15 @@ class GuessFactViewModel @Inject constructor(
         }
         if(guessFactState.value.questionIndex<20 && guessFactState.value.timer > 0)
             createQuestion()
-        else
+        else { //End Screen
             pauseTimer()
+            Log.d("AAAAAAAAAAAAAA",  guessFactState.value.points.toString())
+            val result = Result(
+                result = seeResults(guessFactState.value.timer,  guessFactState.value.points),
+                createdAt = System.currentTimeMillis()
+            )
+            addResult(result)
+        }
     }
     private fun createQuestion(){
         viewModelScope.launch {

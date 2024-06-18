@@ -2,10 +2,14 @@ package com.example.catapult.cats.quiz.guess_fact
 
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.quiz.Timer
+import com.example.catapult.users.Result
+import com.example.catapult.users.UsersData
 
 interface IGuessFactContract {
     data class GuessFactState(
         val isLoading: Boolean = false,
+        val usersData: UsersData,
+        val result: Result? = null,
         val error: DetailsError? = null,
         val cats: List<Cat> = emptyList(),
         val answers: List<String> = emptyList(),

@@ -48,15 +48,17 @@ fun NavGraphBuilder.guessFactScreen(
     val guessFactViewModel: GuessFactViewModel = hiltViewModel()
     val state by guessFactViewModel.guessFactState.collectAsState()
 
-    GuessFactScreen(
-        state = state,
-        eventPublisher = { uiEvent -> guessFactViewModel.setEvent(uiEvent) },
-        navController = navController,
-        seeResults = {time, points ->
-            val ubp = seeResults(time, points)
-            navController.navigate("quiz/result/1/anasa/${ubp}")
-        }
-    )
+    if (state.questionIndex == 20 && state.result != null) {
+        val user = state.usersData.users[state.usersData.pick]
+        navController.navigate("quiz/result/1/${user.nickname}/${state.result?.result ?: 0}")
+    }
+    else {
+        GuessFactScreen(
+            state = state,
+            eventPublisher = { uiEvent -> guessFactViewModel.setEvent(uiEvent) },
+            navController = navController,
+        )
+    }
 }
 
 
@@ -66,7 +68,6 @@ fun GuessFactScreen(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
     navController: NavController,
-    seeResults: (Int, Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -123,7 +124,6 @@ fun GuessFactScreen(
                     MakeQuestion(
                         state,
                         eventPublisher,
-                        seeResults
                     )
                 }
 
@@ -137,7 +137,6 @@ fun GuessFactScreen(
 fun MakeQuestion(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
-    seeResults: (Int, Int) -> Unit
 ) {
     Log.d("print", state.answers.toString())
     Column(
@@ -170,10 +169,7 @@ fun MakeQuestion(
                     state.answers[0]
                 )
             )
-            if(state.rightAnswer != state.answers[0])
-
-            if(state.timer <= 0  || state.questionIndex > 19)
-                seeResults(state.timer, state.points)
+//            if(state.rightAnswer != state.answers[0])
         },
             modifier = Modifier
                 .width(200.dp)
@@ -188,8 +184,6 @@ fun MakeQuestion(
                     state.answers[1]
                 )
             )
-            if(state.timer <= 0  || state.questionIndex > 19)
-                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
@@ -204,8 +198,6 @@ fun MakeQuestion(
                     state.answers[2]
                 )
             )
-            if(state.timer <= 0  || state.questionIndex > 19)
-                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
@@ -219,8 +211,6 @@ fun MakeQuestion(
                     state.answers[3]
                 )
             )
-            if(state.timer <= 0  || state.questionIndex > 19)
-                seeResults(state.timer, state.points)
         },
             modifier = Modifier
                 .width(200.dp)
