@@ -40,6 +40,7 @@ import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.CustomRippleTheme
+import com.example.catapult.core.ProgressBarOurs
 import com.example.catapult.core.getTimeAsFormat
 
 fun NavGraphBuilder.guessFactScreen(
@@ -136,6 +137,8 @@ fun MakeQuestion(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
 ) {
+
+    ProgressBarOurs(index = state.questionIndex, size = 20)
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

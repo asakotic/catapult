@@ -40,6 +40,7 @@ import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.CustomRippleTheme
+import com.example.catapult.core.ProgressBarOurs
 import com.example.catapult.core.seeResults
 import kotlinx.coroutines.delay
 
@@ -107,6 +108,7 @@ fun LeftRightScreen(
     Column(
         modifier = Modifier.padding(paddingValues)
     ) {
+        ProgressBarOurs(index = quizState.questionIndex, size = quizState.questions.size)
         Column(
             modifier = Modifier.padding(top = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
