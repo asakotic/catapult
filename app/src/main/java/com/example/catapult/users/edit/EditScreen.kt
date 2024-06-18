@@ -1,8 +1,12 @@
 package com.example.catapult.users.edit
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,8 +58,7 @@ fun NavGraphBuilder.editScreen(
 
                 if (editState.saveUserPassed) {
                     navController.navigate("cats")
-                }
-                else {
+                } else {
                     LoginScreen(
                         paddingValues = it,
                         editState = editState,
@@ -97,6 +100,11 @@ fun LoginScreen(
         )
     }
 
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> onClick(IEditContract.EditUIEvent.ImageChanged(uri.toString())) }
+    )
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -107,15 +115,22 @@ fun LoginScreen(
     ) {
         Text(text = "Edit Profile", style = MaterialTheme.typography.headlineSmall)
 
+
         AsyncImage(
             modifier = Modifier
                 .size(170.dp)
                 .border(
-                BorderStroke(6.dp, rainbowColorsBrush),
-                CircleShape)
-                .clip(CircleShape),
+                    BorderStroke(6.dp, rainbowColorsBrush),
+                    CircleShape
+                )
+                .clip(CircleShape)
+                .clickable {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                },
             contentScale = ContentScale.Crop,
-            model = "https://cdn2.thecatapi.com/images/J2PmlIizw.jpg",
+            model = editState.image,
             contentDescription = null
         )
 

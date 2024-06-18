@@ -316,7 +316,7 @@ private fun UserItemDrawer(
                     .size(48.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
-                model = "https://cdn2.thecatapi.com/images/J2PmlIizw.jpg",
+                model = user.image,
                 contentDescription = null
             )
         },

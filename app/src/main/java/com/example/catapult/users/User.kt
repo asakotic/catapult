@@ -1,21 +1,30 @@
 package com.example.catapult.users
 
+import android.net.Uri
 import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 @Serializable
-data class User (
-    //TODO image
+data class User(
     val name: String,
-    val nickname: String,
     val email: String,
+    val image: String = "https://cdn2.thecatapi.com/images/J2PmlIizw.jpg",
+    val nickname: String,
     val guessCat: UserQuiz = UserQuiz.EMPTY,
     val guessFact: UserQuiz = UserQuiz.EMPTY,
     val leftRightCat: UserQuiz = UserQuiz.EMPTY,
 ) {
     companion object {
-        val EMPTY = User(name = "", email = "", nickname = "", guessCat = UserQuiz.EMPTY ,guessFact = UserQuiz.EMPTY, leftRightCat = UserQuiz.EMPTY)
+        val EMPTY = User(
+            name = "",
+            email = "",
+            nickname = "",
+            image = "",
+            guessCat = UserQuiz.EMPTY,
+            guessFact = UserQuiz.EMPTY,
+            leftRightCat = UserQuiz.EMPTY
+        )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -35,18 +44,22 @@ data class User (
 }
 
 @Serializable
-data class UserQuiz (
+data class UserQuiz(
     val resultsHistory: List<Result> = emptyList(),
     val bestResult: Float = 0f,
     val bestLeaderboardPos: Int = Int.MAX_VALUE,
 ) {
     companion object {
-        val EMPTY = UserQuiz(resultsHistory = emptyList(), bestResult = 0f, bestLeaderboardPos = Int.MAX_VALUE)
+        val EMPTY = UserQuiz(
+            resultsHistory = emptyList(),
+            bestResult = 0f,
+            bestLeaderboardPos = Int.MAX_VALUE
+        )
     }
 }
 
 @Serializable
-data class Result (
+data class Result(
     val result: Float = 0f,
     val createdAt: Long
 ) {
