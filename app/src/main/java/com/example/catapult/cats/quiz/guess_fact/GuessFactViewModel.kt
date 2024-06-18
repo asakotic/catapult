@@ -101,7 +101,6 @@ class GuessFactViewModel @Inject constructor(
             createQuestion()
         else { //End Screen
             pauseTimer()
-            Log.d("AAAAAAAAAAAAAA",  guessFactState.value.points.toString())
             val result = Result(
                 result = seeResults(guessFactState.value.timer,  guessFactState.value.points),
                 createdAt = System.currentTimeMillis()

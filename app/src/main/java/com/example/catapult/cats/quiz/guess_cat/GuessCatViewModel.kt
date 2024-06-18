@@ -168,7 +168,6 @@ class GuessCatViewModel @Inject constructor(
                     )
             )
         }
-        println(questions)
         setQuestionState { copy(questions = questions.shuffled()) }
     }
 
