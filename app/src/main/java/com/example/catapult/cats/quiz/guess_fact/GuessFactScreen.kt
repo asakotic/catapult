@@ -1,45 +1,46 @@
 package com.example.catapult.cats.quiz.guess_fact
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.room.util.appendPlaceholders
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
-import com.example.catapult.core.seeResults
-import com.example.catapult.core.theme.onPrimaryContainerLight
+import com.example.catapult.core.CustomRippleTheme
+import com.example.catapult.core.getTimeAsFormat
 
 fun NavGraphBuilder.guessFactScreen(
     route: String,
@@ -76,7 +77,7 @@ fun GuessFactScreen(
                     Text(text = "Quiz", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = { navController.navigateUp()})
+                    AppIconButton(imageVector = Icons.AutoMirrored.Filled.ArrowBack, onClick = { navController.navigateUp()})
                 }
             )
         },
@@ -118,9 +119,6 @@ fun GuessFactScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(it)
                 ){
-                    val sec = state.timer%60
-                    Text(text = "Time left: " + state.timer/60 + ":" + if(sec < 10) "0${sec}" else sec)
-                    Text(text = "Points: " + state.points + "/20")
                     MakeQuestion(
                         state,
                         eventPublisher,
@@ -138,85 +136,203 @@ fun MakeQuestion(
     state: IGuessFactContract.GuessFactState,
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
 ) {
-    Log.d("print", state.answers.toString())
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(20.dp),
     ) {
-        var text = ""
 
-        text = when (state.question) {
+        val text: String = when (state.question) {
             1 -> "What's the race of this cat on the photo?"
             2 -> "Odd one out!"
             else -> "Throw out one temperament!"
         }
-
-        Text(text = "${state.questionIndex}. $text")
-        if(state.image.isNotEmpty())
-            SubcomposeAsyncImage(
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Card(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                )
+                if(state.image.isNotEmpty())
+                    SubcomposeAsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .padding(vertical = 15.dp, horizontal = 20.dp),
+                        model = state.image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Inside,
+                    )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
-                    .padding(vertical = 15.dp, horizontal = 20.dp),
-                model = state.image,
-                contentDescription = null,
-                contentScale = ContentScale.Inside,
-            )
-        Button(onClick = {
-            eventPublisher(
-                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
-                    state.answers[0]
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween
+            ) {
+                Text(text = getTimeAsFormat(state.timer), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = "${state.questionIndex}/20",
+                    style = MaterialTheme.typography.bodyLarge
                 )
-            )
-//            if(state.rightAnswer != state.answers[0])
-        },
-            modifier = Modifier
-                .width(200.dp)
-                .align(Alignment.CenterHorizontally),
+            }
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                CompositionLocalProvider(
+                    LocalRippleTheme provides CustomRippleTheme(
+                        color =
+                        if (state.rightAnswer == state.answers[0])
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                            .clickable {
+                                eventPublisher(
+                                    IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                                        state.answers[0]
+                                    )
+                                )
+                            },
+                    ){
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentHeight(Alignment.CenterVertically)
+                                .align(Alignment.CenterHorizontally),
+                            text = state.answers[0],
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+                CompositionLocalProvider(
+                    LocalRippleTheme provides CustomRippleTheme(
+                        color =
+                        if (state.rightAnswer == state.answers[1])
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                            .clickable {
+                                eventPublisher(
+                                    IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                                        state.answers[1]
+                                    )
+                                )
+                            },
+                    ){
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentHeight(Alignment.CenterVertically)
+                                .align(Alignment.CenterHorizontally),
+                            text = state.answers[1],
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+            }
 
-        ) {
-            Text(text = state.answers[0])
-        }
-        Button(onClick = {
-            eventPublisher(
-                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
-                    state.answers[1]
-                )
-            )
-        },
-            modifier = Modifier
-                .width(200.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = state.answers[1])
-        }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            ) {
+                CompositionLocalProvider(
+                    LocalRippleTheme provides CustomRippleTheme(
+                        color =
+                        if (state.rightAnswer == state.answers[2])
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                            .clickable {
+                                eventPublisher(
+                                    IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                                        state.answers[2]
+                                    )
+                                )
+                            },
+                    ){
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentHeight(Alignment.CenterVertically)
+                                .align(Alignment.CenterHorizontally),
+                            text = state.answers[2],
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
 
-        Button(onClick = {
-            eventPublisher(
-                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
-                    state.answers[2]
-                )
-            )
-        },
-            modifier = Modifier
-                .width(200.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = state.answers[2])
-        }
-        Button(onClick = {
-            eventPublisher(
-                IGuessFactContract.GuessFactUIEvent.CalculatePoints(
-                    state.answers[3]
-                )
-            )
-        },
-            modifier = Modifier
-                .width(200.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = state.answers[3])
+                CompositionLocalProvider(
+                    LocalRippleTheme provides CustomRippleTheme(
+                        color =
+                        if (state.rightAnswer == state.answers[3])
+                            MaterialTheme.colorScheme.tertiary
+                        else
+                            MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
+                            .clickable {
+                                eventPublisher(
+                                    IGuessFactContract.GuessFactUIEvent.CalculatePoints(
+                                        state.answers[3]
+                                    )
+                                )
+                            },
+                    ){
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentHeight(Alignment.CenterVertically)
+                                .align(Alignment.CenterHorizontally),
+                            text = state.answers[3],
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+            }
         }
     }
 }
