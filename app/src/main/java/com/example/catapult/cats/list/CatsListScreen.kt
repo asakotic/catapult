@@ -250,17 +250,49 @@ private fun UsersListDrawer(
                         icon = {
                             AppIconButton(
                                 imageVector = Icons.Filled.Leaderboard,
-                                onClick = addNewUser
+                                onClick = {  }
                             )
                         },
                         label = {
                             Text(
-                                text = "See leaderboards",
+                                text = "Guess Fact",
                                 style = MaterialTheme.typography.labelLarge
                             )
                         },
                         selected = false,
-                        onClick = addNewUser
+                        onClick = { }
+                    )
+                    NavigationDrawerItem(
+                        icon = {
+                            AppIconButton(
+                                imageVector = Icons.Filled.Leaderboard,
+                                onClick = {  }
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "Guess Cat",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        selected = false,
+                        onClick = {  }
+                    )
+                    NavigationDrawerItem(
+                        icon = {
+                            AppIconButton(
+                                imageVector = Icons.Filled.Leaderboard,
+                                onClick = {  }
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "Left Right Cat",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        selected = false,
+                        onClick = {  }
                     )
                 }
 
