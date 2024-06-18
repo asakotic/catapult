@@ -82,7 +82,7 @@ class UsersDataStore @Inject constructor(
         )
         users[data.value.pick] = users[data.value.pick].copy(guessCat = guessCat)
 
-        return updateList(users = users.toList())
+        return updateList(users = users.toImmutableList())
     }
 
 }
