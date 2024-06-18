@@ -40,7 +40,7 @@ fun NavGraphBuilder.loginScreen(
     Surface(
         tonalElevation = 1.dp
     ) {
-        if (loginViewModel.hasAccount()) {
+        if (loginViewModel.hasAccount() || loginState.loginCheckPassed) {
             navController.navigate("cats")
         }
         else {
@@ -49,7 +49,6 @@ fun NavGraphBuilder.loginScreen(
                 onClick = { uiEvent ->
                     if (loginViewModel.isInfoValid()) {
                         loginViewModel.setLoginEvent(uiEvent)
-                        navController.navigate("cats")
                     }
                 },
                 onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }

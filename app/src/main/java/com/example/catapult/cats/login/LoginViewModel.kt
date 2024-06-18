@@ -66,9 +66,10 @@ class LoginViewModel @Inject constructor(
     private fun addUser() {
         val user = User(name = loginState.value.name, nickname = loginState.value.nickname, email = loginState.value.email)
 
-        //waits for user to be added, then goes to new page
-        runBlocking {
+        viewModelScope.launch {
             usersData.addUser(user)
+
+            setLoginState { copy(loginCheckPassed = true) }
         }
     }
 
