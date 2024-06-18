@@ -1,5 +1,6 @@
 package com.example.catapult.cats.list
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -333,7 +334,14 @@ private fun UserItemDrawer(
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
                 model = user.image,
-                contentDescription = null
+                contentDescription = null,
+                loading = {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
             )
         },
         label = {

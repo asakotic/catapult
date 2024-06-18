@@ -5,9 +5,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -40,6 +44,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.AsyncImage
 import com.example.catapult.R
+import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.TopBar
 
 fun NavGraphBuilder.editScreen(
@@ -115,24 +120,42 @@ fun LoginScreen(
     ) {
         Text(text = "Edit Profile", style = MaterialTheme.typography.headlineSmall)
 
-
-        AsyncImage(
-            modifier = Modifier
-                .size(170.dp)
-                .border(
-                    BorderStroke(6.dp, rainbowColorsBrush),
-                    CircleShape
-                )
-                .clip(CircleShape)
-                .clickable {
-                    singlePhotoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        Box(
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(170.dp)
+                    .border(
+                        BorderStroke(6.dp, rainbowColorsBrush),
+                        CircleShape
                     )
-                },
-            contentScale = ContentScale.Crop,
-            model = editState.image,
-            contentDescription = null
-        )
+                    .clip(CircleShape)
+                    .clickable {
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
+                contentScale = ContentScale.Crop,
+                model = editState.image,
+                contentDescription = null
+            )
+
+            Box(
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = CircleShape
+                )
+            ) {
+                AppIconButton(
+                    imageVector = Icons.Filled.Edit,
+                    onClick = {
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    })
+            }
+        }
 
         Column(
             modifier = Modifier.fillMaxWidth(),
