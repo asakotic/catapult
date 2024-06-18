@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -141,11 +142,38 @@ private fun CardContent(
 
         if (historyState.expandedList[index]) {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(5.dp)
 
             ) {
+
+                item{
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Points", style = MaterialTheme.typography.titleSmall)
+                        Text(text = "Date", style = MaterialTheme.typography.titleSmall)
+                    }
+                }
+                items(items = items.resultsHistory) { result ->
+
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        HorizontalDivider()
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = result.result.toString())
+                            Text(text = result.covertToDate())
+                        }
+                    }
+                }
                 
-//                items(key = items., items =  items) { result ->
+//                items(key = items.resultsHistory[0], items = items.resultsHistory) { resultHistory ->
 //                    HorizontalDivider()
 //
 //                    Row(

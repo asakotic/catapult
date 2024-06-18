@@ -2,6 +2,7 @@ package com.example.catapult.cats.quiz.guess_cat
 
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.quiz.Timer
+import com.example.catapult.users.Result
 
 interface IGuessCatContract {
     data class GuessCatState(
@@ -31,5 +32,6 @@ interface IGuessCatContract {
 
     sealed class GuessCatUIEvent {
         data class QuestionAnswered(val catAnswer: Cat) : GuessCatUIEvent()
+        data class AddResult(val result: Result) : GuessCatUIEvent()
     }
 }

@@ -10,12 +10,12 @@ data class User (
     val name: String,
     val nickname: String,
     val email: String,
-    val guessCat: UserQuiz = UserQuiz(),
-    val guessFact: UserQuiz = UserQuiz(),
-    val leftRightCat: UserQuiz = UserQuiz(),
+    val guessCat: UserQuiz = UserQuiz.EMPTY,
+    val guessFact: UserQuiz = UserQuiz.EMPTY,
+    val leftRightCat: UserQuiz = UserQuiz.EMPTY,
 ) {
     companion object {
-        val EMPTY = User(name = "", email = "", nickname = "")
+        val EMPTY = User(name = "", email = "", nickname = "", guessCat = UserQuiz.EMPTY ,guessFact = UserQuiz.EMPTY, leftRightCat = UserQuiz.EMPTY)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -36,10 +36,14 @@ data class User (
 
 @Serializable
 data class UserQuiz (
-    val resultsHistory: List<Int> = emptyList(), //TODO Result
-    val bestResult: Int = 0, //TODO float
+    val resultsHistory: List<Result> = emptyList(),
+    val bestResult: Float = 0f,
     val bestLeaderboardPos: Int = Int.MAX_VALUE,
-)
+) {
+    companion object {
+        val EMPTY = UserQuiz(resultsHistory = emptyList(), bestResult = 0f, bestLeaderboardPos = Int.MAX_VALUE)
+    }
+}
 
 @Serializable
 data class Result (
@@ -60,4 +64,5 @@ data class Result (
         val calendar: Calendar = Calendar.getInstance()
         calendar.setTimeInMillis(milliSeconds)
         return formatter.format(calendar.time)
-    }}
+    }
+}

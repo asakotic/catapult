@@ -16,9 +16,8 @@ import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
 import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
-import com.example.catapult.cats.user.loginScreen
+import com.example.catapult.cats.login.loginScreen
 import com.example.catapult.users.history.history
-import java.net.URLEncoder
 
 @Composable
 fun AppNavigation() {

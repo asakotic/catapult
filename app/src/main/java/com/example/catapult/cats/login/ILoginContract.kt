@@ -1,4 +1,4 @@
-package com.example.catapult.cats.user
+package com.example.catapult.cats.login
 
 interface ILoginContract {
 

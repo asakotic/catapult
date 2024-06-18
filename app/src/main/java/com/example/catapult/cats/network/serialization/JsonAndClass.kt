@@ -5,5 +5,6 @@ import kotlinx.serialization.json.Json
 val JsonAndClass = Json {
     ignoreUnknownKeys = true
     prettyPrint = true
+    encodeDefaults = true // <- ova linija mi je zagorsala zivot
 }
 

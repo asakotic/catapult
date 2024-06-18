@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
 import com.example.catapult.di.DispatcherProvider
+import com.example.catapult.users.Result
+import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,6 +22,7 @@ import kotlin.random.Random
 @HiltViewModel
 class GuessCatViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
+    private val usersDataStore: UsersDataStore,
     private val catsService: CatsService
 ) : ViewModel() {
     private val _questionState = MutableStateFlow(IGuessCatContract.GuessCatState())
@@ -56,6 +59,12 @@ class GuessCatViewModel @Inject constructor(
         }
     }
 
+    fun addResult(result: Result) {
+        viewModelScope.launch {
+            usersDataStore.addGuessCatResult(result)
+        }
+    }
+
     fun isCorrectAnswer(catId: String): Boolean {
         val questionIndex= questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
@@ -81,6 +90,7 @@ class GuessCatViewModel @Inject constructor(
             _questionEvent.collect {
                 when (it) {
                     is IGuessCatContract.GuessCatUIEvent.QuestionAnswered -> checkAnswer(it.catAnswer)
+                    is IGuessCatContract.GuessCatUIEvent.AddResult -> addResult(it.result)
                 }
             }
         }
@@ -97,6 +107,7 @@ class GuessCatViewModel @Inject constructor(
             questionIndex++
         else { //End Screen
             pauseTimer()
+            addResult(Result(result = points, createdAt = System.currentTimeMillis()))
         }
         setQuestionState {
             copy(
@@ -104,6 +115,7 @@ class GuessCatViewModel @Inject constructor(
                 points = points,
             )
         }
+
     }
 
     /**
