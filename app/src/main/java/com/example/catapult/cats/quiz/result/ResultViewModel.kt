@@ -74,7 +74,7 @@ class ResultViewModel @Inject constructor(
                 val state = resultState.value
                 catsService.postResult(state.username,state.points,state.category)
             }
-            setResultSate { copy(isLoading = false) }
+            setResultSate { copy(isPosted = true, isLoading = false) }
         }
     }
 

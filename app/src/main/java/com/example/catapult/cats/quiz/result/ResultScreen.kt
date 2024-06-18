@@ -107,7 +107,9 @@ fun ResultScreen(
             Button(
                 onClick = {
                     eventPublisher(IResultContract.ResultUIEvent.PostResult)
-                }, modifier = Modifier.padding(horizontal = 5.dp)
+                },
+                modifier = Modifier.padding(horizontal = 5.dp),
+                enabled = !state.isPosted
             ) {
                 Text(text = "Share it")
             }
