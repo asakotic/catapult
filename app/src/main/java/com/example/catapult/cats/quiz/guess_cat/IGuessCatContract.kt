@@ -3,10 +3,13 @@ package com.example.catapult.cats.quiz.guess_cat
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.quiz.Timer
 import com.example.catapult.users.Result
+import com.example.catapult.users.UsersData
 
 interface IGuessCatContract {
     data class GuessCatState(
         val isLoading: Boolean = false,
+        val usersData: UsersData,
+        val result: Result? = null,
         val cats: List<Cat> = emptyList(),
         val questions: List<GuessCatQuestion> = emptyList(),
         val points: Float = 0f,

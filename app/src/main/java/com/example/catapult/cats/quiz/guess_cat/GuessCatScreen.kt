@@ -74,16 +74,18 @@ fun NavGraphBuilder.guessCatScreen(
                         )
                     }
                 } else {
-                    GuessCatScreen(
-                        paddingValues = it,
-                        quizViewModel = quizViewModel,
-                        quizState = quizState,
-                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
-                        seeResults = {time, points ->
-                            val ubp = seeResults(time, points.toInt())
-                            navController.navigate("quiz/result/2/pozy/${ubp}")
-                        }
-                    )
+                    if (quizState.questionIndex == 19 && quizState.result != null) {
+                        val user = quizState.usersData.users[quizState.usersData.pick]
+                        navController.navigate("quiz/result/2/${user.nickname}/${quizState.result?.result ?: 0}")
+                    }
+                    else {
+                        GuessCatScreen(
+                            paddingValues = it,
+                            quizViewModel = quizViewModel,
+                            quizState = quizState,
+                            onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
+                        )
+                    }
                 }
             }
         )
@@ -96,7 +98,6 @@ fun GuessCatScreen(
     quizViewModel: GuessCatViewModel,
     quizState: IGuessCatContract.GuessCatState,
     onClickImage: (uiEvent: IGuessCatContract.GuessCatUIEvent) -> Unit,
-    seeResults: (Int, Float)->Unit
 ) {
 
     val question = quizState.questions[quizState.questionIndex]
@@ -162,8 +163,6 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[0]
                                     )
                                 )
-                                if(quizState.questionIndex >18)
-                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[0].image?.url ?: "",
                         contentDescription = null,
@@ -196,8 +195,6 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[1]
                                     )
                                 )
-                                if(quizState.questionIndex >18)
-                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[1].image?.url ?: "",
                         contentDescription = null,
@@ -238,8 +235,6 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[2]
                                     )
                                 )
-                                if(quizState.questionIndex >18)
-                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[2].image?.url ?: "",
                         contentDescription = null,
@@ -273,8 +268,6 @@ fun GuessCatScreen(
                                         catAnswer = question.cats[3]
                                     )
                                 )
-                                if(quizState.questionIndex >18)
-                                    seeResults(quizState.timer,quizState.points)
                             },
                         model = question.cats[3].image?.url ?: "",
                         contentDescription = null,

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
+import com.example.catapult.core.seeResults
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.Result
 import com.example.catapult.users.UsersDataStore
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -25,7 +27,7 @@ class GuessCatViewModel @Inject constructor(
     private val usersDataStore: UsersDataStore,
     private val catsService: CatsService
 ) : ViewModel() {
-    private val _questionState = MutableStateFlow(IGuessCatContract.GuessCatState())
+    private val _questionState = MutableStateFlow(IGuessCatContract.GuessCatState(usersData = usersDataStore.data.value))
     val questionState = _questionState.asStateFlow()
 
     private val _questionEvent = MutableSharedFlow<IGuessCatContract.GuessCatUIEvent>()
@@ -37,7 +39,8 @@ class GuessCatViewModel @Inject constructor(
     private fun setQuestionState(update: IGuessCatContract.GuessCatState.() -> IGuessCatContract.GuessCatState) =
         _questionState.getAndUpdate(update)
 
-    fun setQuestionEvent(even: IGuessCatContract.GuessCatUIEvent) = viewModelScope.launch { _questionEvent.emit(even) }
+    fun setQuestionEvent(even: IGuessCatContract.GuessCatUIEvent) =
+        viewModelScope.launch { _questionEvent.emit(even) }
 
     init {
         getAllCats()
@@ -47,7 +50,7 @@ class GuessCatViewModel @Inject constructor(
 
     private fun startTimer() {
         timerJob?.cancel()
-        timerJob =  viewModelScope.launch {
+        timerJob = viewModelScope.launch {
             while (true) {
                 delay(1000)
                 setQuestionState { copy(timer = timer - 1) }
@@ -59,14 +62,15 @@ class GuessCatViewModel @Inject constructor(
         }
     }
 
-    fun addResult(result: Result) {
+    private fun addResult(result: Result) {
         viewModelScope.launch {
+            setQuestionState { copy(result = result) }
             usersDataStore.addGuessCatResult(result)
         }
     }
 
     fun isCorrectAnswer(catId: String): Boolean {
-        val questionIndex= questionState.value.questionIndex
+        val questionIndex = questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
         return catId == question.correctAnswer
     }
@@ -97,7 +101,7 @@ class GuessCatViewModel @Inject constructor(
     }
 
     private fun checkAnswer(catAnswer: Cat) {
-        var questionIndex= questionState.value.questionIndex
+        var questionIndex = questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
         var points = questionState.value.points
         if (catAnswer.id == question.correctAnswer)
@@ -107,7 +111,7 @@ class GuessCatViewModel @Inject constructor(
             questionIndex++
         else { //End Screen
             pauseTimer()
-            addResult(Result(result = points, createdAt = System.currentTimeMillis()))
+            addResult( Result(result = seeResults(questionState.value.timer, points.toInt()), createdAt = System.currentTimeMillis()))
         }
         setQuestionState {
             copy(
@@ -157,15 +161,15 @@ class GuessCatViewModel @Inject constructor(
 
             questions.add(
                 IGuessCatContract.GuessCatQuestion(
-                    cats = cats.slice(i..i+3),
+                    cats = cats.slice(i..i + 3),
                     questionText = question,
                     correctAnswer = answer.first,
 
-                )
+                    )
             )
         }
         println(questions)
-        setQuestionState { copy(questions = questions.shuffled())}
+        setQuestionState { copy(questions = questions.shuffled()) }
     }
 
     private fun giveAnswer(questionNumber: Int, i: Int): Pair<String, String> {
@@ -204,7 +208,7 @@ class GuessCatViewModel @Inject constructor(
     }
 
 
-    private fun giveQuestion(num:Int, answer: String): String {
+    private fun giveQuestion(num: Int, answer: String): String {
         return when (num) {
             0 -> "Which cat is $answer?"
             else -> "Which cat belongs to a race $answer?"
