@@ -53,10 +53,13 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun expandedChanged(index: Int) {
-        val list = historyState.value.expandedList.toMutableList()
-        list[index] = !list[index]
+        var expandedList = historyState.value.expandedList.toMutableList()
+        expandedList[index] = !expandedList[index]
+        if (expandedList[index])
+            expandedList = expandedList.mapIndexed { i, bool -> if (i != index) false else bool }.toMutableList()
+
         viewModelScope.launch {
-            setHistoryState { copy(expandedList = list.toImmutableList()) }
+            setHistoryState { copy(expandedList = expandedList.toImmutableList()) }
         }
     }
 }
