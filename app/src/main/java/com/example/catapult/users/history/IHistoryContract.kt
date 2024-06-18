@@ -10,6 +10,6 @@ interface IHistoryContract {
     )
 
     sealed class HistoryUIEvent {
-        data class Expanded(val expandedList: List<Boolean>) : HistoryUIEvent()
+        data class Expanded(val index: Int) : HistoryUIEvent()
     }
 }

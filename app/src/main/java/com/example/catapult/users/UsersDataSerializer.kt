@@ -31,8 +31,6 @@ class UsersDataSerializer() : Serializer<UsersData> {
 
     override suspend fun writeTo(t: UsersData, output: OutputStream) {
         val text = json.encodeToString(t)
-        withContext(Dispatchers.IO) {
-            output.write(text.toByteArray())
-        }
+        output.write(text.toByteArray())
     }
 }

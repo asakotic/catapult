@@ -19,6 +19,7 @@ class UsersDataStore @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val dataStore: DataStore<UsersData>
 ) {
+    //TODO Change user to only have nickname, name and email saved, but quiz stats to be in database
 
     private val scope = CoroutineScope(dispatcherProvider.io())
 
@@ -34,12 +35,14 @@ class UsersDataStore @Inject constructor(
         //so list first needs to be empty so that optimisation doesn't kick in
 
         dataStore.updateData {
-            it.copy(users = emptyList())
+            it.copy(users = emptyList(), pick = -1)
         }
 
         return dataStore.updateData {
             it.copy(users = users, pick = pick)
         }
+
+
     }
 
     suspend fun changeMainUser(newPick: Int): UsersData {
@@ -74,13 +77,12 @@ class UsersDataStore @Inject constructor(
 
         resultsHistory.add(result)
         guessCat = guessCat.copy(
-            resultsHistory = resultsHistory,
+            resultsHistory = resultsHistory.toImmutableList(),
             bestResult = max(guessCat.bestResult, result.result)
         )
-        users[data.value.pick] =
-            users[data.value.pick].copy(guessCat = guessCat) //updates user in list
+        users[data.value.pick] = users[data.value.pick].copy(guessCat = guessCat)
 
-        return updateList(users = users.toImmutableList())
+        return updateList(users = users.toList())
     }
 
 }

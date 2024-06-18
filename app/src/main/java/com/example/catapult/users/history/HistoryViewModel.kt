@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,19 +30,33 @@ class HistoryViewModel @Inject constructor(
         observeEvents()
     }
 
+    fun getBestResult(quiz : String): String {
+        val users = historyState.value.usersData.users
+        val pick = historyState.value.usersData.pick
+
+        return when (quiz) {
+            "guessCat" -> users[pick].guessCat.bestResult.toString()
+            "guessFact" -> users[pick].guessFact.bestResult.toString()
+            "leftRightCat" -> users[pick].leftRightCat.bestResult.toString()
+            else -> "0.0"
+        }
+    }
+
     private fun observeEvents() {
         viewModelScope.launch {
             _historyEvent.collect {
                 when (it) {
-                    is IHistoryContract.HistoryUIEvent.Expanded -> expandedChanged(it.expandedList)
+                    is IHistoryContract.HistoryUIEvent.Expanded -> expandedChanged(it.index)
                 }
             }
         }
     }
 
-    private fun expandedChanged(expandedList: List<Boolean>) {
+    private fun expandedChanged(index: Int) {
+        val list = historyState.value.expandedList.toMutableList()
+        list[index] = !list[index]
         viewModelScope.launch {
-            setHistoryState { copy(expandedList = expandedList) }
+            setHistoryState { copy(expandedList = list.toImmutableList()) }
         }
     }
 }

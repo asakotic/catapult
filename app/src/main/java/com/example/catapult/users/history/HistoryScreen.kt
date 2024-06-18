@@ -62,6 +62,7 @@ fun NavGraphBuilder.history(
                 ) {
                     Card {
                         CardContent(
+                            bestResult = historyViewModel.getBestResult("guessFact"),
                             historyState = historyState,
                             index = 0,
                             title = "Guess Fact",
@@ -71,6 +72,7 @@ fun NavGraphBuilder.history(
                     }
                     Card {
                         CardContent(
+                            bestResult = historyViewModel.getBestResult("guessCat"),
                             historyState = historyState,
                             index = 1,
                             title = "Guess Cat",
@@ -80,6 +82,7 @@ fun NavGraphBuilder.history(
                     }
                     Card {
                         CardContent(
+                            bestResult = historyViewModel.getBestResult("leftRightCat"),
                             historyState = historyState,
                             title = "Left Right Cat",
                             items = historyState.usersData.users[historyState.usersData.pick].leftRightCat,
@@ -96,6 +99,7 @@ fun NavGraphBuilder.history(
 
 @Composable
 private fun CardContent(
+    bestResult: String,
     historyState: IHistoryContract.HistoryState,
     title: String,
     items : UserQuiz,
@@ -114,7 +118,7 @@ private fun CardContent(
                 val list = historyState.expandedList.toMutableList()
                 list[index] = !list[index]
                 onClick(
-                    IHistoryContract.HistoryUIEvent.Expanded(expandedList = list)
+                    IHistoryContract.HistoryUIEvent.Expanded(index = index)
                 )
             },
             verticalAlignment = Alignment.CenterVertically
@@ -123,7 +127,7 @@ private fun CardContent(
                 modifier = Modifier.weight(3 / 4f),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Text(text = "Best Result: 56.5", style = MaterialTheme.typography.labelLarge)
+                Text(text = "Best Result: $bestResult", style = MaterialTheme.typography.labelLarge)
 
                 Text(text = title, style = MaterialTheme.typography.headlineSmall)
             }
@@ -131,10 +135,8 @@ private fun CardContent(
             AppIconButton(
                 imageVector = if (historyState.expandedList[index]) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
                 onClick = {
-                    val list = historyState.expandedList.toMutableList()
-                    list[index] = !list[index]
                     onClick(
-                        IHistoryContract.HistoryUIEvent.Expanded(expandedList = list)
+                        IHistoryContract.HistoryUIEvent.Expanded(index = index)
                     )
                 }
             )
