@@ -86,8 +86,8 @@ class GuessFactViewModel @Inject constructor(
 
     private fun addResult(result: Result) {
         viewModelScope.launch {
-            setGuessFactState { copy(result = result) }
             usersDataStore.addGuessFactResult(result)
+            setGuessFactState { copy(result = result) }
         }
     }
 

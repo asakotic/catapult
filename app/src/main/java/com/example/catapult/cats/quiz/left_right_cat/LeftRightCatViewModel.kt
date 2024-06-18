@@ -94,8 +94,8 @@ class LeftRightCatViewModel @Inject constructor(
 
     private fun addResult(result: Result) {
         viewModelScope.launch {
-            setQuestionState { copy(result = result) }
             usersDataStore.addLeftRightCatResult(result)
+            setQuestionState { copy(result = result) }
         }
     }
 

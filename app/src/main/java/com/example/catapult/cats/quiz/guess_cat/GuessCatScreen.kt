@@ -76,7 +76,7 @@ fun NavGraphBuilder.guessCatScreen(
                 } else {
                     if (quizState.questionIndex == 19 && quizState.result != null) {
                         val user = quizState.usersData.users[quizState.usersData.pick]
-                        navController.navigate("quiz/result/2/${user.nickname}/${quizState.result?.result ?: 0}")
+                        navController.navigate("quiz/result/2/${quizState.result?.result ?: 0}")
                     }
                     else {
                         GuessCatScreen(

@@ -78,7 +78,8 @@ fun NavGraphBuilder.quizLeftRightCat(
                 } else {
                     if (quizState.questionIndex == 19 && quizState.result != null) {
                         val user = quizState.usersData.users[quizState.usersData.pick]
-                        navController.navigate("quiz/result/3/${user.nickname}/${quizState.result?.result ?: 0}")
+                        Log.d("test",user.toString())
+                        navController.navigate("quiz/result/3/${quizState.result?.result ?: 0}")
                     }
                     else {
                         LeftRightScreen(

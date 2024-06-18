@@ -39,7 +39,7 @@ fun NavGraphBuilder.resultScreen(
     arguments: List<NamedNavArgument>,
 ) = composable(route = route, arguments = arguments) { navBackStackEntry ->
 
-    val resultViewModel: ResultViewModel = hiltViewModel(navBackStackEntry)
+    val resultViewModel: ResultViewModel = hiltViewModel()
     val state by resultViewModel.resultState.collectAsState()
 
 
@@ -63,8 +63,8 @@ fun NavGraphBuilder.resultScreen(
                     state = state,
                     paddingValues = paddingValues,
                     leaderboard =
-                    { category, nick ->
-                        navController.navigate("quiz/leaderboard/${category}/${nick}")
+                    { category->
+                        navController.navigate("quiz/leaderboard/${category}")
                     },
                     home = { navController.navigate("cats") },
                     eventPublisher = { uiEvent -> resultViewModel.setEvent(uiEvent) },
@@ -78,7 +78,7 @@ fun NavGraphBuilder.resultScreen(
 fun ResultScreen(
     state: IResultContract.ResultState,
     paddingValues: PaddingValues,
-    leaderboard: (Int, String) -> Unit,
+    leaderboard: (Int) -> Unit,
     home: () -> Unit,
     eventPublisher: (uiEvent: IResultContract.ResultUIEvent) -> Unit,
 ) {
@@ -124,12 +124,12 @@ fun ResultScreen(
         }
         Button(
             onClick = {
-                leaderboard(state.category, state.username)
+                leaderboard(state.category)
             },
             modifier = Modifier
                 .padding(horizontal = 5.dp, vertical = 5.dp)
                 .align(Alignment.End),
-            enabled = if (state.isLoading) false else true
+            enabled = !state.isLoading
         ) {
             Text(text = "Go to leaderboard")
         }

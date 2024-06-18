@@ -64,8 +64,8 @@ class GuessCatViewModel @Inject constructor(
 
     private fun addResult(result: Result) {
         viewModelScope.launch {
-            setQuestionState { copy(result = result) }
             usersDataStore.addGuessCatResult(result)
+            setQuestionState { copy(result = result) }
         }
     }
 

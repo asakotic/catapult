@@ -91,25 +91,21 @@ fun AppNavigation() {
             navController = navController
         )
         resultScreen(
-            route = "quiz/result/{category}/{nickname}/{result}",
+            route = "quiz/result/{category}/{result}",
             navController = navController,
             arguments = listOf(
                 navArgument("category") {
                 type = NavType.IntType
-            }, navArgument("nickname") {
-                type = NavType.StringType
             }, navArgument("result") {
             type = NavType.FloatType
             }  )
         )
         leaderboardScreen(
-            route = "quiz/leaderboard/{category}/{nickname}",
+            route = "quiz/leaderboard/{category}",
             navController = navController,
             arguments = listOf(
                 navArgument("category") {
                     type = NavType.IntType
-                }, navArgument("nickname") {
-                    type = NavType.StringType
                 }
             )
         )
@@ -132,8 +128,6 @@ inline val SavedStateHandle.photoIndex: Int
     get() = checkNotNull(get("photoIndex")) {"photoIndex is mandatory"}
 inline val SavedStateHandle.category: Int
     get() = checkNotNull(get("category")) {"category is mandatory"}
-inline val SavedStateHandle.nickname: String
-    get() = checkNotNull(get("nickname")) {"nickname is mandatory"}
 inline val SavedStateHandle.result: Float
     get() = checkNotNull(get("result")) {"result is mandatory"}
 

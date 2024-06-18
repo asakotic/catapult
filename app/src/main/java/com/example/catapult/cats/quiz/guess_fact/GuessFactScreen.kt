@@ -50,7 +50,7 @@ fun NavGraphBuilder.guessFactScreen(
 
     if (state.questionIndex == 20 && state.result != null) {
         val user = state.usersData.users[state.usersData.pick]
-        navController.navigate("quiz/result/1/${user.nickname}/${state.result?.result ?: 0}")
+        navController.navigate("quiz/result/1/${state.result?.result ?: 0}")
     }
     else {
         GuessFactScreen(

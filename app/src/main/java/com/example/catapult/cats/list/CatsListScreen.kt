@@ -102,7 +102,10 @@ fun NavGraphBuilder.catsListScreen(
                     catsViewModel = catsViewModel,
                     addNewUser = { navController.navigate("login?add-new-user=${true}") },
                     navigateToHistory = { navController.navigate("history") },
-                    navigateToEdit = { navController.navigate("user/edit") }
+                    navigateToEdit = { navController.navigate("user/edit") },
+                    leaderboard = {category->
+                        navController.navigate("quiz/leaderboard/${category}")
+                    }
                 )
             }
         ) {
@@ -158,7 +161,8 @@ private fun UsersListDrawer(
     catsViewModel: CatsViewModel,
     addNewUser: () -> Unit,
     navigateToHistory: () -> Unit,
-    navigateToEdit: () -> Unit
+    navigateToEdit: () -> Unit,
+    leaderboard:(Int)->Unit
 ) {
     BoxWithConstraints {
         val box = this
@@ -250,7 +254,9 @@ private fun UsersListDrawer(
                         icon = {
                             AppIconButton(
                                 imageVector = Icons.Filled.Leaderboard,
-                                onClick = {  }
+                                onClick = {
+                                    leaderboard(2)
+                                }
                             )
                         },
                         label = {
@@ -260,13 +266,17 @@ private fun UsersListDrawer(
                             )
                         },
                         selected = false,
-                        onClick = { }
+                        onClick = {
+                            leaderboard(2)
+                        }
                     )
                     NavigationDrawerItem(
                         icon = {
                             AppIconButton(
                                 imageVector = Icons.Filled.Leaderboard,
-                                onClick = {  }
+                                onClick = {
+                                    leaderboard(1)
+                                }
                             )
                         },
                         label = {
@@ -276,13 +286,17 @@ private fun UsersListDrawer(
                             )
                         },
                         selected = false,
-                        onClick = {  }
+                        onClick = {
+                            leaderboard(1)
+                        }
                     )
                     NavigationDrawerItem(
                         icon = {
                             AppIconButton(
                                 imageVector = Icons.Filled.Leaderboard,
-                                onClick = {  }
+                                onClick = {
+                                    leaderboard(3)
+                                }
                             )
                         },
                         label = {
@@ -292,7 +306,9 @@ private fun UsersListDrawer(
                             )
                         },
                         selected = false,
-                        onClick = {  }
+                        onClick = {
+                            leaderboard(3)
+                        }
                     )
                 }
 
