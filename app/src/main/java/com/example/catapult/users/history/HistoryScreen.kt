@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +34,7 @@ import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.TopBar
 import com.example.catapult.users.UserQuiz
 
-fun NavGraphBuilder.history(
+fun NavGraphBuilder.historyScreen(
     route: String,
     navController: NavController,
 ) = composable(route = route) {
@@ -104,7 +102,7 @@ private fun CardContent(
     bestResult: String,
     historyState: IHistoryContract.HistoryState,
     title: String,
-    items : UserQuiz,
+    items: UserQuiz,
     index: Int,
     onClick: (uiEvent: IHistoryContract.HistoryUIEvent) -> Unit
 ) {
@@ -145,49 +143,39 @@ private fun CardContent(
         }
 
         if (historyState.expandedList[index]) {
-            LazyColumn(
-                modifier = Modifier.heightIn(max =  200.dp),
+            Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-
-                item{
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "Points", style = MaterialTheme.typography.titleSmall)
-                        Text(text = "Date", style = MaterialTheme.typography.titleSmall)
-                    }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Points", style = MaterialTheme.typography.titleSmall)
+                    Text(text = "Date", style = MaterialTheme.typography.titleSmall)
                 }
-                items(items = items.resultsHistory) { result ->
+
+                LazyColumn(
+                    modifier = Modifier.heightIn(max = 200.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(items = items.resultsHistory) { result ->
 
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        HorizontalDivider()
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            Text(text = result.result.toString())
-                            Text(text = result.covertToDate())
+                            HorizontalDivider()
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(text = result.result.toString())
+                                Text(text = result.covertToDate())
+                            }
                         }
                     }
                 }
-                
-//                items(key = items.resultsHistory[0], items = items.resultsHistory) { resultHistory ->
-//                    HorizontalDivider()
-//
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = ("Co,pose ipsum color sit lax"))
-//                        Text(text = ("10"))
-//                    }
-//                }
             }
         }
     }

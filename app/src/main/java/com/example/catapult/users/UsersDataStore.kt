@@ -115,4 +115,8 @@ class UsersDataStore @Inject constructor(
         return updateList(users = users.toImmutableList())
     }
 
+    suspend fun updateUser(users: List<User>): UsersData {
+        return updateList(users = users)
+    }
+
 }

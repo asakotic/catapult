@@ -96,18 +96,18 @@ fun ChooseQuizScreen(
                         verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
                         Button(
-                            onClick = { guessCatQuiz() },
-                            modifier =  Modifier.fillMaxWidth()
-                            ) {
-                            Text(text = "Guess the Cat Quiz")
-                        }
-                        Button(
                             onClick = {
                                       factsQuiz()
                             },
                             modifier =  Modifier.fillMaxWidth()
                         ) {
                             Text(text = "Guess the Fact Quiz")
+                        }
+                        Button(
+                            onClick = { guessCatQuiz() },
+                            modifier =  Modifier.fillMaxWidth()
+                            ) {
+                            Text(text = "Guess the Cat Quiz")
                         }
                         Button(
                             onClick = { leftRightCatQuiz() },

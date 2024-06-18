@@ -17,7 +17,8 @@ import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
 import com.example.catapult.cats.login.loginScreen
-import com.example.catapult.users.history.history
+import com.example.catapult.users.edit.editScreen
+import com.example.catapult.users.history.historyScreen
 
 @Composable
 fun AppNavigation() {
@@ -112,8 +113,12 @@ fun AppNavigation() {
                 }
             )
         )
-        history(
+        historyScreen(
             route = "history",
+            navController = navController
+        )
+        editScreen(
+            route = "user/edit",
             navController = navController
         )
     }

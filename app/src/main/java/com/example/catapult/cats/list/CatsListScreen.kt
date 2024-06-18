@@ -101,7 +101,8 @@ fun NavGraphBuilder.catsListScreen(
                     catsState = catsState,
                     catsViewModel = catsViewModel,
                     addNewUser = { navController.navigate("login?add-new-user=${true}") },
-                    navigateToHistory = {navController.navigate("history")}
+                    navigateToHistory = { navController.navigate("history") },
+                    navigateToEdit = { navController.navigate("user/edit") }
                 )
             }
         ) {
@@ -156,7 +157,8 @@ private fun UsersListDrawer(
     catsState: CatsListState,
     catsViewModel: CatsViewModel,
     addNewUser: () -> Unit,
-    navigateToHistory: () -> Unit
+    navigateToHistory: () -> Unit,
+    navigateToEdit: () -> Unit
 ) {
     BoxWithConstraints {
         val box = this
@@ -201,7 +203,8 @@ private fun UsersListDrawer(
                                 user = user,
                                 index = index,
                                 catsState = catsState,
-                                onClick = { catsViewModel.changeMainUser(pick = index) }
+                                onClick = { catsViewModel.changeMainUser(pick = index) },
+                                navigateToEdit = navigateToEdit
                             )
                         }
                     }
@@ -271,7 +274,8 @@ private fun UserItemDrawer(
     user: User,
     index: Int,
     catsState: CatsListState,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    navigateToEdit: () -> Unit
 ) {
     NavigationDrawerItem(
         icon = {
@@ -305,13 +309,13 @@ private fun UserItemDrawer(
                 if (index == catsState.usersData.pick) {
                     AppIconButton(
                         imageVector = Icons.Filled.Edit,
-                        onClick = { }
+                        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else onClick
                     )
                 }
             }
         },
         selected = index == (catsState.usersData.pick),
-        onClick = onClick,
+        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else onClick,
     )
 }
 
