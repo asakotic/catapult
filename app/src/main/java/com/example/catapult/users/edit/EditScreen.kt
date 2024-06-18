@@ -1,8 +1,14 @@
 package com.example.catapult.users.edit
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,8 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -105,9 +115,21 @@ fun LoginScreen(
         )
     }
 
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val rotationAnimation = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)),
+        label = ""
+    )
+
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> onClick(IEditContract.EditUIEvent.ImageChanged(uri.toString())) }
+        onResult = { uri ->
+            if (uri != null) {
+                onClick(IEditContract.EditUIEvent.ImageChanged(uri.toString()))
+            }
+        }
     )
 
     Column(
@@ -126,10 +148,11 @@ fun LoginScreen(
             AsyncImage(
                 modifier = Modifier
                     .size(170.dp)
-                    .border(
-                        BorderStroke(6.dp, rainbowColorsBrush),
-                        CircleShape
-                    )
+                    .drawBehind {
+                        rotate(rotationAnimation.value) {
+                            drawCircle(rainbowColorsBrush, style = Stroke(width = 35f))
+                        }
+                    }
                     .clip(CircleShape)
                     .clickable {
                         singlePhotoPickerLauncher.launch(

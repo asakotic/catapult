@@ -14,3 +14,7 @@ fun getTimeAsFormat(timer: Int): String {
     val sec = if (timer%60 < 10) "0${timer%60}" else timer%60
     return "${min}:${sec}"
 }
+
+fun defaultImage(): String {
+    return "https://cdn2.thecatapi.com/images/J2PmlIizw.jpg"
+}
