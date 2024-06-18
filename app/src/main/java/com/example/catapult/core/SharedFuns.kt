@@ -8,3 +8,9 @@ fun seeResults(time: Int, points:Int): Float{
     if(ubp >100) ubp =100f
     return ubp
 }
+
+fun getTimeAsFormat(timer: Int): String {
+    val min = timer/60
+    val sec = if (timer%60 < 10) "0${timer%60}" else timer%60
+    return "${min}:${sec}"
+}

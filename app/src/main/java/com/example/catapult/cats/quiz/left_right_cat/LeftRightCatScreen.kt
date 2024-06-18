@@ -76,16 +76,18 @@ fun NavGraphBuilder.quizLeftRightCat(
                         )
                     }
                 } else {
-                    LeftRightScreen(
-                        paddingValues = it,
-                        quizViewModel = quizViewModel,
-                        quizState = quizState,
-                        onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
-                        seeResults = {time, points ->
-                            val ubp = seeResults(time, points.toInt())
-                            navController.navigate("quiz/result/3/pozy/${ubp}")
-                        }
-                    )
+                    if (quizState.questionIndex == 19 && quizState.result != null) {
+                        val user = quizState.usersData.users[quizState.usersData.pick]
+                        navController.navigate("quiz/result/3/${user.nickname}/${quizState.result?.result ?: 0}")
+                    }
+                    else {
+                        LeftRightScreen(
+                            paddingValues = it,
+                            quizViewModel = quizViewModel,
+                            quizState = quizState,
+                            onClickImage = { uiEvent -> quizViewModel.setQuestionEvent(uiEvent) },
+                        )
+                    }
                 }
             }
         )
@@ -98,7 +100,6 @@ fun LeftRightScreen(
     quizViewModel: LeftRightCatViewModel,
     quizState: ILeftRightCatContract.LeftRightCatState,
     onClickImage: (uiEvent: ILeftRightCatContract.LeftRightCatUIEvent) -> Unit,
-    seeResults: (Int, Float)->Unit
 ) {
 
     val question = quizState.questions[quizState.questionIndex]
@@ -155,8 +156,6 @@ fun LeftRightScreen(
                                     catAnswer = question.cat1
                                 )
                             )
-                            if(quizState.questionIndex >18)
-                                seeResults(quizState.timer,quizState.points)
                         },
                     model = question.cat1.image?.url ?: "",
                     contentDescription = null,
@@ -189,8 +188,6 @@ fun LeftRightScreen(
                                     catAnswer = question.cat2
                                 )
                             )
-                            if(quizState.questionIndex >18)
-                                seeResults(quizState.timer,quizState.points)
                         },
                     model = question.cat2.image?.url ?: "",
                     contentDescription = null,

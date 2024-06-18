@@ -85,4 +85,34 @@ class UsersDataStore @Inject constructor(
         return updateList(users = users.toImmutableList())
     }
 
+    suspend fun addGuessFactResult(result: Result): UsersData {
+        val users = data.value.users.toMutableList()
+        var guessFact = users[data.value.pick].guessFact
+        val resultsHistory = guessFact.resultsHistory.toMutableList()
+
+        resultsHistory.add(result)
+        guessFact = guessFact.copy(
+            resultsHistory = resultsHistory.toImmutableList(),
+            bestResult = max(guessFact.bestResult, result.result)
+        )
+        users[data.value.pick] = users[data.value.pick].copy(guessFact = guessFact)
+
+        return updateList(users = users.toImmutableList())
+    }
+
+    suspend fun addLeftRightCatResult(result: Result): UsersData {
+        val users = data.value.users.toMutableList()
+        var leftRightCat = users[data.value.pick].leftRightCat
+        val resultsHistory = leftRightCat.resultsHistory.toMutableList()
+
+        resultsHistory.add(result)
+        leftRightCat = leftRightCat.copy(
+            resultsHistory = resultsHistory.toImmutableList(),
+            bestResult = max(leftRightCat.bestResult, result.result)
+        )
+        users[data.value.pick] = users[data.value.pick].copy(leftRightCat = leftRightCat)
+
+        return updateList(users = users.toImmutableList())
+    }
+
 }

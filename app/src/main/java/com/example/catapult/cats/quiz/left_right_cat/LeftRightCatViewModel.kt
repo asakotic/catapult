@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatState
 import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatQuestion
+import com.example.catapult.core.seeResults
+import com.example.catapult.users.Result
+import com.example.catapult.users.UsersData
+import com.example.catapult.users.UsersDataStore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,10 +26,11 @@ import kotlin.random.Random
 @HiltViewModel
 class LeftRightCatViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
-    private val catsService: CatsService
+    private val catsService: CatsService,
+    private val usersDataStore: UsersDataStore,
 ) : ViewModel() {
 
-    private val _questionState = MutableStateFlow(LeftRightCatState())
+    private val _questionState = MutableStateFlow(LeftRightCatState(usersData =  usersDataStore.data.value))
     val questionState = _questionState.asStateFlow()
 
     private val _questionEvent = MutableSharedFlow<ILeftRightCatContract.LeftRightCatUIEvent>()
@@ -87,6 +92,13 @@ class LeftRightCatViewModel @Inject constructor(
         }
     }
 
+    private fun addResult(result: Result) {
+        viewModelScope.launch {
+            setQuestionState { copy(result = result) }
+            usersDataStore.addLeftRightCatResult(result)
+        }
+    }
+
     private suspend fun checkAnswer(catAnswer: Cat) {
         var questionIndex= questionState.value.questionIndex
         val question = questionState.value.questions[questionIndex]
@@ -98,6 +110,7 @@ class LeftRightCatViewModel @Inject constructor(
             questionIndex++
         else { //End Screen
             pauseTimer()
+            addResult( Result(result = seeResults(questionState.value.timer, points.toInt()), createdAt = System.currentTimeMillis()))
         }
         //delay(700) //delay for ripple animation to finish
         setQuestionState {
