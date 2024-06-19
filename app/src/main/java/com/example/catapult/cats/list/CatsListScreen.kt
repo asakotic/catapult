@@ -53,6 +53,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,6 +76,7 @@ import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
+import com.example.catapult.core.defaultImage
 import com.example.catapult.core.getPic
 import com.example.catapult.core.isDefaultImage
 import com.example.catapult.users.User
@@ -365,6 +368,13 @@ private fun UserItemDrawer(
     onClick: () -> Unit,
     navigateToEdit: () -> Unit,
 ) {
+
+    val bitmap by remember {
+        mutableStateOf(
+            if (isDefaultImage(user.image)) null else getPic(user.image)
+        )
+    }
+
     NavigationDrawerItem(
         icon = {
             SubcomposeAsyncImage(
@@ -372,8 +382,15 @@ private fun UserItemDrawer(
                     .size(48.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
-                model = if (isDefaultImage(user.image)) user.image else getPic(user.image),
+                model = bitmap ?: defaultImage(),
                 contentDescription = null,
+                loading = {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
             )
         },
         label = {

@@ -46,11 +46,6 @@ class EditViewModel @Inject constructor(
         viewModelScope.launch { _editEvents.emit(event) }
 
     init {
-        if (!isDefaultImage(editState.value.image)) {
-            viewModelScope.launch {
-                setEditState { copy(bitmap = getPic(editState.value.image)) }
-            }
-        }
         observerEvents()
     }
 
@@ -118,7 +113,7 @@ class EditViewModel @Inject constructor(
             out.flush()
             out.close()
             viewModelScope.launch {
-                setEditState { copy(image = file.absolutePath, bitmap = getPic(file.absolutePath)) }
+                setEditState { copy(image = file.absolutePath) }
             }
         } catch (ex: Exception) {
             ex.printStackTrace()

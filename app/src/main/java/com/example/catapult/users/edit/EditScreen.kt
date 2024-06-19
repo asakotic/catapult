@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +52,8 @@ import coil.compose.AsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.TopBar
 import com.example.catapult.core.defaultImage
+import com.example.catapult.core.getPic
+import com.example.catapult.core.isDefaultImage
 
 fun NavGraphBuilder.editScreen(
     route: String,
@@ -125,10 +128,22 @@ fun LoginScreen(
             if (uri != null) {
                 val imageView = ImageView(context)
                 imageView.setImageURI(uri)
-                onClick(IEditContract.EditUIEvent.ImageChanged(imageView = imageView, subfolder = "profile-pictures", pictureName = editState.email))
+                onClick(
+                    IEditContract.EditUIEvent.ImageChanged(
+                        imageView = imageView,
+                        subfolder = "profile-pictures",
+                        pictureName = editState.email
+                    )
+                )
             }
         }
     )
+
+    val bitmap by remember {
+        mutableStateOf(
+            if (isDefaultImage(editState.image)) null else getPic(editState.image)
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -158,7 +173,7 @@ fun LoginScreen(
                         )
                     },
                 contentScale = ContentScale.Crop,
-                model = editState.bitmap ?: defaultImage(),
+                model = bitmap ?: defaultImage(),
                 contentDescription = null
             )
 

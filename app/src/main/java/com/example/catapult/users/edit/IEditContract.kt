@@ -9,7 +9,6 @@ interface IEditContract {
         val name: String,
         val email: String,
         val image: String,
-        val bitmap: Bitmap? = null,
         val saveUserPassed: Boolean = false
     ) {
         sealed class DetailsError {
