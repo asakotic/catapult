@@ -34,7 +34,7 @@ class CatsService @Inject constructor(
         catGalleryDao.insertAllGalleryCats(cats = catApi.getAllCatsPhotos(id).map { it.copy(id = id) })
     }
 
-    fun getAllCatImagesFlow(id: String): Flow<List<String>> = catGalleryDao.getAllImagesForId(id)
+    fun getAllCatImagesByIdFlow(id: String): Flow<List<String>> = catGalleryDao.getAllImagesForId(id)
     fun getCatImageByUrlFlow(url: String): Flow<String> = catGalleryDao.getImageByUrl(url)
 
     suspend fun fetchAllResultsForCategory(category: Int): List<ResultDTO> {

@@ -29,6 +29,7 @@ interface IGuessCatContract {
 
     data class GuessCatQuestion(
         val cats: List<Cat> = emptyList(),
+        val images: List<String> = emptyList(),
         val questionText: String,
         val correctAnswer: String,
     )

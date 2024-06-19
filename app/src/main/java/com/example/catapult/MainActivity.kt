@@ -11,17 +11,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.catapult.analytics.AppAnalytics
 import com.example.catapult.core.theme.CatapultTheme
 import com.example.catapult.navigation.AppNavigation
+import com.example.catapult.users.User
+import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val analytics = AppAnalytics()
+    @Inject
+    lateinit var usersDataStore: UsersDataStore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        var user = User.EMPTY
+        if (usersDataStore.data.value.pick > -1)
+            user = usersDataStore.data.value.users[usersDataStore.data.value.pick]
         setContent {
-            CatapultTheme {
+            CatapultTheme(darkTheme = user.darkTheme) {
                 AppNavigation()
             }
         }

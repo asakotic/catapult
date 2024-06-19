@@ -43,7 +43,7 @@ class CatGalleryViewModel @Inject constructor(
                 withContext(dispatcherProvider.io()) {
                     catsService.getAllCatsPhotosApi(id = catId)
                 }
-                catsService.getAllCatImagesFlow(id = catId).collect { photos ->
+                catsService.getAllCatImagesByIdFlow(id = catId).collect { photos ->
                     setCatGalleryState { copy(photos = photos, isLoading = false) }
                 }
             }catch (error: IOException){

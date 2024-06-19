@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
+import com.example.catapult.cats.list.ICatsContract
 import com.example.catapult.core.seeResults
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.Result
@@ -17,7 +18,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -27,7 +30,8 @@ class GuessCatViewModel @Inject constructor(
     private val usersDataStore: UsersDataStore,
     private val catsService: CatsService
 ) : ViewModel() {
-    private val _questionState = MutableStateFlow(IGuessCatContract.GuessCatState(usersData = usersDataStore.data.value))
+    private val _questionState =
+        MutableStateFlow(IGuessCatContract.GuessCatState(usersData = usersDataStore.data.value))
     val questionState = _questionState.asStateFlow()
 
     private val _questionEvent = MutableSharedFlow<IGuessCatContract.GuessCatUIEvent>()
@@ -111,7 +115,12 @@ class GuessCatViewModel @Inject constructor(
             questionIndex++
         else { //End Screen
             pauseTimer()
-            addResult( Result(result = seeResults(questionState.value.timer, points.toInt()), createdAt = System.currentTimeMillis()))
+            addResult(
+                Result(
+                    result = seeResults(questionState.value.timer, points.toInt()),
+                    createdAt = System.currentTimeMillis()
+                )
+            )
         }
         setQuestionState {
             copy(
@@ -122,27 +131,55 @@ class GuessCatViewModel @Inject constructor(
 
     }
 
+    private suspend fun getPictures(id: String): List<String> {
+        val photos = catsService.getAllCatImagesByIdFlow(id = id).first()
+
+        if (photos.isNotEmpty())
+            return photos
+
+        withContext(dispatcherProvider.io()) {
+            catsService.fetchAllCatsFromApi()
+        }
+
+        return catsService.getAllCatImagesByIdFlow(id = id).first()
+    }
+
     /**
      * Creates 20 random questions and saves them in a list
      */
-    private fun createQuestions() {
-        //todo random images of cat
+    private suspend fun createQuestions() {
         val cats = questionState.value.cats
         val questions: MutableList<IGuessCatContract.GuessCatQuestion> = ArrayList()
         val len = cats.size
         var skip = 0
-        var i = -1
+        var i = 2
         var questionNumber = 0
+        var pictureIndex = -1
 
-        while (++i < 20 + skip) {
+        var cat1photos = getPictures(cats[0].id)
+        var cat2photos = getPictures(cats[1].id)
+        var cat3photos = getPictures(cats[2].id)
 
-            //If cat doesn't have images, it shouldn't be in the game
-            if (cats[i].image == null || cats[i + 1].image == null || cats[i + 2].image == null || cats[i + 3].image == null) {
+        while (++i < 23 + skip) {
+            pictureIndex++
+
+            //This way more cats combination are possible
+            val cat4photos = getPictures(cats[i].id)
+            if (cat4photos.isEmpty()) {
                 skip++
                 continue
             }
 
-            var question: String = ""
+            //If cat doesn't have images, it shouldn't be in the game
+            if (cat1photos.isEmpty() || cat2photos.isEmpty() || cat3photos.isEmpty()) {
+                skip++
+                cat1photos = cat2photos
+                cat2photos = cat3photos
+                cat3photos = cat4photos
+                continue
+            }
+
+            var question = ""
             var answer: Pair<String, String> = Pair(invalid, invalid) //(id, answer)
             for (j in 1..2) {
                 questionNumber = (questionNumber + 1) % 2
@@ -156,17 +193,30 @@ class GuessCatViewModel @Inject constructor(
 
             if (answer.first == invalid) {
                 skip++
+                cat1photos = cat2photos
+                cat2photos = cat3photos
+                cat3photos = cat4photos
                 continue
             }
 
             questions.add(
                 IGuessCatContract.GuessCatQuestion(
                     cats = cats.slice(i..i + 3),
+                    images = listOf(
+                        cat1photos[pictureIndex % cat1photos.size],
+                        cat2photos[pictureIndex % cat2photos.size],
+                        cat3photos[pictureIndex % cat3photos.size],
+                        cat4photos[pictureIndex % cat4photos.size],
+                    ),
                     questionText = question,
                     correctAnswer = answer.first,
 
                     )
             )
+
+            cat1photos = cat2photos
+            cat2photos = cat3photos
+            cat3photos = cat4photos
         }
         setQuestionState { copy(questions = questions.shuffled()) }
     }

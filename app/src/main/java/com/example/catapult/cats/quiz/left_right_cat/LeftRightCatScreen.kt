@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,8 +40,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.CustomRippleTheme
 import com.example.catapult.core.ProgressBarOurs
-import com.example.catapult.core.seeResults
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.quizLeftRightCat(
@@ -111,7 +108,7 @@ fun LeftRightScreen(
         ProgressBarOurs(index = quizState.questionIndex, size = quizState.questions.size)
         Column(
             modifier = Modifier.padding(top = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(36.dp)
         ) {
             Card(
                 modifier = Modifier.padding(10.dp)
@@ -125,7 +122,7 @@ fun LeftRightScreen(
                         .padding(10.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

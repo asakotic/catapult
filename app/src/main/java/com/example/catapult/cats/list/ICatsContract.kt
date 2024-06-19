@@ -7,7 +7,8 @@ import com.example.catapult.users.UsersDataStore
 interface ICatsContract {
     data class CatsListState(
         val isLoading: Boolean = false,
-        var usersData: UsersData,
+        val usersData: UsersData,
+        val darkTheme: Boolean,
         val cats: List<Cat> = emptyList(),
         val catsFiltered: List<Cat> = emptyList(),
         val isSearching: Boolean = false,
@@ -21,5 +22,6 @@ interface ICatsContract {
 
     sealed class CatsListUIEvent {
         data class SearchQueryChanged(val query: String) : CatsListUIEvent()
+        data class ChangeTheme(val bool: Boolean) : CatsListUIEvent()
     }
 }

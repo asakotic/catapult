@@ -1,10 +1,8 @@
 package com.example.catapult.cats.quiz.guess_fact
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract.GuessFactState
 import com.example.catapult.core.seeResults
@@ -112,12 +110,12 @@ class GuessFactViewModel @Inject constructor(
         viewModelScope.launch {
             setGuessFactState { copy(isLoading = true) }
             val list = guessFactState.value.cats.shuffled()
-            var newPhotos = catsService.getAllCatImagesFlow(id = list[0].id).first()
+            var newPhotos = catsService.getAllCatImagesByIdFlow(id = list[0].id).first()
             if(newPhotos.isEmpty()) {
                 withContext(dispatcherProvider.io()) {
                     catsService.getAllCatsPhotosApi(id = list[0].id)
                 }
-                newPhotos = catsService.getAllCatImagesFlow(id = list[0].id).first()
+                newPhotos = catsService.getAllCatImagesByIdFlow(id = list[0].id).first()
             }
 
             if(newPhotos.isEmpty()){

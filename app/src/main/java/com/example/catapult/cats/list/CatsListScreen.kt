@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -104,7 +105,7 @@ fun NavGraphBuilder.catsListScreen(
                     addNewUser = { navController.navigate("login?add-new-user=${true}") },
                     navigateToHistory = { navController.navigate("history") },
                     navigateToEdit = { navController.navigate("user/edit") },
-                    leaderboard = {category->
+                    leaderboard = { category ->
                         navController.navigate("quiz/leaderboard/${category}")
                     }
                 )
@@ -124,8 +125,10 @@ fun NavGraphBuilder.catsListScreen(
                         },
                         actions = {
                             AppIconButton(
-                                imageVector = Icons.Filled.LightMode,
-                                onClick = { /*TODO*/ })
+                                imageVector = if (catsState.darkTheme) Icons.Outlined.LightMode else Icons.Filled.LightMode,
+                                onClick = {
+                                    catsViewModel.setCatsEvent(CatsListUIEvent.ChangeTheme(!catsState.darkTheme))
+                                })
                         }
                     )
                 },
@@ -163,7 +166,7 @@ private fun UsersListDrawer(
     addNewUser: () -> Unit,
     navigateToHistory: () -> Unit,
     navigateToEdit: () -> Unit,
-    leaderboard:(Int)->Unit
+    leaderboard: (Int) -> Unit
 ) {
     BoxWithConstraints {
         val box = this

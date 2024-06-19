@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.internal.toImmutableList
 import java.io.IOException
 import javax.inject.Inject
 
@@ -26,7 +27,10 @@ class CatsViewModel @Inject constructor(
     private val usersDataStore: UsersDataStore
 ) : ViewModel() {
 
-    private val _catsState = MutableStateFlow(CatsListState(usersData =  usersDataStore.data.value))
+    private val _catsState = MutableStateFlow(CatsListState(
+        usersData =  usersDataStore.data.value,
+        darkTheme = usersDataStore.data.value.users[usersDataStore.data.value.pick].darkTheme
+    ))
     val catsState = _catsState.asStateFlow()
 
     private val _catsEvents = MutableSharedFlow<CatsListUIEvent>()
@@ -57,8 +61,23 @@ class CatsViewModel @Inject constructor(
             _catsEvents.collect { catsListUIEvent ->
                 when (catsListUIEvent) {
                     is CatsListUIEvent.SearchQueryChanged -> searchQueryFilter(catsListUIEvent.query)
+                    is CatsListUIEvent.ChangeTheme -> changeTheme(catsListUIEvent.bool)
                 }
             }
+        }
+    }
+
+    private fun changeTheme(bool: Boolean) {
+        val users = usersDataStore.data.value.users.toMutableList()
+        val pick = usersDataStore.data.value.pick
+
+        users[pick] = users[pick].copy(
+            darkTheme = bool
+        )
+
+        viewModelScope.launch {
+            usersDataStore.updateUser(users.toImmutableList())
+            setCatsState { copy(darkTheme = bool) }
         }
     }
 
@@ -77,7 +96,6 @@ class CatsViewModel @Inject constructor(
             setCatsState { copy(isLoading = true) }
             try {
                 withContext(dispatcherProvider.io()) {
-                    //delay(1.seconds)
                     catsService.fetchAllCatsFromApi()
                 }
             } catch (error: IOException) {
