@@ -1,11 +1,17 @@
 package com.example.catapult.users.edit
 
-import androidx.lifecycle.SavedStateHandle
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.os.Build
+import android.os.Environment
+import android.util.Log
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.di.DispatcherProvider
-import com.example.catapult.navigation.addNewUser
 import com.example.catapult.users.UsersDataStore
+import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +19,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import okhttp3.internal.toImmutableList
+import java.io.File
+import java.io.FileOutputStream
+import java.nio.file.Paths
+import java.util.Objects
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +59,7 @@ class EditViewModel @Inject constructor(
                     is IEditContract.EditUIEvent.EmailInputChanged -> emailChange(it.email)
                     is IEditContract.EditUIEvent.NameInputChanged -> nameChange(it.name)
                     is IEditContract.EditUIEvent.NicknameInputChanged -> nicknameChange(it.nickname)
-                    is IEditContract.EditUIEvent.ImageChanged -> imageChange(it.image)
+                    is IEditContract.EditUIEvent.ImageChanged -> savePic(imageView = it.imageView, subfolder = it.subfolder, pictureName =  it.pictureName)
                     is IEditContract.EditUIEvent.SaveChanges -> updateUser()
                 }
             }
@@ -84,10 +94,33 @@ class EditViewModel @Inject constructor(
         }
     }
 
-    private fun imageChange(image: String) {
-        viewModelScope.launch {
-            setEditState { copy(image = image) }
+    private fun savePic(imageView: ImageView, subfolder: String, pictureName: String) {
+        val drawable = imageView.getDrawable() as BitmapDrawable
+        val bitmap = drawable.bitmap
+        try {
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .toString(),
+                "$pictureName.jpg"
+            )
+            if (!file.exists()) {
+                Log.d("FILE", "Folder '$file' doesn't exist, creating it...")
+                val rv = Objects.requireNonNull(file.getParentFile()).mkdir()
+                Log.d("FILE", "Folder creation " + if (rv) "success" else "failed")
+            } else {
+                Log.d("FILE", "Folder already exists.")
+            }
+            val out = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            out.flush()
+            out.close()
+            viewModelScope.launch {
+                setEditState { copy(image = file.absolutePath) }
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
+
     }
 
     private fun emailChange(email: String) {

@@ -1,5 +1,7 @@
 package com.example.catapult.users.edit
 
+import android.widget.ImageView
+
 interface IEditContract {
     data class EditState (
         val nickname: String,
@@ -17,7 +19,7 @@ interface IEditContract {
         data class NicknameInputChanged(val nickname: String) : EditUIEvent()
         data class EmailInputChanged(val email: String) : EditUIEvent()
         data class NameInputChanged(val name: String) :  EditUIEvent()
-        data class ImageChanged(val image: String) :  EditUIEvent()
+        data class ImageChanged(val imageView: ImageView, val subfolder: String, val pictureName: String) :  EditUIEvent()
         data object SaveChanges :  EditUIEvent()
     }
 }

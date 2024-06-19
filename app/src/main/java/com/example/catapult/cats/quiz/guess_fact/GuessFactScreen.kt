@@ -173,6 +173,13 @@ fun MakeQuestion(
                         model = state.image,
                         contentDescription = null,
                         contentScale = ContentScale.Inside,
+                        loading = {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                        }
                     )
             }
             Spacer(modifier = Modifier.height(16.dp))

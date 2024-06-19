@@ -76,6 +76,8 @@ import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
+import com.example.catapult.core.getPic
+import com.example.catapult.core.isDefaultImage
 import com.example.catapult.users.User
 import kotlinx.coroutines.launch
 
@@ -372,15 +374,8 @@ private fun UserItemDrawer(
                     .size(48.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
-                model = user.image,
+                model = if (isDefaultImage(user.image)) user.image else getPic(user.image),
                 contentDescription = null,
-                loading = {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
             )
         },
         label = {

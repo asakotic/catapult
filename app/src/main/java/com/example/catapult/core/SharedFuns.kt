@@ -1,6 +1,15 @@
 package com.example.catapult.core
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.os.Environment
 import android.util.Log
+import android.widget.ImageView
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Objects
+
 
 fun seeResults(time: Int, points:Int): Float{
     //UBP = BTO * 2.5 * (1 + (PVT + 120) / MVT)
@@ -17,4 +26,13 @@ fun getTimeAsFormat(timer: Int): String {
 
 fun defaultImage(): String {
     return "https://cdn2.thecatapi.com/images/J2PmlIizw.jpg"
+}
+
+fun isDefaultImage(imagePath: String): Boolean {
+    return imagePath == defaultImage()
+}
+
+fun getPic(path: String): Bitmap {
+    val file = File(path)
+    return BitmapFactory.decodeFile(file.absolutePath)
 }

@@ -1,6 +1,7 @@
 package com.example.catapult.users.edit
 
 import android.util.Log
+import android.widget.ImageView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,6 +58,9 @@ import coil.compose.AsyncImage
 import com.example.catapult.R
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.TopBar
+import com.example.catapult.core.defaultImage
+import com.example.catapult.core.getPic
+import com.example.catapult.core.isDefaultImage
 
 fun NavGraphBuilder.editScreen(
     route: String,
@@ -123,11 +128,14 @@ fun LoginScreen(
         label = ""
     )
 
+    val context = LocalContext.current
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             if (uri != null) {
-                onClick(IEditContract.EditUIEvent.ImageChanged(uri.toString()))
+                val imageView = ImageView(context)
+                imageView.setImageURI(uri)
+                onClick(IEditContract.EditUIEvent.ImageChanged(imageView = imageView, subfolder = "profile-pictures", pictureName = editState.email))
             }
         }
     )
@@ -160,7 +168,7 @@ fun LoginScreen(
                         )
                     },
                 contentScale = ContentScale.Crop,
-                model = editState.image,
+                model = if (isDefaultImage(editState.image)) editState.image else getPic(editState.image),
                 contentDescription = null
             )
 
