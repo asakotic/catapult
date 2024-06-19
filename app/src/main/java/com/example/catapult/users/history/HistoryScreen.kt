@@ -32,7 +32,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.catapult.core.AppIconButton
 import com.example.catapult.core.TopBar
-import com.example.catapult.users.UserQuiz
+import com.example.catapult.users.Result
 
 fun NavGraphBuilder.historyScreen(
     route: String,
@@ -66,7 +66,7 @@ fun NavGraphBuilder.historyScreen(
                             historyState = historyState,
                             index = 0,
                             title = "Guess Fact",
-                            items = historyState.usersData.users[historyState.usersData.pick].guessFact,
+                            results = historyViewModel.getAllResults("guessFact"),
                             onClick = { uiEvent -> historyViewModel.setHistoryEvent(uiEvent) }
                         )
                     }
@@ -76,7 +76,7 @@ fun NavGraphBuilder.historyScreen(
                             historyState = historyState,
                             index = 1,
                             title = "Guess Cat",
-                            items = historyState.usersData.users[historyState.usersData.pick].guessCat,
+                            results = historyViewModel.getAllResults("guessCat"),
                             onClick = { uiEvent -> historyViewModel.setHistoryEvent(uiEvent) }
                         )
                     }
@@ -85,7 +85,7 @@ fun NavGraphBuilder.historyScreen(
                             bestResult = historyViewModel.getBestResult("leftRightCat"),
                             historyState = historyState,
                             title = "Left Right Cat",
-                            items = historyState.usersData.users[historyState.usersData.pick].leftRightCat,
+                            results = historyViewModel.getAllResults("leftRightCat"),
                             index = 2,
                             onClick = { uiEvent -> historyViewModel.setHistoryEvent(uiEvent) }
                         )
@@ -102,7 +102,7 @@ private fun CardContent(
     bestResult: String,
     historyState: IHistoryContract.HistoryState,
     title: String,
-    items: UserQuiz,
+    results: List<Result>,
     index: Int,
     onClick: (uiEvent: IHistoryContract.HistoryUIEvent) -> Unit
 ) {
@@ -158,7 +158,7 @@ private fun CardContent(
                     modifier = Modifier.heightIn(max = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    items(items = items.resultsHistory) { result ->
+                    items(items = results) { result ->
 
 
                         Column(

@@ -2,6 +2,7 @@ package com.example.catapult.users.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.catapult.users.Result
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,6 +40,18 @@ class HistoryViewModel @Inject constructor(
             "guessFact" -> users[pick].guessFact.bestResult.toString()
             "leftRightCat" -> users[pick].leftRightCat.bestResult.toString()
             else -> "0.0"
+        }
+    }
+
+    fun getAllResults(quiz: String): List<Result> {
+        val users = historyState.value.usersData.users
+        val pick = historyState.value.usersData.pick
+
+        return when (quiz) {
+            "guessCat" -> users[pick].guessCat.resultsHistory.reversed()
+            "guessFact" -> users[pick].guessFact.resultsHistory.reversed()
+            "leftRightCat" -> users[pick].leftRightCat.resultsHistory.reversed()
+            else -> emptyList<Result>()
         }
     }
 
