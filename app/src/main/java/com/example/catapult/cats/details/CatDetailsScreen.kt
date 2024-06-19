@@ -2,6 +2,7 @@ package com.example.catapult.cats.details
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,20 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,8 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -44,9 +37,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.cats.db.Cat
-import com.example.catapult.core.TopBar
 import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
+import com.example.catapult.core.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.catDetailsScreen (
@@ -126,32 +119,17 @@ private fun CatDetailsScreen(
                     .padding(paddingValues)
                     .verticalScroll(scrollState)
             ) {
-                Card(
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    SubcomposeAsyncImage(
-                        modifier =  Modifier.fillMaxWidth(),
-                        model = catState.data.image?.url ?: "",
-                        contentDescription = null
-                    )
-                    Button(
-                        onClick = {
-                            openGallery(catState.catId)
-                        }
-                    ) {
-                        Text(text = "Gallery")
-                    }
-                }
+                SubcomposeAsyncImage(
+                    modifier =  Modifier.fillMaxWidth(),
+                    model = catState.data.image?.url ?: "",
+                    contentDescription = null
+                )
 
-                Card(
-                    shape = RectangleShape,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    CatInformation(catState.data)
-                }
+                CatInformation(
+                    catState = catState,
+                    data = catState.data,
+                    openGallery = openGallery
+                )
 
             }
         }
@@ -160,68 +138,64 @@ private fun CatDetailsScreen(
 
 @Composable
 private fun CatInformation(
-    data: Cat
+    catState: ICatDetailsContract.CatDetailsState,
+    data: Cat,
+    openGallery: (String)-> Unit,
 ) {
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
+        Button(
+            onClick = {
+                openGallery(catState.catId)
+            }
+        ) {
+            Text(text = "Gallery")
+        }
 
         SimpleInfo(
             title = "Race Of Cat",
             description = data.name
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         SimpleInfo(
             title = "description",
             description = data.description
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         ListInfo(title = "Countries Of Origin", items = data.origin.replace(" ", "").split(","))
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         ListInfo(title = "Temperament Traits", items = data.temperament.replace(" ", "").split(","))
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         SimpleInfo(
             title = "Average Weight",
             description = data.weight.metric
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         SimpleInfo(
             title = "Rare",
             description = if (data.rare == 1) "Yes" else "No"
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         SimpleInfo(
             title = "Life Span",
             description = data.lifeSpan
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Column {
-            StarRatingBar(text = "affectionLevel", rating = data.affectionLevel.toFloat()) {}
-            Spacer(modifier = Modifier.height(16.dp))
-            StarRatingBar(text = "childFriendly", rating = data.childFriendly.toFloat()) {}
-            Spacer(modifier = Modifier.height(16.dp))
-            StarRatingBar(text = "dogFriendly", rating = data.dogFriendly.toFloat()) {}
-            Spacer(modifier = Modifier.height(16.dp))
-            StarRatingBar(text = "energyLevel", rating = data.energyLevel.toFloat()) {}
-            Spacer(modifier = Modifier.height(16.dp))
-            StarRatingBar(text = "healthIssues", rating = data.healthIssues.toFloat()) {}
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        StarRatingBar(text = "affectionLevel", rating = data.affectionLevel.toFloat()) {}
+        StarRatingBar(text = "childFriendly", rating = data.childFriendly.toFloat()) {}
+        StarRatingBar(text = "dogFriendly", rating = data.dogFriendly.toFloat()) {}
+        StarRatingBar(text = "energyLevel", rating = data.energyLevel.toFloat()) {}
+        StarRatingBar(text = "healthIssues", rating = data.healthIssues.toFloat()) {}
 
         val context = LocalContext.current
 
@@ -261,29 +235,32 @@ private fun StarRatingBar(
             modifier = Modifier.selectableGroup(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            for (i in 1..maxStars) {
-                val isSelected = i <= rating
-                val icon = if (isSelected) Icons.Filled.Star else Icons.Default.Star
-                val iconTintColor = if (isSelected) Color(0xFFFFC700) else Color(0xFFbdbdbd)
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconTintColor,
-                    modifier = Modifier
-                        .selectable(
-                            selected = isSelected,
-                            onClick = {
-                                onRatingChanged(i.toFloat())
-                            }
-                        )
-                        .width(starSize)
-                        .height(starSize)
-                )
-
-                if (i < maxStars) {
-                    Spacer(modifier = Modifier.width(starSpacing))
-                }
-            }
+            LinearProgressIndicator(
+                progress = {rating / maxStars.toFloat()}
+            )
+//            for (i in 1..maxStars) {
+//                val isSelected = i <= rating
+//                val icon = if (isSelected) Icons.Filled.Star else Icons.Default.Star
+//                val iconTintColor = if (isSelected) Color(0xFFFFC700) else Color(0xFFbdbdbd)
+//                Icon(
+//                    imageVector = icon,
+//                    contentDescription = null,
+//                    tint = iconTintColor,
+//                    modifier = Modifier
+//                        .selectable(
+//                            selected = isSelected,
+//                            onClick = {
+//                                onRatingChanged(i.toFloat())
+//                            }
+//                        )
+//                        .width(starSize)
+//                        .height(starSize)
+//                )
+//
+//                if (i < maxStars) {
+//                    Spacer(modifier = Modifier.width(starSpacing))
+//                }
+//            }
         }
     }
 }
