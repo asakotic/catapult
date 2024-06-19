@@ -149,7 +149,7 @@ class LeftRightCatViewModel @Inject constructor(
         val questions: MutableList<LeftRightCatQuestion> = ArrayList()
         var skip = 0
         var i = 0
-        var photoIndex = 0
+        var photoIndex = -1
 
         var cat1Photos = getAllPictures(cats[0].id)
         while (++i < 21 + skip) {
@@ -171,7 +171,7 @@ class LeftRightCatViewModel @Inject constructor(
             val randomQuestion = Random.nextInt(1, 3)
             questions.add(
                 LeftRightCatQuestion(
-                    cats = listOf(cats[i - 1], cats[1]),
+                    cats = listOf(cats[i - 1], cats[i]),
                     images = listOf(
                         cat1Photos[photoIndex % cat1Photos.size],
                         cat2Photos[photoIndex % cat2Photos.size]

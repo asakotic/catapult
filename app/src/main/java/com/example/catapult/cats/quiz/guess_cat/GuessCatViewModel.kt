@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
-import com.example.catapult.cats.list.ICatsContract
 import com.example.catapult.core.seeResults
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.Result
@@ -18,9 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -184,7 +181,7 @@ class GuessCatViewModel @Inject constructor(
             for (j in 1..2) {
                 questionNumber = (questionNumber + 1) % 2
 
-                answer = giveAnswer(questionNumber, i)
+                answer = giveAnswer(questionNumber, i - 3)
                 if (answer.first != invalid) {
                     question = giveQuestion(questionNumber, answer.second)
                     break
@@ -221,19 +218,19 @@ class GuessCatViewModel @Inject constructor(
         setQuestionState { copy(questions = questions.shuffled()) }
     }
 
-    private fun giveAnswer(questionNumber: Int, i: Int): Pair<String, String> {
+    private fun giveAnswer(questionNumber: Int, index: Int): Pair<String, String> {
         return when (questionNumber) {
-            0 -> giveTemperament(i)
-            else -> giveRace(i)
+            0 -> giveTemperament(index)
+            else -> giveRace(index)
         }
     }
 
-    private fun giveTemperament(i: Int): Pair<String, String> {
+    private fun giveTemperament(index: Int): Pair<String, String> {
         val cats = questionState.value.cats
-        val allTemps = cats[i].getListOfTemperaments() +
-                cats[i + 1].getListOfTemperaments() +
-                cats[i + 2].getListOfTemperaments() +
-                cats[i + 3].getListOfTemperaments()
+        val allTemps = cats[index].getListOfTemperaments() +
+                cats[index + 1].getListOfTemperaments() +
+                cats[index + 2].getListOfTemperaments() +
+                cats[index + 3].getListOfTemperaments()
 
         val uniqueTemps = allTemps
             .groupBy { it.lowercase() }
@@ -243,8 +240,8 @@ class GuessCatViewModel @Inject constructor(
 
         var currNum = Random.nextInt(0, 4)
         for (j in 0..3) {
-            if (cats[i + currNum].getListOfTemperaments().contains(uniqueTemps[0]))
-                return Pair(cats[i + currNum].id, uniqueTemps[0])
+            if (cats[index + currNum].getListOfTemperaments().contains(uniqueTemps[0]))
+                return Pair(cats[index + currNum].id, uniqueTemps[0])
             currNum = (currNum + 1) % 4
         }
         return Pair(invalid, invalid)
