@@ -157,7 +157,7 @@ fun LeftRightScreen(
                                 )
                             )
                         },
-                    model = question.cat1.image?.url ?: "",
+                    model = question.images[0],
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     loading = {
@@ -189,7 +189,7 @@ fun LeftRightScreen(
                                 )
                             )
                         },
-                    model = question.cat2.image?.url ?: "",
+                    model = question.images[1],
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
     //                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiaryContainer, blendMode = BlendMode.Color),
