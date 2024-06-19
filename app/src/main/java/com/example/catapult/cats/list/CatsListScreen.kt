@@ -22,11 +22,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.LightMode
@@ -93,68 +95,73 @@ fun NavGraphBuilder.catsListScreen(
         scope.launch { drawerState.close() }
     }
 
-    Surface(
-        tonalElevation = 1.dp
-    ) {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                UsersListDrawer(
-                    catsState = catsState,
-                    catsViewModel = catsViewModel,
-                    addNewUser = { navController.navigate("login?add-new-user=${true}") },
-                    navigateToHistory = { navController.navigate("history") },
-                    navigateToEdit = { navController.navigate("user/edit") },
-                    leaderboard = { category ->
-                        navController.navigate("quiz/leaderboard/${category}")
+    if (catsState.usersData.pick == -1) {
+        navController.navigate("login")
+    }
+    else {
+        Surface(
+            tonalElevation = 1.dp
+        ) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    UsersListDrawer(
+                        catsState = catsState,
+                        catsViewModel = catsViewModel,
+                        addNewUser = { navController.navigate("login?add-new-user=${true}") },
+                        navigateToHistory = { navController.navigate("history") },
+                        navigateToEdit = { navController.navigate("user/edit") },
+                        leaderboard = { category ->
+                            navController.navigate("quiz/leaderboard/${category}")
+                        }
+                    )
+                }
+            ) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(text = "Catapult", style = MaterialTheme.typography.labelLarge)
+                            },
+                            navigationIcon = {
+                                AppIconButton(
+                                    imageVector = Icons.Default.Menu,
+                                    onClick = { scope.launch { drawerState.open() } }
+                                )
+                            },
+                            actions = {
+                                AppIconButton(
+                                    imageVector = if (catsState.darkTheme) Icons.Outlined.LightMode else Icons.Filled.LightMode,
+                                    onClick = {
+                                        catsViewModel.setCatsEvent(CatsListUIEvent.ChangeTheme(!catsState.darkTheme))
+                                    })
+                            }
+                        )
+                    },
+                    floatingActionButton = {
+                        LargeFloatingActionButton(
+                            onClick = {
+                                goToQuiz()
+                            },
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.tertiary,
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.quiz_icon),
+                                contentDescription = "Floating action button."
+                            )
+                        }
+                    },
+                    content = {
+                        CatsList(
+                            catsState = catsState,
+                            paddingValues = it,
+                            eventPublisher = { uiEvent -> catsViewModel.setCatsEvent(uiEvent) },
+                            onClick = { catInfoDetail -> navController.navigate("cats/${catInfoDetail.id}") }
+                        )
                     }
                 )
             }
-        ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(text = "Catapult", style = MaterialTheme.typography.labelLarge)
-                        },
-                        navigationIcon = {
-                            AppIconButton(
-                                imageVector = Icons.Default.Menu,
-                                onClick = { scope.launch { drawerState.open() } }
-                            )
-                        },
-                        actions = {
-                            AppIconButton(
-                                imageVector = if (catsState.darkTheme) Icons.Outlined.LightMode else Icons.Filled.LightMode,
-                                onClick = {
-                                    catsViewModel.setCatsEvent(CatsListUIEvent.ChangeTheme(!catsState.darkTheme))
-                                })
-                        }
-                    )
-                },
-                floatingActionButton = {
-                    LargeFloatingActionButton(
-                        onClick = {
-                            goToQuiz()
-                        },
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.tertiary,
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.quiz_icon),
-                            contentDescription = "Floating action button."
-                        )
-                    }
-                },
-                content = {
-                    CatsList(
-                        catsState = catsState,
-                        paddingValues = it,
-                        eventPublisher = { uiEvent -> catsViewModel.setCatsEvent(uiEvent) },
-                        onClick = { catInfoDetail -> navController.navigate("cats/${catInfoDetail.id}") }
-                    )
-                }
-            )
         }
     }
 }
@@ -204,7 +211,7 @@ private fun UsersListDrawer(
                     )
 
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 300.dp)
+                        modifier = Modifier.heightIn(max = 180.dp)
                     ) {
                         itemsIndexed(catsState.usersData.users) { index, user ->
                             UserItemDrawer(
@@ -316,6 +323,35 @@ private fun UsersListDrawer(
                     )
                 }
 
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+                NavigationDrawerItem(
+                    icon = {
+                        AppIconButton(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            onClick = {
+                                catsViewModel.setCatsEvent(
+                                    CatsListUIEvent.Logout(
+                                        user = catsState.usersData.users[catsState.usersData.pick]
+                                    )
+                                )
+                            }
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = "Logout",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
+                    selected = false,
+                    onClick = {
+                        catsViewModel.setCatsEvent(
+                            CatsListUIEvent.Logout(
+                                user = catsState.usersData.users[catsState.usersData.pick]
+                            )
+                        )
+                    }
+                )
             }
         }
     }
@@ -327,7 +363,7 @@ private fun UserItemDrawer(
     index: Int,
     catsState: CatsListState,
     onClick: () -> Unit,
-    navigateToEdit: () -> Unit
+    navigateToEdit: () -> Unit,
 ) {
     NavigationDrawerItem(
         icon = {

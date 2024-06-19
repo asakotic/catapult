@@ -7,6 +7,7 @@ import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.list.ICatsContract.CatsListState
 import com.example.catapult.cats.list.ICatsContract.CatsListUIEvent
 import com.example.catapult.di.DispatcherProvider
+import com.example.catapult.users.User
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -62,8 +63,16 @@ class CatsViewModel @Inject constructor(
                 when (catsListUIEvent) {
                     is CatsListUIEvent.SearchQueryChanged -> searchQueryFilter(catsListUIEvent.query)
                     is CatsListUIEvent.ChangeTheme -> changeTheme(catsListUIEvent.bool)
+                    is CatsListUIEvent.Logout -> logout(catsListUIEvent.user)
                 }
             }
+        }
+    }
+
+    private fun logout(user: User) {
+        viewModelScope.launch {
+            usersDataStore.removeUser(user)
+            setCatsState { copy(usersData = usersDataStore.data.value) }
         }
     }
 

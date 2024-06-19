@@ -4,23 +4,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.cats.db.CatsService
-import com.example.catapult.di.DispatcherProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatState
 import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatQuestion
+import com.example.catapult.cats.quiz.left_right_cat.ILeftRightCatContract.LeftRightCatState
 import com.example.catapult.core.seeResults
+import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.Result
 import com.example.catapult.users.UsersDataStore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
@@ -147,7 +147,6 @@ class LeftRightCatViewModel @Inject constructor(
     private suspend fun createQuestions() {
         val cats = questionState.value.cats
         val questions: MutableList<LeftRightCatQuestion> = ArrayList()
-        val len = cats.size
         var skip = 0
         var i = 0
         var photoIndex = 0

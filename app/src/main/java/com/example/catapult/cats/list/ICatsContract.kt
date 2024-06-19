@@ -1,6 +1,7 @@
 package com.example.catapult.cats.list
 
 import com.example.catapult.cats.db.Cat
+import com.example.catapult.users.User
 import com.example.catapult.users.UsersData
 import com.example.catapult.users.UsersDataStore
 
@@ -23,5 +24,6 @@ interface ICatsContract {
     sealed class CatsListUIEvent {
         data class SearchQueryChanged(val query: String) : CatsListUIEvent()
         data class ChangeTheme(val bool: Boolean) : CatsListUIEvent()
+        data class Logout(val user: User) : CatsListUIEvent()
     }
 }
