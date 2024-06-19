@@ -3,8 +3,8 @@ package com.example.catapult.cats.gallery
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.catapult.cats.gallery.ICatGalleryContract.CatGalleryState
 import com.example.catapult.cats.db.CatsService
+import com.example.catapult.cats.gallery.ICatGalleryContract.CatGalleryState
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.navigation.catId
 import dagger.hilt.android.lifecycle.HiltViewModel

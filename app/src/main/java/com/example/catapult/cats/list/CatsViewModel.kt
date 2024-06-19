@@ -1,6 +1,5 @@
 package com.example.catapult.cats.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.CatsService

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.example.catapult.users.User
 import com.example.catapult.users.UsersData
 import com.example.catapult.users.UsersDataSerializer
 import dagger.Module

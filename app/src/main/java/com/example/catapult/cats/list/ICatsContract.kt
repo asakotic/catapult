@@ -3,7 +3,6 @@ package com.example.catapult.cats.list
 import com.example.catapult.cats.db.Cat
 import com.example.catapult.users.User
 import com.example.catapult.users.UsersData
-import com.example.catapult.users.UsersDataStore
 
 interface ICatsContract {
     data class CatsListState(

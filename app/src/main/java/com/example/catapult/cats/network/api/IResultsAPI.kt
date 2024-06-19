@@ -1,6 +1,5 @@
 package com.example.catapult.cats.network.api
 
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import com.example.catapult.cats.network.dto.ResultDTO
 import retrofit2.http.Body
 import retrofit2.http.GET

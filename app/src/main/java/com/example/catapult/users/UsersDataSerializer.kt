@@ -3,8 +3,6 @@ package com.example.catapult.users
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.example.catapult.cats.network.serialization.JsonAndClass
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

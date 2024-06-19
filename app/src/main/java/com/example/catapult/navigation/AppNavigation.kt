@@ -10,13 +10,13 @@ import com.example.catapult.cats.details.catDetailsScreen
 import com.example.catapult.cats.gallery.catGalleryScreen
 import com.example.catapult.cats.gallery.photo.catPhotoScreen
 import com.example.catapult.cats.list.catsListScreen
+import com.example.catapult.cats.login.loginScreen
 import com.example.catapult.cats.quiz.chooseQuizScreen
 import com.example.catapult.cats.quiz.guess_cat.guessCatScreen
 import com.example.catapult.cats.quiz.guess_fact.guessFactScreen
 import com.example.catapult.cats.quiz.leaderboard.leaderboardScreen
 import com.example.catapult.cats.quiz.left_right_cat.quizLeftRightCat
 import com.example.catapult.cats.quiz.result.resultScreen
-import com.example.catapult.cats.login.loginScreen
 import com.example.catapult.users.edit.editScreen
 import com.example.catapult.users.history.historyScreen
 

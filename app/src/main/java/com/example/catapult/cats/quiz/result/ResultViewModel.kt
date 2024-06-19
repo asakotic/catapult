@@ -5,24 +5,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.CatsService
-import com.example.catapult.cats.quiz.guess_fact.IGuessFactContract
+import com.example.catapult.cats.quiz.result.IResultContract.ResultState
 import com.example.catapult.di.DispatcherProvider
+import com.example.catapult.navigation.category
+import com.example.catapult.navigation.result
+import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
-import javax.inject.Inject
-import com.example.catapult.cats.quiz.result.IResultContract.ResultState
-import com.example.catapult.navigation.catId
-import com.example.catapult.navigation.category
-import com.example.catapult.navigation.result
-import com.example.catapult.users.UsersData
-import com.example.catapult.users.UsersDataStore
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.cats.db.CatsService
 import com.example.catapult.navigation.category
-import com.example.catapult.users.UsersData
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -33,8 +33,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
-import com.example.catapult.core.AppIconButton
 import com.example.catapult.cats.gallery.ICatGalleryContract.CatGalleryState
+import com.example.catapult.core.AppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.catGalleryScreen (

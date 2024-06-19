@@ -2,18 +2,15 @@ package com.example.catapult.users.edit
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catapult.core.getPic
 import com.example.catapult.core.isDefaultImage
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.UsersDataStore
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +20,6 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.toImmutableList
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.file.Paths
 import java.util.Objects
 import javax.inject.Inject
 
