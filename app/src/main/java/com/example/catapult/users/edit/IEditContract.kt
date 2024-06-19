@@ -1,5 +1,6 @@
 package com.example.catapult.users.edit
 
+import android.graphics.Bitmap
 import android.widget.ImageView
 
 interface IEditContract {
@@ -8,6 +9,7 @@ interface IEditContract {
         val name: String,
         val email: String,
         val image: String,
+        val bitmap: Bitmap? = null,
         val saveUserPassed: Boolean = false
     ) {
         sealed class DetailsError {

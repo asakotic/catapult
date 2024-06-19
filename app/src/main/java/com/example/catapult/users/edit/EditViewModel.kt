@@ -9,6 +9,8 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.catapult.core.getPic
+import com.example.catapult.core.isDefaultImage
 import com.example.catapult.di.DispatcherProvider
 import com.example.catapult.users.UsersDataStore
 import dagger.hilt.android.internal.Contexts
@@ -48,6 +50,11 @@ class EditViewModel @Inject constructor(
         viewModelScope.launch { _editEvents.emit(event) }
 
     init {
+        if (!isDefaultImage(editState.value.image)) {
+            viewModelScope.launch {
+                setEditState { copy(bitmap = getPic(editState.value.image)) }
+            }
+        }
         observerEvents()
     }
 
@@ -115,7 +122,7 @@ class EditViewModel @Inject constructor(
             out.flush()
             out.close()
             viewModelScope.launch {
-                setEditState { copy(image = file.absolutePath) }
+                setEditState { copy(image = file.absolutePath, bitmap = getPic(file.absolutePath)) }
             }
         } catch (ex: Exception) {
             ex.printStackTrace()

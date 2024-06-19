@@ -33,6 +33,7 @@ fun isDefaultImage(imagePath: String): Boolean {
 }
 
 fun getPic(path: String): Bitmap {
+    Log.d("AAAAAAAAAAAAA","Pozvao")
     val file = File(path)
     return BitmapFactory.decodeFile(file.absolutePath)
 }

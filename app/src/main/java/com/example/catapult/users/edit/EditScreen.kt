@@ -168,7 +168,7 @@ fun LoginScreen(
                         )
                     },
                 contentScale = ContentScale.Crop,
-                model = if (isDefaultImage(editState.image)) editState.image else getPic(editState.image),
+                model = editState.bitmap ?: defaultImage(),
                 contentDescription = null
             )
 
