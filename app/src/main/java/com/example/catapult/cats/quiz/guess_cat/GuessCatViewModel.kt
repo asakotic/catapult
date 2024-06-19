@@ -201,7 +201,7 @@ class GuessCatViewModel @Inject constructor(
 
             questions.add(
                 IGuessCatContract.GuessCatQuestion(
-                    cats = cats.slice(i..i + 3),
+                    cats = cats.slice(i - 3..i),
                     images = listOf(
                         cat1photos[pictureIndex % cat1photos.size],
                         cat2photos[pictureIndex % cat2photos.size],
