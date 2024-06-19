@@ -140,7 +140,7 @@ fun LeftRightScreen(
             CompositionLocalProvider(
                 LocalRippleTheme provides CustomRippleTheme(
                     color =
-                    if (quizViewModel.isCorrectAnswer(question.cat1.id))
+                    if (quizViewModel.isCorrectAnswer(question.cats[0].id))
                         MaterialTheme.colorScheme.tertiary
                     else
                         MaterialTheme.colorScheme.error
@@ -153,7 +153,7 @@ fun LeftRightScreen(
                         .clickable {
                             onClickImage(
                                 ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
-                                    catAnswer = question.cat1
+                                    catAnswer = question.cats[0]
                                 )
                             )
                         },
@@ -172,7 +172,7 @@ fun LeftRightScreen(
             CompositionLocalProvider(
                 LocalRippleTheme provides CustomRippleTheme(
                     color =
-                    if (quizViewModel.isCorrectAnswer(question.cat2.id))
+                    if (quizViewModel.isCorrectAnswer(question.cats[1].id))
                         MaterialTheme.colorScheme.tertiary
                     else
                         MaterialTheme.colorScheme.error
@@ -185,7 +185,7 @@ fun LeftRightScreen(
                         .clickable {
                             onClickImage(
                                 ILeftRightCatContract.LeftRightCatUIEvent.QuestionAnswered(
-                                    catAnswer = question.cat2
+                                    catAnswer = question.cats[1]
                                 )
                             )
                         },

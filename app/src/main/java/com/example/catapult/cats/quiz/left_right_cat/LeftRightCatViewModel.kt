@@ -172,8 +172,7 @@ class LeftRightCatViewModel @Inject constructor(
             val randomQuestion = Random.nextInt(1, 3)
             questions.add(
                 LeftRightCatQuestion(
-                    cat1 = cats[i - 1],
-                    cat2 = cats[i],
+                    cats = listOf(cats[i - 1], cats[1]),
                     images = listOf(
                         cat1Photos[photoIndex % cat1Photos.size],
                         cat2Photos[photoIndex % cat2Photos.size]

@@ -29,8 +29,7 @@ interface ILeftRightCatContract {
     }
 
     data class LeftRightCatQuestion(
-        val cat1: Cat,
-        val cat2: Cat,
+        val cats: List<Cat>,
         val images: List<String> = emptyList(),
         val questionText: String,
         val correctAnswer: String,
