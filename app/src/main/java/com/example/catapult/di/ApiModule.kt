@@ -1,6 +1,5 @@
-package com.example.catapult.cats.network
+package com.example.catapult.di
 
-import com.example.catapult.cats.db.CatsService
 import com.example.catapult.cats.network.api.ICatListAPI
 import com.example.catapult.cats.network.api.IResultsAPI
 import com.example.catapult.cats.network.serialization.JsonAndClass
