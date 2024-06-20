@@ -122,7 +122,14 @@ private fun CatDetailsScreen(
                 SubcomposeAsyncImage(
                     modifier =  Modifier.fillMaxWidth(),
                     model = catState.data.image?.url ?: "",
-                    contentDescription = null
+                    contentDescription = null,
+                    loading = {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
                 )
 
                 CatInformation(
