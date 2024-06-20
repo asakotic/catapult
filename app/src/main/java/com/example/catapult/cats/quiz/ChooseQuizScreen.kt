@@ -19,6 +19,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -74,15 +76,14 @@ fun ChooseQuizScreen(
                 Column(
                     modifier = Modifier
                         .verticalScroll(scrollState)
-                        .align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .align(Alignment.Center).padding(top = 60.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(30.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.quiz_pick),
                         contentDescription = "quiz picker photo",
                         modifier = Modifier
-                            .padding(vertical = 20.dp)
-                            .padding(bottom = 40.dp)
                     )
 
                     Column(
