@@ -10,6 +10,7 @@ import com.example.catapult.navigation.catId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,12 +41,15 @@ class CatGalleryViewModel @Inject constructor(
         viewModelScope.launch {
             setCatGalleryState { copy(isLoading = true) }
             try {
-                withContext(dispatcherProvider.io()) {
-                    catsService.getAllCatsPhotosApi(id = catId)
+                var newPhotos = catsService.getAllCatImagesByIdFlow(id = catId).first()
+                if(newPhotos.isEmpty()) {
+                    withContext(dispatcherProvider.io()) {
+                        catsService.getAllCatsPhotosApi(id = catId)
+                    }
+                    newPhotos = catsService.getAllCatImagesByIdFlow(id = catId).first()
                 }
-                catsService.getAllCatImagesByIdFlow(id = catId).collect { photos ->
-                    setCatGalleryState { copy(photos = photos, isLoading = false) }
-                }
+                setCatGalleryState { copy(photos = newPhotos, isLoading = false) }
+
             }catch (error: IOException){
                 setCatGalleryState { copy(error = CatGalleryState.DetailsError.DataUpdateFailed(cause = error)) }
             }finally {

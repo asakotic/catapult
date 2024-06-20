@@ -126,6 +126,13 @@ fun CatGalleryScreen(
                     model = item,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
                 )
             }
         }
