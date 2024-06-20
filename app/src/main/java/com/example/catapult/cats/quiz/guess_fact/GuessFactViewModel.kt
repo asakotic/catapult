@@ -72,6 +72,11 @@ class GuessFactViewModel @Inject constructor(
                 setGuessFactState { copy(timer = timer - 1) }
                 if(guessFactState.value.timer <= 0){
                     pauseTimer()
+                    val result = Result(
+                        result = seeResults(guessFactState.value.timer,  guessFactState.value.points),
+                        createdAt = System.currentTimeMillis()
+                    )
+                    addResult(result)
                 }
             }
 

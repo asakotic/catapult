@@ -50,8 +50,7 @@ fun NavGraphBuilder.guessFactScreen(
     val guessFactViewModel: GuessFactViewModel = hiltViewModel()
     val state by guessFactViewModel.guessFactState.collectAsState()
 
-    if (state.questionIndex == 20 && state.result != null) {
-        val user = state.usersData.users[state.usersData.pick]
+    if ( state.result != null && (state.questionIndex == 20 || state.timer<=0)) {
         navController.navigate("quiz/result/1/${state.result?.result ?: 0}")
     }
     else {
