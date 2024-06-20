@@ -1,5 +1,6 @@
 package com.example.catapult.cats.quiz.result
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.catapult.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.resultScreen(
@@ -39,6 +41,7 @@ fun NavGraphBuilder.resultScreen(
     val resultViewModel: ResultViewModel = hiltViewModel()
     val state by resultViewModel.resultState.collectAsState()
 
+    BackHandler() {}
 
     Surface(
         tonalElevation = 1.dp
