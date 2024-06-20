@@ -113,7 +113,7 @@ class GuessFactViewModel @Inject constructor(
     }
     private fun createQuestion(){
         viewModelScope.launch {
-            setGuessFactState { copy(isLoading = true) }
+           // setGuessFactState { copy(isLoading = true) }
             val list = guessFactState.value.cats.shuffled()
             var newPhotos = catsService.getAllCatImagesByIdFlow(id = list[0].id).first()
             if(newPhotos.isEmpty()) {
