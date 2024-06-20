@@ -2,12 +2,16 @@ package com.example.catapult.cats.login
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +24,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,6 +76,7 @@ fun LoginScreen(
     onClick: (uiEvent: ILoginContract.LoginUIEvent) -> Unit,
     onValueChange: (uiEvent: ILoginContract.LoginUIEvent) -> Unit
 ) {
+    val radialFade = Brush.radialGradient(0.5f to Color.Green, 1f to Color.Transparent)
     Scaffold(
         content = { pv ->
             Column(
@@ -76,19 +87,20 @@ fun LoginScreen(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(30.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
 
                     Text(text = "Hello, please enter your info", style = MaterialTheme.typography.headlineSmall)
 
                     Image(
+                        modifier = Modifier.fadingEdge(radialFade).size(240.dp),
                         painter = painterResource(id = R.drawable.login_cat),
                         contentDescription = "login cat photo",
                     )
 
                     Column (
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
                     ) {
                         OutlinedTextField(
                             value = loginState.name,
@@ -99,8 +111,9 @@ fun LoginScreen(
                                     )
                                 )
                             },
-                            label = { Text("Name and Surname") },
-                            singleLine = true
+                            label = { Text("Name") },
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
                         )
                         OutlinedTextField(
                             value = loginState.nickname,
@@ -112,7 +125,8 @@ fun LoginScreen(
                                 )
                             },
                             label = { Text("Nickname") },
-                            singleLine = true
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
                         )
                         OutlinedTextField(
                             value = loginState.email,
@@ -124,16 +138,17 @@ fun LoginScreen(
                                 )
                             },
                             label = { Text("Email address") },
-                            singleLine = true
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
                         )
-                    }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        Button(onClick = { onClick(ILoginContract.LoginUIEvent.AddUser)}) {
-                            Text(text = "Log In")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Button(onClick = { onClick(ILoginContract.LoginUIEvent.AddUser)}) {
+                                Text(text = "Log In")
+                            }
                         }
                     }
                 }
@@ -142,3 +157,10 @@ fun LoginScreen(
     )
 
 }
+
+fun Modifier.fadingEdge(brush: Brush) = this
+    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+    .drawWithContent {
+        drawContent()
+        drawRect(brush = brush, blendMode = BlendMode.DstIn)
+    }
