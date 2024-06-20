@@ -39,9 +39,7 @@ object ApiModule {
                 it.proceed(request)
             }
             .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
-                }
+                httpLoggingInterceptor
             )
             .build()
 
