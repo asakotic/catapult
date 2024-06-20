@@ -5,9 +5,9 @@ import com.example.catapult.cats.db.images.CatGallery
 import com.example.catapult.cats.db.images.CatGalleryDao
 import com.example.catapult.cats.network.api.ICatListAPI
 import com.example.catapult.cats.network.api.IResultsAPI
-import com.example.catapult.cats.network.catapi
+//import com.example.catapult.cats.network.catapi
 import com.example.catapult.cats.network.dto.ResultDTO
-import com.example.catapult.cats.network.resultsapi
+//import com.example.catapult.cats.network.resultsapi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,13 +15,15 @@ import javax.inject.Singleton
 @Singleton
 class CatsService @Inject constructor(
     private val catDao: CatDao,
-    private val catGalleryDao: CatGalleryDao
+    private val catGalleryDao: CatGalleryDao,
+    private val catApi: ICatListAPI,
+    private val resultsApi: IResultsAPI
 ) {
     //ICatListAPI:: class.java -  reflection of ICatListAPI class and instance (reference type of java)
     //create validates interface
     //https://stackoverflow.com/questions/68686142/what-is-the-meaning-of-class-java
-    private val catApi: ICatListAPI = catapi.create(ICatListAPI:: class.java)
-    private val resultsApi: IResultsAPI = resultsapi.create(IResultsAPI:: class.java)
+    //private val catApi: ICatListAPI = catapi.create(ICatListAPI:: class.java)
+    //private val resultsApi: IResultsAPI = resultsapi.create(IResultsAPI:: class.java)
 
     suspend fun fetchAllCatsFromApi() {
         catDao.insertAllCats(cats = catApi.getAllCats())
