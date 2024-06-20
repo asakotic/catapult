@@ -66,7 +66,7 @@ fun NavGraphBuilder.editScreen(
         tonalElevation = 1.dp
     ) {
         Scaffold(
-            topBar = { TopBar(navController = navController) },
+            topBar = { TopBar(onBackClick = {navController.navigateUp()}) },
             content = {
 
                 if (editState.saveUserPassed) {

@@ -1,7 +1,5 @@
 package com.example.catapult.navigation
 
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -42,7 +40,7 @@ fun AppNavigation() {
             navController = navController,
             goToQuiz = {
                 navController.navigate("quiz")
-            }
+            },
         )
 
         loginScreen( //add-new-user

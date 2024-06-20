@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,22 +68,18 @@ fun ListInfo(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(navController: NavController) {
+fun TopBar(
+    onBackClick: () -> Unit
+) {
     TopAppBar(
         title = {
             Text(text = "Catapult", style = MaterialTheme.typography.labelLarge)
         },
         navigationIcon = {
             AppIconButton(
-                imageVector = Icons.Default.ArrowBack,
-                onClick = { navController.navigateUp() })
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                onClick = onBackClick)
         },
-        actions = {
-            //Icons.Outlined.LightMode -- dark mode
-            //Icons.Filled.LightMode -- light mode
-            AppIconButton(imageVector = Icons.Filled.LightMode, onClick = { /*TODO*/ })
-//                        AppIconButton(imageVector = Icons.Default.Menu, onClick = { /*TODO*/ })
-        }
     )
 }
 
@@ -96,7 +94,6 @@ fun ProgressBarOurs(
     )
     LinearProgressIndicator(
         modifier = Modifier.fillMaxWidth(),
-        progress = {progress}
-        ,
+        progress = { progress },
     )
 }

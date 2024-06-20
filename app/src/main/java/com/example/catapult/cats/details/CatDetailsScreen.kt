@@ -56,7 +56,7 @@ fun NavGraphBuilder.catDetailsScreen (
     ) {
         Scaffold (
             topBar = {
-                TopBar(navController)
+                TopBar(onBackClick = {navController.navigateUp()})
             },
             content = { paddingValues ->
                 CatDetailsScreen(

@@ -46,7 +46,7 @@ fun NavGraphBuilder.historyScreen(
         tonalElevation = 1.dp
     ) {
         Scaffold(
-            topBar = { TopBar(navController = navController) }
+            topBar = { TopBar(onBackClick = {navController.navigateUp()}) }
         ) {
             Column(
                 modifier = Modifier
