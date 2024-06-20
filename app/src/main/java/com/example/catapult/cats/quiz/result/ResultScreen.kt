@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,8 +56,7 @@ fun NavGraphBuilder.resultScreen(
                     title = {
                         Text(
                             text = "Here are your results!",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 )
@@ -94,33 +97,41 @@ fun ResultScreen(
             contentDescription = "result cat photo",
             modifier = Modifier
                 .padding(vertical = 20.dp)
-                .padding(bottom = 40.dp)
+                .padding(bottom = 20.dp)
         )
         Text(
-            text = "${state.username}, your result is ${state.points}!\n" +
-                    "Do you want to share it with other players?"
+            text = "${state.username}, your result is ${state.points}!",
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(20.dp)
-        ) {
-            Button(
-                onClick = {
+        Text(
+            text = "Do you want to share it with other players?",
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Button(
+            onClick = {
                     eventPublisher(IResultContract.ResultUIEvent.PostResult)
-                },
-                modifier = Modifier.padding(horizontal = 5.dp),
-                enabled = !state.isPosted
-            ) {
-                Text(text = "Share it")
-            }
-            Button(
-                onClick = {
-                    home()
-                },
-                modifier = Modifier.padding(horizontal = 5.dp)
-            ) {
-                Text(text = "Go back to home screen")
-            }
+            },
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .align(Alignment.CenterHorizontally)
+                .width(250.dp),
+            enabled = !state.isPosted
+        ) {
+            Text(text = "Share it")
+        }
+        Button(
+            onClick = {
+                home()
+            },
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .align(Alignment.CenterHorizontally)
+                .width(250.dp)
+        ) {
+            Text(text = "Go back to home screen")
         }
         Button(
             onClick = {
@@ -128,7 +139,8 @@ fun ResultScreen(
             },
             modifier = Modifier
                 .padding(horizontal = 5.dp, vertical = 5.dp)
-                .align(Alignment.End),
+                .align(Alignment.CenterHorizontally)
+                .width(250.dp),
             enabled = !state.isLoading
         ) {
             Text(text = "Go to leaderboard")
