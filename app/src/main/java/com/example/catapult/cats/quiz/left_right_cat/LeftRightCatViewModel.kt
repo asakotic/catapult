@@ -57,8 +57,15 @@ class LeftRightCatViewModel @Inject constructor(
                 delay(1000)
                 setQuestionState { copy(timer = timer - 1) }
 
-                if (questionState.value.timer <= 0)
+                if (questionState.value.timer <= 0) {
                     pauseTimer()
+                    addResult(
+                        Result(
+                            result = seeResults(questionState.value.timer, questionState.value.points.toInt()),
+                            createdAt = System.currentTimeMillis()
+                        )
+                    )
+                }
             }
 
         }

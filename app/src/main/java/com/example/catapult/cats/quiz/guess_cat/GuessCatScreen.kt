@@ -81,8 +81,7 @@ fun NavGraphBuilder.guessCatScreen(
                         }
                     }
                 } else {
-                    if (quizState.questionIndex == 19 && quizState.result != null) {
-                        val user = quizState.usersData.users[quizState.usersData.pick]
+                    if ((quizState.questionIndex == 19 || quizState.timer <= 0) && quizState.result != null) {
                         navController.navigate("quiz/result/2/${quizState.result?.result ?: 0}")
                     }
                     else {

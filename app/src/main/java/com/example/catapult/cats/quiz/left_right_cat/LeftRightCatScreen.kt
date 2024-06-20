@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Card
@@ -60,7 +61,7 @@ fun NavGraphBuilder.quizLeftRightCat(
                     },
                     navigationIcon = {
                         AppIconButton(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             onClick = { navController.navigateUp() })
                     }
                 )
@@ -82,9 +83,7 @@ fun NavGraphBuilder.quizLeftRightCat(
                         }
                     }
                 } else {
-                    if (quizState.questionIndex == 19 && quizState.result != null) {
-                        val user = quizState.usersData.users[quizState.usersData.pick]
-                        Log.d("test",user.toString())
+                    if ((quizState.questionIndex == 19 || quizState.timer <= 0) && quizState.result != null) {
                         navController.navigate("quiz/result/3/${quizState.result?.result ?: 0}")
                     }
                     else {
