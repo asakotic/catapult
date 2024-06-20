@@ -108,7 +108,7 @@ fun NavGraphBuilder.catsListScreen(
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 drawerContent = {
-                    UsersListDrawer(
+                    UserInfoDrawer(
                         catsState = catsState,
                         catsViewModel = catsViewModel,
                         addNewUser = { navController.navigate("login?add-new-user=${true}") },
@@ -170,7 +170,7 @@ fun NavGraphBuilder.catsListScreen(
 }
 
 @Composable
-private fun UsersListDrawer(
+private fun UserInfoDrawer(
     catsState: CatsListState,
     catsViewModel: CatsViewModel,
     addNewUser: () -> Unit,
@@ -221,7 +221,7 @@ private fun UsersListDrawer(
                                 user = user,
                                 index = index,
                                 catsState = catsState,
-                                onClick = { catsViewModel.changeMainUser(pick = index) },
+                                changeUserOnClick = { catsViewModel.changeMainUser(pick = index) },
                                 navigateToEdit = navigateToEdit
                             )
                         }
@@ -365,7 +365,7 @@ private fun UserItemDrawer(
     user: User,
     index: Int,
     catsState: CatsListState,
-    onClick: () -> Unit,
+    changeUserOnClick: () -> Unit,
     navigateToEdit: () -> Unit,
 ) {
 
@@ -414,13 +414,13 @@ private fun UserItemDrawer(
                 if (index == catsState.usersData.pick) {
                     AppIconButton(
                         imageVector = Icons.Filled.Edit,
-                        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else onClick
+                        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else changeUserOnClick
                     )
                 }
             }
         },
         selected = index == (catsState.usersData.pick),
-        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else onClick,
+        onClick = if (index == (catsState.usersData.pick)) navigateToEdit else changeUserOnClick,
     )
 }
 

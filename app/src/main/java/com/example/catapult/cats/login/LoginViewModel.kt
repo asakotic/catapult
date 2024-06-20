@@ -67,7 +67,6 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             usersData.addUser(user)
-
             setLoginState { copy(loginCheckPassed = true) }
         }
     }

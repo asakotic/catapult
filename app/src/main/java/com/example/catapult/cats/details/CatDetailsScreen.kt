@@ -16,7 +16,6 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -41,7 +40,6 @@ import com.example.catapult.core.ListInfo
 import com.example.catapult.core.SimpleInfo
 import com.example.catapult.core.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.catDetailsScreen (
     route: String,
     navController: NavController,
@@ -70,7 +68,6 @@ fun NavGraphBuilder.catDetailsScreen (
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CatDetailsScreen(
     catState: ICatDetailsContract.CatDetailsState,
@@ -198,11 +195,11 @@ private fun CatInformation(
         )
 
 
-        StarRatingBar(text = "affectionLevel", rating = data.affectionLevel.toFloat()) {}
-        StarRatingBar(text = "childFriendly", rating = data.childFriendly.toFloat()) {}
-        StarRatingBar(text = "dogFriendly", rating = data.dogFriendly.toFloat()) {}
-        StarRatingBar(text = "energyLevel", rating = data.energyLevel.toFloat()) {}
-        StarRatingBar(text = "healthIssues", rating = data.healthIssues.toFloat()) {}
+        RatingBar(text = "affectionLevel", rating = data.affectionLevel.toFloat())
+        RatingBar(text = "childFriendly", rating = data.childFriendly.toFloat())
+        RatingBar(text = "dogFriendly", rating = data.dogFriendly.toFloat())
+        RatingBar(text = "energyLevel", rating = data.energyLevel.toFloat())
+        RatingBar(text = "healthIssues", rating = data.healthIssues.toFloat())
 
         val context = LocalContext.current
 
@@ -222,15 +219,12 @@ private fun CatInformation(
 }
 
 @Composable
-private fun StarRatingBar(
+private fun RatingBar(
     text: String,
     maxStars: Int = 5,
     rating: Float,
-    onRatingChanged: (Float) -> Unit
 ) {
     val density = LocalDensity.current.density
-    val starSize = (12f * density).dp
-    val starSpacing = (0.5f * density).dp
 
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
 
@@ -245,29 +239,6 @@ private fun StarRatingBar(
             LinearProgressIndicator(
                 progress = {rating / maxStars.toFloat()}
             )
-//            for (i in 1..maxStars) {
-//                val isSelected = i <= rating
-//                val icon = if (isSelected) Icons.Filled.Star else Icons.Default.Star
-//                val iconTintColor = if (isSelected) Color(0xFFFFC700) else Color(0xFFbdbdbd)
-//                Icon(
-//                    imageVector = icon,
-//                    contentDescription = null,
-//                    tint = iconTintColor,
-//                    modifier = Modifier
-//                        .selectable(
-//                            selected = isSelected,
-//                            onClick = {
-//                                onRatingChanged(i.toFloat())
-//                            }
-//                        )
-//                        .width(starSize)
-//                        .height(starSize)
-//                )
-//
-//                if (i < maxStars) {
-//                    Spacer(modifier = Modifier.width(starSpacing))
-//                }
-//            }
         }
     }
 }

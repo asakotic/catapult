@@ -2,13 +2,12 @@ package com.example.catapult.cats.gallery.photo
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -32,7 +31,7 @@ import androidx.navigation.compose.composable
 import coil.compose.SubcomposeAsyncImage
 import com.example.catapult.core.AppIconButton
 
-fun NavGraphBuilder.catPhotoScreen (
+fun NavGraphBuilder.catPhotoScreen(
     route: String,
     navController: NavController,
     arguments: List<NamedNavArgument>
@@ -45,32 +44,30 @@ fun NavGraphBuilder.catPhotoScreen (
     Surface(
         tonalElevation = 1.dp
     ) {
-        Scaffold (
-            content = { paddingValues ->
-                CatPhotoScreen(
-                    catState = catState,
-                    paddingValues = paddingValues,
-                    onClose = {navController.navigateUp()}
-                )
-            }
+        CatPhotoScreen(
+            catState = catState,
+            onClose = { navController.navigateUp() }
         )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun CatPhotoScreen(
     catState: ICatPhotoContract.CatPhotoState,
-    paddingValues: PaddingValues,
     onClose: () -> Unit
-){
-    Scaffold (
+) {
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(text = "Photo", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    AppIconButton(imageVector = Icons.Default.ArrowBack, onClick = onClose)
+                    AppIconButton(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        onClick = onClose
+                    )
                 }
             )
         },
@@ -80,13 +77,15 @@ fun CatPhotoScreen(
                     catState.photos.size
                 },
                 initialPage = catState.photoIndex
-            ) 
+            )
 
-            
+
             if (catState.isLoading) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                ) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -116,11 +115,11 @@ fun CatPhotoScreen(
                 HorizontalPager(
                     state = pagerState,
                     contentPadding = it
-                ) {pageIndex ->
+                ) { pageIndex ->
                     val photo = catState.photos[pageIndex]
 
                     SubcomposeAsyncImage(
-                        modifier =  Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         model = photo,
                         contentDescription = null,
                         contentScale = ContentScale.FillWidth,

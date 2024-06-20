@@ -1,13 +1,12 @@
 package com.example.catapult.cats.db
 
-import android.util.Log
+//import com.example.catapult.cats.network.catapi
+//import com.example.catapult.cats.network.resultsapi
 import com.example.catapult.cats.db.images.CatGallery
 import com.example.catapult.cats.db.images.CatGalleryDao
 import com.example.catapult.cats.network.api.ICatListAPI
 import com.example.catapult.cats.network.api.IResultsAPI
-//import com.example.catapult.cats.network.catapi
 import com.example.catapult.cats.network.dto.ResultDTO
-//import com.example.catapult.cats.network.resultsapi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,7 +45,6 @@ class CatsService @Inject constructor(
         return resultsApi.getAllResultsForCategory(category)
     }
      suspend fun postResult(nickname: String, result:Float, category: Int) {
-        Log.d("tag", category.toString())
         val dto = ResultDTO(nickname,result,category)
         resultsApi.postResult(dto)
     }
