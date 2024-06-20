@@ -1,6 +1,7 @@
 package com.example.catapult.cats.db
 
 import android.util.Log
+import com.example.catapult.cats.db.images.CatGallery
 import com.example.catapult.cats.db.images.CatGalleryDao
 import com.example.catapult.cats.network.api.ICatListAPI
 import com.example.catapult.cats.network.api.IResultsAPI
@@ -30,8 +31,10 @@ class CatsService @Inject constructor(
 
     fun getCatByIdFlow(id: String): Flow<Cat> = catDao.getCatById(id)
 
-    suspend fun getAllCatsPhotosApi(id: String){
-        catGalleryDao.insertAllGalleryCats(cats = catApi.getAllCatsPhotos(id).map { it.copy(id = id) })
+    suspend fun getAllCatsPhotosApi(id: String): List<CatGallery> {
+        val images = catApi.getAllCatsPhotos(id).map { it.copy(id = id) }
+        catGalleryDao.insertAllGalleryCats(cats = images)
+        return images
     }
 
     fun getAllCatImagesByIdFlow(id: String): Flow<List<String>> = catGalleryDao.getAllImagesForId(id)

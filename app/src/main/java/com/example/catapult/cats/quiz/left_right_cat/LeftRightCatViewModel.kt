@@ -134,11 +134,9 @@ class LeftRightCatViewModel @Inject constructor(
         if (photos.isNotEmpty())
             return photos
 
-        withContext(dispatcherProvider.io()) {
-            catsService.fetchAllCatsFromApi()
+        return withContext(dispatcherProvider.io()) {
+            catsService.getAllCatsPhotosApi(id = id).map { it.url }
         }
-
-        return catsService.getAllCatImagesByIdFlow(id = id).first()
     }
 
     /**

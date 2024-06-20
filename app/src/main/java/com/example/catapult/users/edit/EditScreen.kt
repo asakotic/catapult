@@ -131,19 +131,12 @@ fun LoginScreen(
                 onClick(
                     IEditContract.EditUIEvent.ImageChanged(
                         imageView = imageView,
-                        subfolder = "profile-pictures",
                         pictureName = editState.email
                     )
                 )
             }
         }
     )
-
-    val bitmap by remember {
-        mutableStateOf(
-            if (isDefaultImage(editState.image)) null else getPic(editState.image)
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -173,7 +166,7 @@ fun LoginScreen(
                         )
                     },
                 contentScale = ContentScale.Crop,
-                model = bitmap ?: defaultImage(),
+                model = editState.bitmap ?: defaultImage(),
                 contentDescription = null
             )
 

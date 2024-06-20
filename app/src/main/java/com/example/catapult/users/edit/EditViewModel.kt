@@ -46,6 +46,11 @@ class EditViewModel @Inject constructor(
         viewModelScope.launch { _editEvents.emit(event) }
 
     init {
+        if (!isDefaultImage(editState.value.image)) {
+            viewModelScope.launch {
+                setEditState { copy(bitmap = getPic(editState.value.image)) }
+            }
+        }
         observerEvents()
     }
 
@@ -57,7 +62,7 @@ class EditViewModel @Inject constructor(
                     is IEditContract.EditUIEvent.EmailInputChanged -> emailChange(it.email)
                     is IEditContract.EditUIEvent.NameInputChanged -> nameChange(it.name)
                     is IEditContract.EditUIEvent.NicknameInputChanged -> nicknameChange(it.nickname)
-                    is IEditContract.EditUIEvent.ImageChanged -> savePic(imageView = it.imageView, subfolder = it.subfolder, pictureName =  it.pictureName)
+                    is IEditContract.EditUIEvent.ImageChanged -> savePic(imageView = it.imageView,  pictureName =  it.pictureName)
                     is IEditContract.EditUIEvent.SaveChanges -> updateUser()
                 }
             }
@@ -92,7 +97,7 @@ class EditViewModel @Inject constructor(
         }
     }
 
-    private fun savePic(imageView: ImageView, subfolder: String, pictureName: String) {
+    private fun savePic(imageView: ImageView, pictureName: String) {
         val drawable = imageView.getDrawable() as BitmapDrawable
         val bitmap = drawable.bitmap
         try {
@@ -113,7 +118,7 @@ class EditViewModel @Inject constructor(
             out.flush()
             out.close()
             viewModelScope.launch {
-                setEditState { copy(image = file.absolutePath) }
+                setEditState { copy(image = file.absolutePath, bitmap = getPic(file.absolutePath)) }
             }
         } catch (ex: Exception) {
             ex.printStackTrace()

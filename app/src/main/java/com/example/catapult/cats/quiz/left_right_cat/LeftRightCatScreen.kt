@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -66,10 +67,19 @@ fun NavGraphBuilder.quizLeftRightCat(
             },
             content = {
                 if (quizState.isLoading) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "Please wait for all cat images to load", style = MaterialTheme.typography.titleSmall)
+                            Text(text = "This process will take a few seconds", style = MaterialTheme.typography.titleSmall)
+                            Spacer(modifier = Modifier.padding(top = 10.dp))
+                            CircularProgressIndicator()
+                        }
                     }
                 } else {
                     if (quizState.questionIndex == 19 && quizState.result != null) {
