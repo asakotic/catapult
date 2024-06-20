@@ -4,7 +4,9 @@ package com.example.catapult.cats.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,57 +72,70 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding(pv)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Hello, please enter your info", style = MaterialTheme.typography.headlineSmall)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(30.dp)
+                ) {
 
-                Image(
-                    painter = painterResource(id = R.drawable.login_cat),
-                    contentDescription = "login cat photo",
-                    modifier = Modifier
-                        .padding(vertical = 20.dp)
-                        .padding(bottom = 40.dp)
-                )
+                    Text(text = "Hello, please enter your info", style = MaterialTheme.typography.headlineSmall)
 
-                OutlinedTextField(
-                    value = loginState.name,
-                    onValueChange = {
-                        onValueChange(
-                            ILoginContract.LoginUIEvent.NameInputChanged(
-                                name = it
-                            )
+                    Image(
+                        painter = painterResource(id = R.drawable.login_cat),
+                        contentDescription = "login cat photo",
+                    )
+
+                    Column (
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = loginState.name,
+                            onValueChange = {
+                                onValueChange(
+                                    ILoginContract.LoginUIEvent.NameInputChanged(
+                                        name = it
+                                    )
+                                )
+                            },
+                            label = { Text("Name and Surname") },
+                            singleLine = true
                         )
-                    },
-                    label = { Text("Name and Surname") },
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = loginState.nickname,
-                    onValueChange = {
-                        onValueChange(
-                            ILoginContract.LoginUIEvent.NicknameInputChanged(
-                                nickname = it
-                            )
+                        OutlinedTextField(
+                            value = loginState.nickname,
+                            onValueChange = {
+                                onValueChange(
+                                    ILoginContract.LoginUIEvent.NicknameInputChanged(
+                                        nickname = it
+                                    )
+                                )
+                            },
+                            label = { Text("Nickname") },
+                            singleLine = true
                         )
-                    },
-                    label = { Text("Nickname") },
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = loginState.email,
-                    onValueChange = {
-                        onValueChange(
-                            ILoginContract.LoginUIEvent.EmailInputChanged(
-                                email = it
-                            )
+                        OutlinedTextField(
+                            value = loginState.email,
+                            onValueChange = {
+                                onValueChange(
+                                    ILoginContract.LoginUIEvent.EmailInputChanged(
+                                        email = it
+                                    )
+                                )
+                            },
+                            label = { Text("Email address") },
+                            singleLine = true
                         )
-                    },
-                    label = { Text("Email address") },
-                    singleLine = true
-                )
-                Button(onClick = { onClick(ILoginContract.LoginUIEvent.AddUser)}, modifier = Modifier.padding(vertical = 20.dp)) {
-                    Text(text = "Log In")
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Button(onClick = { onClick(ILoginContract.LoginUIEvent.AddUser)}) {
+                            Text(text = "Log In")
+                        }
+                    }
                 }
             }
         }
