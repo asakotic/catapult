@@ -28,6 +28,8 @@ class LoginViewModel @Inject constructor(
 
     private val _loginEvents = MutableSharedFlow<ILoginContract.LoginUIEvent>()
 
+    private val NICKNAME_PATTERN = Regex("[A-Za-z0-9_]+")
+
     private fun setLoginState(updateWith: ILoginContract.LoginState.() -> ILoginContract.LoginState) =
         _loginState.getAndUpdate(updateWith)
 
@@ -55,9 +57,9 @@ class LoginViewModel @Inject constructor(
     fun isInfoValid(): Boolean {
         if (loginState.value.name.isEmpty())
             return false
-        if (loginState.value.nickname.isEmpty())
+        if (loginState.value.nickname.isEmpty() || !NICKNAME_PATTERN.matches(loginState.value.nickname))
             return false
-        if (loginState.value.email.isEmpty())
+        if (loginState.value.email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(loginState.value.email).matches())
             return false
         return true
     }

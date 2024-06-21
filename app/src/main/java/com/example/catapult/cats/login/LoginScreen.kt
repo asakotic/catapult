@@ -1,6 +1,7 @@
 package com.example.catapult.cats.login
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,7 +43,7 @@ fun NavGraphBuilder.loginScreen(
 ) = composable(route = route, arguments = arguments) { navBackStackEntry ->
     val loginViewModel: LoginViewModel = hiltViewModel(navBackStackEntry)
     val loginState by loginViewModel.loginState.collectAsState()
-
+    val context = LocalContext.current
     Surface(
         tonalElevation = 1.dp
     ) {
@@ -54,6 +56,9 @@ fun NavGraphBuilder.loginScreen(
                 onClick = { uiEvent ->
                     if (loginViewModel.isInfoValid()) {
                         loginViewModel.setLoginEvent(uiEvent)
+                    }
+                    else {
+                        Toast.makeText(context, "Invalid Input", Toast.LENGTH_SHORT).show()
                     }
                 },
                 onValueChange = { uiEvent -> loginViewModel.setLoginEvent(uiEvent) }

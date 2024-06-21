@@ -137,7 +137,7 @@ fun MakeQuestion(
     eventPublisher: (uiEvent: IGuessFactContract.GuessFactUIEvent) -> Unit,
 ) {
 
-    ProgressBarOurs(index = state.questionIndex, size = 20)
+    ProgressBarOurs(index = state.questionIndex - 1, size = 20)
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
