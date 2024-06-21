@@ -50,7 +50,7 @@ class CatsViewModel @Inject constructor(
     }
 
     fun changeMainUser(pick: Int) {
-        CoroutineScope(dispatcherProvider.io()).launch {
+        viewModelScope.launch {
             val usersData = usersDataStore.changeMainUser(newPick = pick)
             setCatsState { copy(usersData = usersData, darkTheme = usersData.users[usersData.pick].darkTheme) }
         }
