@@ -21,4 +21,5 @@
 <h2> Used technologies </h2>
 Programming language - Kotlin <br/>
 Build tool - Gradle <br/>
+Dependencies - Room, Hilt, DataStore, ... <br/>
 API for information about cats - https://thecatapi.com/
